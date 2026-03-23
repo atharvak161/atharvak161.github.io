@@ -1603,4 +1603,15 @@
     dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;margin-right:.5rem;animation:blink 1.5s step-end infinite;';
     heroTag.appendChild(dot);
     let i = 0;
-    c
+    const typeInterval = setInterval(() => {
+      if (i < text.length) {
+        heroTag.appendChild(document.createTextNode(text[i]));
+        i++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 60);
+  }
+</script>
+</body>
+</html>
