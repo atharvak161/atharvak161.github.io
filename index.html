@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Atharva Kulkarni — Security Engineer</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23080b10'/><text y='50' x='50' dominant-baseline='central' text-anchor='middle' font-size='54' font-family='monospace' font-weight='bold' fill='%2300d4ff'>AK</text><rect x='10' y='68' width='80' height='2' fill='%2300ff9d' rx='1'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -22,1043 +23,212 @@
     --font-display: 'Barlow Condensed', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.7; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 9999; }
+  body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-mono);
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
-
-  /* Scanline overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* Grid background */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ─── NAVBAR ─────────────────────────────────────────────── */
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 3rem;
-    background: rgba(8, 11, 16, 0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    transition: all .3s;
-  }
-
-  nav.scrolled {
-    padding: .7rem 3rem;
-    box-shadow: 0 4px 30px rgba(0,212,255,0.08);
-  }
-
-  .nav-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--accent);
-    letter-spacing: .18em;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
+  /* NAVBAR */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
+  nav.scrolled { padding: .7rem 3rem; box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
+  .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo span { color: var(--text2); }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-size: .78rem;
-    color: var(--text2);
-    text-decoration: none;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    position: relative;
-    transition: color .2s;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--accent);
-    transition: width .3s;
-  }
-
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color .2s; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width .3s; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after { width: 100%; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 4px;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: var(--text2);
-    transition: all .3s;
-  }
-
-  /* ─── HERO ───────────────────────────────────────────────── */
-  #hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 8rem 3rem 4rem;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .hero-glow {
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
-    top: -100px;
-    right: -100px;
-    pointer-events: none;
-    animation: pulseGlow 6s ease-in-out infinite;
-  }
-
-  .hero-glow2 {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,255,157,0.05) 0%, transparent 70%);
-    bottom: 50px;
-    left: 5%;
-    pointer-events: none;
-    animation: pulseGlow 8s ease-in-out infinite reverse;
-  }
-
-  @keyframes pulseGlow {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: .7; }
-  }
-
+  /* HERO */
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 1; }
+  .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
+  .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.05) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
+  @keyframes pulseGlow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: .7; } }
   .hero-content { max-width: 800px; position: relative; z-index: 2; }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    font-size: .72rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid rgba(0,212,255,.25);
-    padding: .3rem .8rem;
-    border-radius: 2px;
-    margin-bottom: 1.5rem;
-    animation: fadeSlideUp .6s ease both;
-  }
-
-  .hero-tag::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: blink 1.5s step-end infinite;
-  }
-
+  .hero-tag { display: inline-flex; align-items: center; gap: .5rem; font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(0,212,255,.25); padding: .3rem .8rem; border-radius: 2px; margin-bottom: 1.5rem; animation: fadeSlideUp .6s ease both; }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.5s step-end infinite; }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-  h1.hero-name {
-    font-family: var(--font-display);
-    font-size: clamp(3.5rem, 10vw, 8rem);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: var(--text);
-    animation: fadeSlideUp .7s .1s ease both;
-    margin-bottom: .3rem;
-  }
-
+  h1.hero-name { font-family: var(--font-display); font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 800; line-height: 0.95; letter-spacing: .04em; text-transform: uppercase; color: var(--text); animation: fadeSlideUp .7s .1s ease both; margin-bottom: .3rem; }
   h1.hero-name span { color: var(--accent); }
-
-  .hero-role {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(1rem, 2.5vw, 1.6rem);
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--text2);
-    animation: fadeSlideUp .7s .2s ease both;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-tagline {
-    font-size: .9rem;
-    color: var(--text2);
-    max-width: 500px;
-    line-height: 1.8;
-    animation: fadeSlideUp .7s .3s ease both;
-    margin-bottom: 2.5rem;
-    border-left: 2px solid var(--accent);
-    padding-left: 1rem;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    animation: fadeSlideUp .7s .4s ease both;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    padding: .75rem 1.8rem;
-    font-family: var(--font-mono);
-    font-size: .8rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 2px;
-    transition: all .25s;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-    font-weight: 700;
-    border: 1px solid var(--accent);
-  }
-
-  .btn-primary:hover {
-    background: transparent;
-    color: var(--accent);
-    box-shadow: 0 0 20px rgba(0,212,255,.3);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--text2);
-    border: 1px solid var(--border);
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--accent2);
-    color: var(--accent2);
-    box-shadow: 0 0 20px rgba(0,255,157,.15);
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 3rem;
-    margin-top: 4rem;
-    animation: fadeSlideUp .7s .5s ease both;
-  }
-
+  .hero-role { font-family: 'Rajdhani', sans-serif; font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--text2); animation: fadeSlideUp .7s .2s ease both; margin-bottom: 1.5rem; }
+  .hero-tagline { font-size: .9rem; color: var(--text2); max-width: 500px; line-height: 1.8; animation: fadeSlideUp .7s .3s ease both; margin-bottom: 2.5rem; border-left: 2px solid var(--accent); padding-left: 1rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeSlideUp .7s .4s ease both; }
+  .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.8rem; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: all .25s; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: var(--bg); font-weight: 700; border: 1px solid var(--accent); }
+  .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px rgba(0,212,255,.3); }
+  .btn-secondary { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); box-shadow: 0 0 20px rgba(0,255,157,.15); }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; animation: fadeSlideUp .7s .5s ease both; }
   .stat-item { text-align: left; }
+  .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-label { font-size: .7rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; margin-top: .3rem; }
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    line-height: 1;
-  }
+  /* SECTIONS */
+  section { position: relative; z-index: 1; padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
+  .section-num { font-size: .72rem; color: var(--accent); letter-spacing: .2em; font-weight: 700; }
+  h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
 
-  .stat-label {
-    font-size: .7rem;
-    color: var(--text3);
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    margin-top: .3rem;
-  }
+  /* ABOUT */
+  #about { border-top: 1px solid var(--border); padding-top: 6rem; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .about-text p { color: var(--text2); font-size: .88rem; line-height: 1.9; margin-bottom: 1.2rem; }
+  .about-text p strong { color: var(--accent); font-weight: 700; }
+  .about-highlights { display: flex; flex-direction: column; gap: 1rem; }
+  .highlight-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; transition: all .25s; }
+  .highlight-card:hover { border-left-color: var(--accent2); background: rgba(0,212,255,.04); transform: translateX(4px); }
+  .highlight-card h4 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+  .highlight-card p { font-size: .78rem; color: var(--text2); line-height: 1.6; }
 
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ─── SECTIONS ───────────────────────────────────────────── */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 6rem 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 3.5rem;
-  }
-
-  .section-num {
-    font-size: .72rem;
-    color: var(--accent);
-    letter-spacing: .2em;
-    font-weight: 700;
-  }
-
-  h2.section-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--border), transparent);
-  }
-
-  /* ─── ABOUT ──────────────────────────────────────────────── */
-  #about {
-    border-top: 1px solid var(--border);
-    padding-top: 6rem;
-  }
-
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .about-text p {
-    color: var(--text2);
-    font-size: .88rem;
-    line-height: 1.9;
-    margin-bottom: 1.2rem;
-  }
-
-  .about-text p strong {
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  .about-highlights {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .highlight-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    padding: 1.2rem 1.5rem;
-    border-radius: 2px;
-    transition: all .25s;
-  }
-
-  .highlight-card:hover {
-    border-left-color: var(--accent2);
-    background: rgba(0,212,255,.04);
-    transform: translateX(4px);
-  }
-
-  .highlight-card h4 {
-    font-family: var(--font-display);
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .4rem;
-  }
-
-  .highlight-card p {
-    font-size: .78rem;
-    color: var(--text2);
-    line-height: 1.6;
-  }
-
-  /* ─── SKILLS ─────────────────────────────────────────────── */
+  /* SKILLS */
   #skills { border-top: 1px solid var(--border); }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .skill-category {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.8rem;
-    transition: border-color .25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .skill-category::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-  }
-
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.5rem; }
+  .skill-category { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color .25s; position: relative; overflow: hidden; }
+  .skill-category::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
   .skill-category:nth-child(1)::before { background: var(--accent); }
   .skill-category:nth-child(2)::before { background: var(--accent2); }
   .skill-category:nth-child(3)::before { background: var(--accent3); }
   .skill-category:nth-child(4)::before { background: #f5a623; }
-
   .skill-category:hover { border-color: var(--accent); }
-
-  .skill-category h3 {
-    font-family: var(--font-display);
-    font-size: .85rem;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 1.2rem;
-  }
-
+  .skill-category h3 { font-family: var(--font-display); font-size: .85rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.2rem; }
   .skill-category:nth-child(1) h3 { color: var(--accent); }
   .skill-category:nth-child(2) h3 { color: var(--accent2); }
   .skill-category:nth-child(3) h3 { color: var(--accent3); }
   .skill-category:nth-child(4) h3 { color: #f5a623; }
-
   .skill-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
-
-  .skill-tag {
-    font-size: .72rem;
-    padding: .3rem .7rem;
-    border-radius: 2px;
-    letter-spacing: .05em;
-    border: 1px solid;
-    transition: all .2s;
-  }
-
+  .skill-tag { font-size: .72rem; padding: .3rem .7rem; border-radius: 2px; letter-spacing: .05em; border: 1px solid; transition: all .2s; }
   .skill-tag:hover { transform: translateY(-2px); }
-
   .skill-category:nth-child(1) .skill-tag { border-color: rgba(0,212,255,.25); color: rgba(0,212,255,.8); background: rgba(0,212,255,.05); }
   .skill-category:nth-child(1) .skill-tag:hover { background: rgba(0,212,255,.12); border-color: var(--accent); color: var(--accent); }
-
   .skill-category:nth-child(2) .skill-tag { border-color: rgba(0,255,157,.2); color: rgba(0,255,157,.75); background: rgba(0,255,157,.04); }
   .skill-category:nth-child(2) .skill-tag:hover { background: rgba(0,255,157,.1); border-color: var(--accent2); color: var(--accent2); }
-
   .skill-category:nth-child(3) .skill-tag { border-color: rgba(255,77,109,.2); color: rgba(255,77,109,.75); background: rgba(255,77,109,.04); }
   .skill-category:nth-child(3) .skill-tag:hover { background: rgba(255,77,109,.1); border-color: var(--accent3); color: var(--accent3); }
-
   .skill-category:nth-child(4) .skill-tag { border-color: rgba(245,166,35,.2); color: rgba(245,166,35,.75); background: rgba(245,166,35,.04); }
   .skill-category:nth-child(4) .skill-tag:hover { background: rgba(245,166,35,.1); border-color: #f5a623; color: #f5a623; }
 
-  /* ─── EXPERIENCE ─────────────────────────────────────────── */
+  /* EXPERIENCE */
   #experience { border-top: 1px solid var(--border); }
-
   .exp-list { display: flex; flex-direction: column; gap: 2rem; }
-
-  .exp-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem 2.5rem;
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 2rem;
-    transition: all .25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .exp-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--border);
-    transition: background .25s;
-  }
-
+  .exp-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem 2.5rem; display: grid; grid-template-columns: 200px 1fr; gap: 2rem; transition: all .25s; position: relative; overflow: hidden; }
+  .exp-card::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--border); transition: background .25s; }
   .exp-card:hover { border-color: rgba(0,212,255,.3); background: rgba(0,212,255,.02); }
   .exp-card:hover::after { background: var(--accent); }
-
   .exp-meta { padding-top: .2rem; }
-
-  .exp-period {
-    font-size: .72rem;
-    color: var(--accent);
-    letter-spacing: .1em;
-    margin-bottom: .5rem;
-    display: block;
-  }
-
-  .exp-company {
-    font-family: var(--font-display);
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--text2);
-  }
-
-  .exp-location {
-    font-size: .7rem;
-    color: var(--text3);
-    margin-top: .3rem;
-    letter-spacing: .05em;
-  }
-
-  .exp-main h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .8rem;
-  }
-
-  .exp-main p {
-    font-size: .82rem;
-    color: var(--text2);
-    line-height: 1.8;
-    margin-bottom: 1rem;
-  }
-
-  .exp-achievements {
-    list-style: none;
-    margin-bottom: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-  }
-
-  .exp-achievements li {
-    font-size: .8rem;
-    color: var(--text2);
-    padding-left: 1.2rem;
-    position: relative;
-    line-height: 1.7;
-  }
-
-  .exp-achievements li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--accent2);
-    font-size: .7rem;
-  }
-
+  .exp-period { font-size: .72rem; color: var(--accent); letter-spacing: .1em; margin-bottom: .5rem; display: block; }
+  .exp-company { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text2); }
+  .exp-location { font-size: .7rem; color: var(--text3); margin-top: .3rem; letter-spacing: .05em; }
+  .exp-main h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: .8rem; }
+  .exp-main p { font-size: .82rem; color: var(--text2); line-height: 1.8; margin-bottom: 1rem; }
+  .exp-achievements { list-style: none; margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+  .exp-achievements li { font-size: .8rem; color: var(--text2); padding-left: 1.2rem; position: relative; line-height: 1.7; }
+  .exp-achievements li::before { content: '▸'; position: absolute; left: 0; color: var(--accent2); font-size: .7rem; }
   .exp-achievements li strong { color: var(--accent2); }
-
   .tech-stack { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
-
-  .tech-badge {
-    font-size: .68rem;
-    padding: .2rem .6rem;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text3);
-    letter-spacing: .06em;
-    background: rgba(255,255,255,.02);
-    transition: all .2s;
-  }
-
+  .tech-badge { font-size: .68rem; padding: .2rem .6rem; border: 1px solid var(--border); border-radius: 2px; color: var(--text3); letter-spacing: .06em; background: rgba(255,255,255,.02); transition: all .2s; }
   .tech-badge:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ─── PROJECTS ───────────────────────────────────────────── */
+  /* PROJECTS */
   #projects { border-top: 1px solid var(--border); }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .project-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition: all .3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .project-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,212,255,.05) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity .3s;
-  }
-
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+  .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; transition: all .3s; position: relative; overflow: hidden; }
+  .project-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,212,255,.05) 0%, transparent 60%); opacity: 0; transition: opacity .3s; }
   .project-card:hover { border-color: rgba(0,212,255,.35); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.4); }
   .project-card:hover::before { opacity: 1; }
+  .project-icon { width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; background: rgba(0,212,255,.06); }
+  .project-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text); }
+  .project-org { font-size: .7rem; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; }
+  .project-card p { font-size: .8rem; color: var(--text2); line-height: 1.8; flex: 1; }
+  .project-outcomes { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+  .project-outcomes li { font-size: .75rem; color: var(--text2); padding-left: 1rem; position: relative; }
+  .project-outcomes li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
 
-  .project-icon {
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    background: rgba(0,212,255,.06);
-  }
-
-  .project-card h3 {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .project-org {
-    font-size: .7rem;
-    color: var(--accent);
-    letter-spacing: .1em;
-    text-transform: uppercase;
-  }
-
-  .project-card p {
-    font-size: .8rem;
-    color: var(--text2);
-    line-height: 1.8;
-    flex: 1;
-  }
-
-  .project-outcomes {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: .4rem;
-  }
-
-  .project-outcomes li {
-    font-size: .75rem;
-    color: var(--text2);
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .project-outcomes li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-  }
-
-  /* ─── EDUCATION & CERTS ──────────────────────────────────── */
+  /* EDUCATION */
   #education { border-top: 1px solid var(--border); }
-
-  .edu-certs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-
-  .edu-block h3, .certs-block h3 {
-    font-family: var(--font-display);
-    font-size: .8rem;
-    font-weight: 700;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 1.5rem;
-    padding-bottom: .7rem;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .edu-certs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .edu-block h3, .certs-block h3 { font-family: var(--font-display); font-size: .8rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--text3); margin-bottom: 1.5rem; padding-bottom: .7rem; border-bottom: 1px solid var(--border); }
   .timeline { display: flex; flex-direction: column; gap: 0; }
-
-  .timeline-item {
-    position: relative;
-    padding: 0 0 2rem 1.8rem;
-    border-left: 1px solid var(--border);
-  }
-
+  .timeline-item { position: relative; padding: 0 0 2rem 1.8rem; border-left: 1px solid var(--border); }
   .timeline-item:last-child { border-left: 1px solid transparent; }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: 6px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px rgba(0,212,255,.5);
-  }
-
-  .timeline-period {
-    font-size: .7rem;
-    color: var(--accent);
-    letter-spacing: .12em;
-    margin-bottom: .4rem;
-    display: block;
-  }
-
-  .timeline-item h4 {
-    font-family: var(--font-display);
-    font-size: .95rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .2rem;
-  }
-
-  .timeline-item .inst {
-    font-size: .78rem;
-    color: var(--text2);
-    margin-bottom: .5rem;
-  }
-
-  .timeline-item p {
-    font-size: .76rem;
-    color: var(--text3);
-    line-height: 1.7;
-  }
-
+  .timeline-item::before { content: ''; position: absolute; left: -4px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(0,212,255,.5); }
+  .timeline-period { font-size: .7rem; color: var(--accent); letter-spacing: .12em; margin-bottom: .4rem; display: block; }
+  .timeline-item h4 { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
+  .timeline-item .inst { font-size: .78rem; color: var(--text2); margin-bottom: .5rem; }
+  .timeline-item p { font-size: .76rem; color: var(--text3); line-height: 1.7; }
   .cert-list { display: flex; flex-direction: column; gap: .8rem; }
-
-  .cert-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    transition: all .25s;
-  }
-
+  .cert-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.2rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; transition: all .25s; }
   .cert-item:hover { border-color: var(--accent2); background: rgba(0,255,157,.03); }
-
-  .cert-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: .9rem;
-    flex-shrink: 0;
-    background: rgba(0,255,157,.1);
-    border: 1px solid rgba(0,255,157,.2);
-  }
-
+  .cert-badge { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; background: rgba(0,255,157,.1); border: 1px solid rgba(0,255,157,.2); }
   .cert-info { flex: 1; }
+  .cert-info h4 { font-family: var(--font-display); font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: .2rem; }
+  .cert-info .cert-id { font-size: .68rem; color: var(--text3); font-family: var(--font-mono); letter-spacing: .06em; }
 
-  .cert-info h4 {
-    font-family: var(--font-display);
-    font-size: .85rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .2rem;
-  }
-
-  .cert-info .cert-id {
-    font-size: .68rem;
-    color: var(--text3);
-    font-family: var(--font-mono);
-    letter-spacing: .06em;
-  }
-
-  /* ─── CONTACT ────────────────────────────────────────────── */
-  #contact {
-    border-top: 1px solid var(--border);
-    max-width: 100%;
-    padding: 6rem 3rem;
-    background: linear-gradient(180deg, transparent, rgba(0,212,255,.03));
-  }
-
+  /* CONTACT */
+  #contact { border-top: 1px solid var(--border); max-width: 100%; padding: 6rem 3rem; background: linear-gradient(180deg, transparent, rgba(0,212,255,.03)); }
   .contact-inner { max-width: 1200px; margin: 0 auto; }
-
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .contact-info h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 1rem;
-    letter-spacing: -.02em;
-  }
-
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .contact-info h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--text); margin-bottom: 1rem; letter-spacing: .08em; text-transform: uppercase; }
   .contact-info h2 span { color: var(--accent); }
-
-  .contact-info p {
-    font-size: .85rem;
-    color: var(--text2);
-    line-height: 1.8;
-    margin-bottom: 2rem;
-    max-width: 380px;
-  }
-
+  .contact-info p { font-size: .85rem; color: var(--text2); line-height: 1.8; margin-bottom: 2rem; max-width: 380px; }
   .contact-links { display: flex; flex-direction: column; gap: .8rem; }
-
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none;
-    color: var(--text2);
-    padding: .9rem 1.2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    transition: all .25s;
-    font-size: .82rem;
-  }
-
+  .contact-link { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text2); padding: .9rem 1.2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; transition: all .25s; font-size: .82rem; }
   .contact-link:hover { border-color: var(--accent); color: var(--text); transform: translateX(4px); }
-
-  .contact-link-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    background: rgba(0,212,255,.1);
-    border: 1px solid rgba(0,212,255,.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: .9rem;
-    flex-shrink: 0;
-  }
-
-  /* ─── CONTACT FORM ───────────────────────────────────────── */
+  .contact-link-icon { width: 32px; height: 32px; border-radius: 4px; background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.2); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
   .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-
   .form-group { display: flex; flex-direction: column; gap: .4rem; }
-
-  .form-group label {
-    font-size: .7rem;
-    color: var(--text3);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-
-  .form-group input,
-  .form-group textarea {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: .8rem 1rem;
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: .82rem;
-    outline: none;
-    transition: border-color .2s;
-    resize: none;
-  }
-
-  .form-group input:focus,
-  .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
-
+  .form-group label { font-size: .7rem; color: var(--text3); letter-spacing: .12em; text-transform: uppercase; }
+  .form-group input, .form-group textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: .8rem 1rem; color: var(--text); font-family: var(--font-mono); font-size: .82rem; outline: none; transition: border-color .2s; resize: none; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
   .form-group textarea { height: 120px; }
-
-  .form-submit {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    padding: .85rem 1.8rem;
-    background: var(--accent);
-    color: var(--bg);
-    font-family: var(--font-mono);
-    font-size: .8rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    border: 1px solid var(--accent);
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all .25s;
-    width: fit-content;
-  }
-
+  .form-submit { display: flex; align-items: center; gap: .5rem; padding: .85rem 1.8rem; background: var(--accent); color: var(--bg); font-family: var(--font-mono); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--accent); border-radius: 2px; cursor: pointer; transition: all .25s; width: fit-content; }
   .form-submit:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px rgba(0,212,255,.25); }
+  .form-notice { font-size: .7rem; color: var(--text3); margin-top: -.3rem; }
 
-  .form-notice {
-    font-size: .7rem;
-    color: var(--text3);
-    margin-top: -.3rem;
-  }
-
-  /* ─── FOOTER ─────────────────────────────────────────────── */
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 2rem 3rem;
-    border-top: 1px solid var(--border);
-    font-size: .72rem;
-    color: var(--text3);
-    letter-spacing: .06em;
-  }
-
+  /* FOOTER */
+  footer { position: relative; z-index: 1; text-align: center; padding: 2rem 3rem; border-top: 1px solid var(--border); font-size: .72rem; color: var(--text3); letter-spacing: .06em; }
   footer span { color: var(--accent); }
 
-  /* ─── BACK TO TOP ────────────────────────────────────────── */
-  #backToTop {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 40px;
-    height: 40px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text2);
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all .3s;
-    z-index: 500;
-  }
-
+  /* BACK TO TOP */
+  #backToTop { position: fixed; bottom: 2rem; right: 2rem; width: 40px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; color: var(--text2); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(10px); transition: all .3s; z-index: 500; }
   #backToTop.visible { opacity: 1; transform: translateY(0); }
   #backToTop:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ─── MOBILE MENU ────────────────────────────────────────── */
-  .mobile-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(8,11,16,.97);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s;
-  }
-
+  /* MOBILE MENU */
+  .mobile-menu { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(8,11,16,.97); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; opacity: 0; pointer-events: none; transition: opacity .3s; }
   .mobile-menu.open { opacity: 1; pointer-events: all; }
-
-  .mobile-menu a {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text2);
-    text-decoration: none;
-    transition: color .2s;
-  }
-
+  .mobile-menu a { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text2); text-decoration: none; transition: color .2s; }
   .mobile-menu a:hover { color: var(--accent); }
+  .mobile-close { position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: var(--text2); font-size: 1.5rem; cursor: pointer; font-family: var(--font-mono); }
 
-  .mobile-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 2rem;
-    background: none;
-    border: none;
-    color: var(--text2);
-    font-size: 1.5rem;
-    cursor: pointer;
-    font-family: var(--font-mono);
-  }
-
-  /* ─── RESPONSIVE ─────────────────────────────────────────── */
+  /* RESPONSIVE */
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
     .hamburger { display: flex; }
-
     #hero { padding: 7rem 1.5rem 3rem; }
-
     section { padding: 4rem 1.5rem; }
-
     .about-grid { grid-template-columns: 1fr; gap: 2rem; }
     .exp-card { grid-template-columns: 1fr; gap: .5rem; }
     .edu-certs-grid { grid-template-columns: 1fr; gap: 2rem; }
     .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-
     .hero-stats { gap: 1.5rem; }
     .stat-num { font-size: 1.5rem; }
-
     #contact { padding: 4rem 1.5rem; }
   }
-
   @media (max-width: 600px) {
     .projects-grid { grid-template-columns: 1fr; }
     .skills-grid { grid-template-columns: 1fr; }
     .hero-stats { gap: 1rem; flex-wrap: wrap; }
   }
 
-  /* ─── SCROLL ANIMATIONS ──────────────────────────────────── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity .6s ease, transform .6s ease;
-  }
-
+  /* SCROLL ANIMATIONS */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-
   .reveal-delay-1 { transition-delay: .1s; }
   .reveal-delay-2 { transition-delay: .2s; }
   .reveal-delay-3 { transition-delay: .3s; }
@@ -1066,7 +236,6 @@
 </head>
 <body>
 
-<!-- ── NAVBAR ─────────────────────────────────────────────────── -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo">AK<span>.sec</span></a>
   <ul class="nav-links">
@@ -1082,9 +251,8 @@
   </button>
 </nav>
 
-<!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose">✕</button>
+  <button class="mobile-close" id="mobileClose">&#x2715;</button>
   <a href="#about" class="mm-link">About</a>
   <a href="#skills" class="mm-link">Skills</a>
   <a href="#experience" class="mm-link">Experience</a>
@@ -1093,7 +261,6 @@
   <a href="#contact" class="mm-link">Contact</a>
 </div>
 
-<!-- ── HERO ───────────────────────────────────────────────────── -->
 <section id="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
@@ -1101,35 +268,20 @@
     <div class="hero-tag">Available for opportunities</div>
     <h1 class="hero-name">Atharva<br><span>Kulkarni</span></h1>
     <p class="hero-role">Junior Penetration Tester &amp; Security Engineer</p>
-    <p class="hero-tagline">
-      Turning deep infrastructure knowledge into offensive security expertise — finding the gaps before adversaries do.
-    </p>
+    <p class="hero-tagline">Turning deep infrastructure knowledge into offensive security expertise &mdash; finding the gaps before adversaries do.</p>
     <div class="hero-btns">
-      <a href="#contact" class="btn btn-primary">⟶ Contact Me</a>
+      <a href="#contact" class="btn btn-primary">&#x27F6; Contact Me</a>
       <a href="#projects" class="btn btn-secondary">View Projects</a>
     </div>
     <div class="hero-stats">
-      <div class="stat-item">
-        <div class="stat-num">CEH</div>
-        <div class="stat-label">Certified</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">MSc</div>
-        <div class="stat-label">Cyber Security</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">4+</div>
-        <div class="stat-label">Years Experience</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">85%</div>
-        <div class="stat-label">CSAT Uplift</div>
-      </div>
+      <div class="stat-item"><div class="stat-num">CEH</div><div class="stat-label">Certified</div></div>
+      <div class="stat-item"><div class="stat-num">MSc</div><div class="stat-label">Cyber Security</div></div>
+      <div class="stat-item"><div class="stat-num">4+</div><div class="stat-label">Years Experience</div></div>
+      <div class="stat-item"><div class="stat-num">85%</div><div class="stat-label">CSAT Uplift</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ──────────────────────────────────────────────────── -->
 <section id="about">
   <div class="section-header reveal">
     <span class="section-num">01 //</span>
@@ -1138,34 +290,27 @@
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>
-        I'm a <strong>GCHQ-accredited MSc Cyber Security graduate</strong> and Certified Ethical Hacker making a focused transition into offensive security. My career started in enterprise IT operations — configuring 250+ devices, running SOC-style incident investigations, and managing Active Directory across complex environments — which gave me an attacker's instinct for how systems break.
-      </p>
-      <p>
-        At <strong>Eurostop</strong>, I currently oversee end-to-end data integrity across enterprise EPOS platforms and third-party integrations, applying root-cause analysis and operational security thinking at scale. That same mindset — trace the data, find the anomaly, secure the boundary — is exactly what drives good penetration testing.
-      </p>
-      <p>
-        Outside of work, I actively sharpen my offensive skills on <strong>TryHackMe</strong> and <strong>HackTheBox</strong>, working through hands-on labs in enumeration, exploitation, and post-exploitation. My long-term goal is Red Teaming.
-      </p>
+      <p>I'm a <strong>GCHQ-accredited MSc Cyber Security graduate</strong> and Certified Ethical Hacker making a focused transition into offensive security. My career started in enterprise IT operations &mdash; configuring 250+ devices, running SOC-style incident investigations, and managing Active Directory across complex environments &mdash; which gave me an attacker's instinct for how systems break.</p>
+      <p>At <strong>Eurostop</strong>, I currently oversee end-to-end data integrity across enterprise EPOS platforms and third-party integrations, applying root-cause analysis and operational security thinking at scale. That same mindset &mdash; trace the data, find the anomaly, secure the boundary &mdash; is exactly what drives good penetration testing.</p>
+      <p>Outside of work, I actively sharpen my offensive skills on <strong>TryHackMe</strong> and <strong>HackTheBox</strong>, working through hands-on labs in enumeration, exploitation, and post-exploitation. My long-term goal is Red Teaming.</p>
     </div>
     <div class="about-highlights reveal reveal-delay-2">
       <div class="highlight-card">
-        <h4>🔍 Offensive Mindset from Enterprise Ops</h4>
+        <h4>&#x1F50D; Offensive Mindset from Enterprise Ops</h4>
         <p>Years managing LAN/WAN, Active Directory, and middleware gave me direct insight into the misconfigurations attackers exploit first.</p>
       </div>
       <div class="highlight-card">
-        <h4>🎓 Research-Led Security Thinking</h4>
-        <p>MSc dissertation on Machine Learning Attacks on Physical Unclonable Functions — demonstrating threat research capability at hardware and cryptographic levels.</p>
+        <h4>&#x1F393; Research-Led Security Thinking</h4>
+        <p>MSc dissertation on Machine Learning Attacks on Physical Unclonable Functions &mdash; demonstrating threat research capability at hardware and cryptographic levels.</p>
       </div>
       <div class="highlight-card">
-        <h4>⚡ Hands-On Lab Practice</h4>
+        <h4>&#x26A1; Hands-On Lab Practice</h4>
         <p>Actively practising manual exploit identification, network reconnaissance, and vulnerability assessment through TryHackMe Junior Pentest Path and HackTheBox.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── SKILLS ─────────────────────────────────────────────────── -->
 <section id="skills">
   <div class="section-header reveal">
     <span class="section-num">02 //</span>
@@ -1237,7 +382,6 @@
   </div>
 </section>
 
-<!-- ── EXPERIENCE ─────────────────────────────────────────────── -->
 <section id="experience">
   <div class="section-header reveal">
     <span class="section-num">03 //</span>
@@ -1245,16 +389,15 @@
     <div class="section-line"></div>
   </div>
   <div class="exp-list">
-
     <div class="exp-card reveal">
       <div class="exp-meta">
-        <span class="exp-period">Sep 2025 — Present</span>
+        <span class="exp-period">Sep 2025 &mdash; Present</span>
         <div class="exp-company">Eurostop Ltd.</div>
         <div class="exp-location">London, UK</div>
       </div>
       <div class="exp-main">
         <h3>Technical Support Analyst</h3>
-        <p>Serving as the primary technical escalation point for enterprise EPOS and retail systems, overseeing secure data flows across in-store tills, middleware, head-office platforms, and third-party integrations.</p>
+        <p>Primary technical escalation point for enterprise EPOS and retail systems, overseeing secure data flows across in-store tills, middleware, head-office platforms, and third-party integrations.</p>
         <ul class="exp-achievements">
           <li>Investigate and resolve <strong>complex data integrity failures</strong> across interconnected retail systems by tracing transactions through large datasets and identifying root causes.</li>
           <li>Enforce <strong>operational security controls</strong> including secure access management, incident investigation workflows, and system synchronisation protocols.</li>
@@ -1265,36 +408,34 @@
         </div>
       </div>
     </div>
-
     <div class="exp-card reveal">
       <div class="exp-meta">
-        <span class="exp-period">Feb 2025 — Sep 2025</span>
+        <span class="exp-period">Feb 2025 &mdash; Sep 2025</span>
         <div class="exp-company">Diageo</div>
         <div class="exp-location">Belfast, UK</div>
       </div>
       <div class="exp-main">
         <h3>DSS Engineer</h3>
-        <p>Delivered enterprise-grade IT support for VIP executive clients, managing the full hardware and software lifecycle from provisioning to compliance — with a focus on security-hardened configurations.</p>
+        <p>Delivered enterprise-grade IT support for VIP executive clients, managing the full hardware and software lifecycle from provisioning to compliance with a focus on security-hardened configurations.</p>
         <ul class="exp-achievements">
           <li>Proposed and contributed to <strong>security-first asset lifecycle improvements</strong> including Intune-Autopilot integration and centralised tracking via Nexthink.</li>
           <li>Resolved authentication and <strong>Active Directory compliance issues</strong> across enterprise user accounts, Wi-Fi, and device management.</li>
-          <li>Configured and maintained systems with tenant lock and centralised ServiceNow workflows, improving <strong>IT efficiency and security posture</strong>.</li>
+          <li>Configured systems with tenant lock and centralised ServiceNow workflows, improving <strong>IT efficiency and security posture</strong>.</li>
         </ul>
         <div class="tech-stack">
           <span class="tech-badge">Active Directory</span><span class="tech-badge">Intune</span><span class="tech-badge">ServiceNow</span><span class="tech-badge">Nexthink</span><span class="tech-badge">Windows OS</span>
         </div>
       </div>
     </div>
-
     <div class="exp-card reveal">
       <div class="exp-meta">
-        <span class="exp-period">Jan 2024 — Jan 2025</span>
+        <span class="exp-period">Jan 2024 &mdash; Jan 2025</span>
         <div class="exp-company">Concentrix</div>
         <div class="exp-location">Belfast, UK</div>
       </div>
       <div class="exp-main">
         <h3>Technical Support Engineer</h3>
-        <p>Provided Tier 1–2 technical support for BT Broadband products, consistently exceeding performance benchmarks through technical precision and cyber-awareness education.</p>
+        <p>Provided Tier 1&ndash;2 technical support for BT Broadband products, consistently exceeding performance benchmarks through technical precision and cyber-awareness education.</p>
         <ul class="exp-achievements">
           <li>Reduced average query resolution time by <strong>35%</strong> through structured diagnostic workflows.</li>
           <li>Achieved an <strong>85% increase in customer satisfaction</strong> ratings through effective communication and expert troubleshooting.</li>
@@ -1306,10 +447,9 @@
         </div>
       </div>
     </div>
-
     <div class="exp-card reveal">
       <div class="exp-meta">
-        <span class="exp-period">Jan 2022 — Jul 2022</span>
+        <span class="exp-period">Jan 2022 &mdash; Jul 2022</span>
         <div class="exp-company">Clariant India Ltd.</div>
         <div class="exp-location">Mumbai, India</div>
       </div>
@@ -1319,7 +459,7 @@
         <ul class="exp-achievements">
           <li>Reduced network outage response time by <strong>30%</strong> through ServiceNow-integrated support processes.</li>
           <li>Decreased security breaches by <strong>25%</strong> through robust laptop security configurations and network hardening.</li>
-          <li>Configured 250+ machines, increasing onboarding efficiency by <strong>25%</strong>.</li>
+          <li>Configured <strong>250+ machines</strong>, increasing onboarding efficiency by 25%.</li>
           <li>Designed and delivered <strong>cybersecurity awareness training</strong>, raising employee threat awareness by 15%.</li>
         </ul>
         <div class="tech-stack">
@@ -1327,11 +467,9 @@
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ── PROJECTS ───────────────────────────────────────────────── -->
 <section id="projects">
   <div class="section-header reveal">
     <span class="section-num">04 //</span>
@@ -1339,79 +477,53 @@
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
-
     <div class="project-card reveal">
-      <div class="project-icon">🤖</div>
-      <div>
-        <div class="project-org">Queen's University Belfast · 2023</div>
-        <h3>ML Attacks on Physical Unclonable Functions</h3>
-      </div>
-      <p>MSc dissertation exploring how machine learning techniques can be weaponised against PUF-based hardware security. Used GANs to generate synthetic PUF challenge-response pairs, enabling training of ML attack models against hardware authentication mechanisms.</p>
+      <div class="project-icon">&#x1F916;</div>
+      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>ML Attacks on Physical Unclonable Functions</h3></div>
+      <p>MSc dissertation exploring how machine learning can be weaponised against PUF-based hardware security. Used GANs to generate synthetic PUF challenge-response pairs, enabling training of ML attack models against hardware authentication mechanisms.</p>
       <ul class="project-outcomes">
         <li>Demonstrated measurable PUF vulnerability through GAN-synthesised attack datasets</li>
         <li>Evaluated attack success rates and proposed countermeasure strategies</li>
         <li>Advanced hardware-level threat research at the intersection of ML and cryptography</li>
       </ul>
-      <div class="tech-stack">
-        <span class="tech-badge">Python</span><span class="tech-badge">GANs</span><span class="tech-badge">Machine Learning</span><span class="tech-badge">Cryptography</span><span class="tech-badge">PUFs</span>
-      </div>
+      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">GANs</span><span class="tech-badge">Machine Learning</span><span class="tech-badge">Cryptography</span><span class="tech-badge">PUFs</span></div>
     </div>
-
     <div class="project-card reveal reveal-delay-1">
-      <div class="project-icon">🔐</div>
-      <div>
-        <div class="project-org">Queen's University Belfast · 2023</div>
-        <h3>Honey Encryption: Brute-Force Resistant Security</h3>
-      </div>
-      <p>Researched and implemented a conceptual framework for Honey Encryption — a technique that returns plausible-looking fake data when decrypted with incorrect passwords, rendering brute-force attacks ineffective and attacker-confusing.</p>
+      <div class="project-icon">&#x1F510;</div>
+      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>Honey Encryption: Brute-Force Resistant Security</h3></div>
+      <p>Researched and implemented a conceptual framework for Honey Encryption &mdash; a technique that returns plausible-looking fake data when decrypted with incorrect passwords, rendering brute-force attacks effectively blind.</p>
       <ul class="project-outcomes">
         <li>Designed a developer-facing API for integrating HE into web and cloud applications</li>
         <li>Applied DTE encoding to low-entropy keys including passwords, PINs, and biometrics</li>
         <li>Mapped real-world use cases across internet banking and cloud security</li>
       </ul>
-      <div class="tech-stack">
-        <span class="tech-badge">Python</span><span class="tech-badge">Encryption</span><span class="tech-badge">DTE</span><span class="tech-badge">API Design</span><span class="tech-badge">Cloud Security</span>
-      </div>
+      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">Encryption</span><span class="tech-badge">DTE</span><span class="tech-badge">API Design</span><span class="tech-badge">Cloud Security</span></div>
     </div>
-
     <div class="project-card reveal reveal-delay-2">
-      <div class="project-icon">🔎</div>
-      <div>
-        <div class="project-org">Queen's University Belfast · 2023</div>
-        <h3>NTFS Digital Forensics: File Recovery on Windows 10</h3>
-      </div>
-      <p>Conducted a practical digital forensics investigation into deleted file recovery on Windows 10 NTFS, evaluating multiple recovery strategies relevant to cybercrime investigation and evidence preservation.</p>
+      <div class="project-icon">&#x1F50E;</div>
+      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>NTFS Digital Forensics: File Recovery on Windows 10</h3></div>
+      <p>Practical forensic investigation into deleted file recovery on Windows 10 NTFS using MFT analysis, slack space examination, disk imaging, and CLI recovery tools. Directly applicable to cybercrime investigation and incident response.</p>
       <ul class="project-outcomes">
         <li>Analysed MFT entries, slack space, and disk imaging for forensic artifact recovery</li>
         <li>Compared CLI tools and recovery software for reliability and forensic soundness</li>
         <li>Documented best practices applicable to incident response and breach analysis</li>
       </ul>
-      <div class="tech-stack">
-        <span class="tech-badge">NTFS</span><span class="tech-badge">Disk Imaging</span><span class="tech-badge">MFT Analysis</span><span class="tech-badge">Windows Forensics</span><span class="tech-badge">CLI Tools</span>
-      </div>
+      <div class="tech-stack"><span class="tech-badge">NTFS</span><span class="tech-badge">Disk Imaging</span><span class="tech-badge">MFT Analysis</span><span class="tech-badge">Windows Forensics</span><span class="tech-badge">CLI Tools</span></div>
     </div>
-
     <div class="project-card reveal reveal-delay-3">
-      <div class="project-icon">🎯</div>
-      <div>
-        <div class="project-org">Ongoing · TryHackMe &amp; HackTheBox</div>
-        <h3>CTF &amp; Penetration Testing Labs</h3>
-      </div>
+      <div class="project-icon">&#x1F3AF;</div>
+      <div><div class="project-org">Ongoing &middot; TryHackMe &amp; HackTheBox</div><h3>CTF &amp; Penetration Testing Labs</h3></div>
       <p>Active participation in competitive Capture The Flag challenges and guided penetration testing labs, building real-world offensive skills across enumeration, exploitation, and privilege escalation techniques.</p>
       <ul class="project-outcomes">
         <li>Completed Junior Penetration Testing path on TryHackMe</li>
         <li>Practising manual exploit identification and vulnerability chaining</li>
         <li>Developing recon, web app testing, and post-exploitation techniques</li>
       </ul>
-      <div class="tech-stack">
-        <span class="tech-badge">Nmap</span><span class="tech-badge">Burp Suite</span><span class="tech-badge">Metasploit</span><span class="tech-badge">Linux</span><span class="tech-badge">Web Exploitation</span>
-      </div>
+      <div class="tech-stack"><span class="tech-badge">Nmap</span><span class="tech-badge">Burp Suite</span><span class="tech-badge">Metasploit</span><span class="tech-badge">Linux</span><span class="tech-badge">Web Exploitation</span></div>
     </div>
-
   </div>
 </section>
 
-<!-- ── EDUCATION & CERTIFICATIONS ────────────────────────────── -->
 <section id="education">
   <div class="section-header reveal">
     <span class="section-num">05 //</span>
@@ -1419,63 +531,47 @@
     <div class="section-line"></div>
   </div>
   <div class="edu-certs-grid">
-
     <div class="edu-block reveal">
       <h3>Education</h3>
       <div class="timeline">
         <div class="timeline-item">
-          <span class="timeline-period">2022 — 2023</span>
+          <span class="timeline-period">2022 &mdash; 2023</span>
           <h4>MSc Applied Cyber Security</h4>
           <p class="inst">Queen's University Belfast</p>
           <p>GCHQ-accredited programme. Modules: Network Security &amp; Monitoring, Malware Analysis, Software Assurance, Computer Forensics, Applied Cryptography. Dissertation: Machine Learning Attacks on PUFs.</p>
         </div>
         <div class="timeline-item">
-          <span class="timeline-period">2019 — 2022</span>
+          <span class="timeline-period">2019 &mdash; 2022</span>
           <h4>BSc Computer Science</h4>
           <p class="inst">Pillai College of Arts, Commerce &amp; Sciences</p>
           <p>Core modules in network technologies, routing protocols, Cisco infrastructure, and network security. Python specialisation.</p>
         </div>
       </div>
     </div>
-
     <div class="certs-block reveal reveal-delay-2">
       <h3>Certifications</h3>
       <div class="cert-list">
         <div class="cert-item">
-          <div class="cert-badge">🛡️</div>
-          <div class="cert-info">
-            <h4>Certified Ethical Hacker (CEH V12)</h4>
-            <div class="cert-id">ID: ECC9421760853</div>
-          </div>
+          <div class="cert-badge">&#x1F6E1;&#xFE0F;</div>
+          <div class="cert-info"><h4>Certified Ethical Hacker (CEH V12)</h4><div class="cert-id">ID: ECC9421760853</div></div>
         </div>
         <div class="cert-item">
-          <div class="cert-badge">🔒</div>
-          <div class="cert-info">
-            <h4>Fortinet NSE Level 1</h4>
-            <div class="cert-id">ID: PggZRhVh2p</div>
-          </div>
+          <div class="cert-badge">&#x1F512;</div>
+          <div class="cert-info"><h4>Fortinet NSE Level 1</h4><div class="cert-id">ID: PggZRhVh2p</div></div>
         </div>
         <div class="cert-item">
-          <div class="cert-badge">🔒</div>
-          <div class="cert-info">
-            <h4>Fortinet NSE Level 2</h4>
-            <div class="cert-id">ID: uTMYfCWHCd</div>
-          </div>
+          <div class="cert-badge">&#x1F512;</div>
+          <div class="cert-info"><h4>Fortinet NSE Level 2</h4><div class="cert-id">ID: uTMYfCWHCd</div></div>
         </div>
         <div class="cert-item">
-          <div class="cert-badge">🎯</div>
-          <div class="cert-info">
-            <h4>TryHackMe — Junior Penetration Testing Path</h4>
-            <div class="cert-id">Completed · Ongoing lab practice</div>
-          </div>
+          <div class="cert-badge">&#x1F3AF;</div>
+          <div class="cert-info"><h4>TryHackMe &mdash; Junior Penetration Testing Path</h4><div class="cert-id">Completed &middot; Ongoing lab practice</div></div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ── CONTACT ────────────────────────────────────────────────── -->
 <div id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
@@ -1489,7 +585,7 @@
         <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p>
         <div class="contact-links">
           <a href="mailto:atharvak161@gmail.com" class="contact-link">
-            <div class="contact-link-icon">✉</div>
+            <div class="contact-link-icon">&#x2709;</div>
             atharvak161@gmail.com
           </a>
           <a href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" class="contact-link">
@@ -1497,12 +593,11 @@
             linkedin.com/in/atharva1
           </a>
           <a href="tel:07768839871" class="contact-link">
-            <div class="contact-link-icon">☏</div>
+            <div class="contact-link-icon">&#x260F;</div>
             07768 839871
           </a>
         </div>
       </div>
-
       <div class="reveal reveal-delay-2">
         <div class="contact-form" id="contactForm">
           <div class="form-group">
@@ -1517,7 +612,7 @@
             <label for="fmsg">Message</label>
             <textarea id="fmsg" placeholder="Introduce yourself or your opportunity..."></textarea>
           </div>
-          <button class="form-submit" onclick="handleFormSubmit()">⟶ Send Message</button>
+          <button class="form-submit" onclick="handleFormSubmit()">&#x27F6; Send Message</button>
           <p class="form-notice" id="formNotice"></p>
         </div>
       </div>
@@ -1525,76 +620,58 @@
   </div>
 </div>
 
-<!-- ── FOOTER ─────────────────────────────────────────────────── -->
 <footer>
-  <p>Built with intention · <span>Atharva Kulkarni</span> © 2025 · London, UK</p>
+  <p>Built with intention &middot; <span>Atharva Kulkarni</span> &copy; 2025 &middot; London, UK</p>
 </footer>
 
-<!-- ── BACK TO TOP ────────────────────────────────────────────── -->
-<button id="backToTop" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button id="backToTop" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // ── Navbar scroll effect
+<script>
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 50);
     document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
   });
 
-  // ── Mobile menu
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
   const mobileClose = document.getElementById('mobileClose');
-
   hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
   mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
-
   document.querySelectorAll('.mm-link').forEach(link => {
     link.addEventListener('click', () => mobileMenu.classList.remove('open'));
   });
 
-  // ── Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
   reveals.forEach(el => observer.observe(el));
 
-  // ── Contact form (frontend only)
   function handleFormSubmit() {
     const name = document.getElementById('fname').value.trim();
     const email = document.getElementById('femail').value.trim();
     const msg = document.getElementById('fmsg').value.trim();
     const notice = document.getElementById('formNotice');
-
     if (!name || !email || !msg) {
       notice.style.color = 'var(--accent3)';
-      notice.textContent = '⚠ Please fill in all fields before sending.';
+      notice.textContent = 'Please fill in all fields before sending.';
       return;
     }
-
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       notice.style.color = 'var(--accent3)';
-      notice.textContent = '⚠ Please enter a valid email address.';
+      notice.textContent = 'Please enter a valid email address.';
       return;
     }
-
-    // Compose mailto
-    const subject = encodeURIComponent(`Enquiry from ${name}`);
-    const body = encodeURIComponent(`Hi Atharva,\n\n${msg}`);
-    window.location.href = `mailto:atharvak161@gmail.com?subject=${subject}&body=${body}`;
-
+    const subject = encodeURIComponent('Enquiry from ' + name);
+    const body = encodeURIComponent('Hi Atharva,\n\n' + msg);
+    window.location.href = 'mailto:atharvak161@gmail.com?subject=' + subject + '&body=' + body;
     notice.style.color = 'var(--accent2)';
-    notice.textContent = '✓ Opening your email client...';
+    notice.textContent = 'Opening your email client...';
   }
 
-  // ── Typewriter effect on hero tag
   const heroTag = document.querySelector('.hero-tag');
   if (heroTag) {
     const text = 'Available for opportunities';
@@ -1604,12 +681,8 @@
     heroTag.appendChild(dot);
     let i = 0;
     const typeInterval = setInterval(() => {
-      if (i < text.length) {
-        heroTag.appendChild(document.createTextNode(text[i]));
-        i++;
-      } else {
-        clearInterval(typeInterval);
-      }
+      if (i < text.length) { heroTag.appendChild(document.createTextNode(text[i])); i++; }
+      else { clearInterval(typeInterval); }
     }, 60);
   }
 </script>
