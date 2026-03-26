@@ -725,8 +725,8 @@
         <h2>Let's <span>connect</span></h2>
         <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p>
         <div class="contact-links">
-          <a href="mailto:atharvak161@gmail.com" class="contact-link">
-            <div class="contact-link-icon">&#x2709;</div>atharvak161@gmail.com
+          <a href="mailto:atharvak161&#64;gmail.com" class="contact-link">
+            <div class="contact-link-icon">&#x2709;</div>atharvak161&#64;gmail.com
           </a>
           <a href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" class="contact-link">
             <div class="contact-link-icon">in</div>linkedin.com/in/atharva1
@@ -855,7 +855,7 @@ function handleFormSubmit(){
   var notice = document.getElementById('formNotice');
   if(!name||!email||!msg){ notice.style.color='var(--accent3)'; notice.textContent='Please fill in all fields.'; return; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ notice.style.color='var(--accent3)'; notice.textContent='Please enter a valid email.'; return; }
-  window.location.href = 'mailto:atharvak161@gmail.com?subject=' + encodeURIComponent('Enquiry from '+name) + '&body=' + encodeURIComponent('Hi Atharva,\n\n'+msg);
+  window.location.href = 'mai'+'lto:atharvak161&#64;gma'+'il.com?subject=' + encodeURIComponent('Enquiry from '+name) + '&body=' + encodeURIComponent('Hi Atharva,\n\n'+msg);
   notice.style.color='var(--accent2)'; notice.textContent='Opening your email client...';
 }
 
