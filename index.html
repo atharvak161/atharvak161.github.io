@@ -204,14 +204,14 @@
   .exp-achievements li::before{content:'\25B8';position:absolute;left:0;color:var(--accent2);font-size:.7rem}
   .exp-achievements li strong{color:var(--accent2)}
   .tech-stack{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
-  .tech-badge{font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--text3);letter-spacing:.06em;background:rgba(255,255,255,.02);transition:all .2s}
+  .tech-badge{font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--text3);letter-spacing:.06em;background:rgba(255,255,255,.02);transition:all .2s;position:relative;z-index:2}
   .tech-badge:hover{border-color:var(--accent);color:var(--accent)}
 
   /* ── PROJECTS ────────────────────────────────────────────── */
   #projects{border-top:1px solid var(--border)}
   .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem}
   .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:all .3s;position:relative;overflow:hidden}
-  .project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+  .project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
   .project-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
   .project-card:hover::before{opacity:1}
   .project-icon{width:44px;height:44px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(0,212,255,.06)}
@@ -725,8 +725,8 @@
         <h2>Let's <span>connect</span></h2>
         <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p>
         <div class="contact-links">
-          <a href="mailto:atharvak161@gmail.com" class="contact-link">
-            <div class="contact-link-icon">&#x2709;</div>atharvak161@gmail.com
+          <a href="/cdn-cgi/l/email-protection#6607120e071410070d57505726010b070f0a4805090b" class="contact-link">
+            <div class="contact-link-icon">&#x2709;</div><span class="__cf_email__" data-cfemail="93f2e7fbf2e1e5f2f8a2a5a2d3f4fef2faffbdf0fcfe">[email&#160;protected]</span>
           </a>
           <a href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" class="contact-link">
             <div class="contact-link-icon">in</div>linkedin.com/in/atharva1
@@ -755,7 +755,7 @@
 
 <button id="backToTop" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── LOADING SCREEN ────────────────────────────────────────
 (function(){
   var lines = [
