@@ -30,7 +30,34 @@
     content: ''; position: fixed; inset: 0;
     background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
     pointer-events: none; z-index: 9999;
-  }  /* ── LOADING SCREEN ──────────────────────────────────────── */
+  }
+  /* ── OPEN TO WORK BANNER ────────────────────────────────── */
+  .otw-banner {
+    display: inline-flex; align-items: center; gap: .7rem;
+    background: rgba(0,255,157,.06); border: 1px solid rgba(0,255,157,.3);
+    padding: .45rem 1.1rem; border-radius: 40px;
+    margin-bottom: 1.8rem; animation: fadeSlideUp .5s ease both;
+    position: relative; overflow: hidden;
+  }
+  .otw-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,255,157,.06), transparent);
+    animation: shimmer 2.5s infinite;
+  }
+  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+  .otw-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #00ff9d; flex-shrink: 0; position: relative;
+  }
+  .otw-dot::after {
+    content: ''; position: absolute; inset: -3px; border-radius: 50%;
+    border: 1.5px solid #00ff9d; animation: ripple 1.8s ease-out infinite;
+  }
+  @keyframes ripple { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(2.6);opacity:0} }
+  .otw-text { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #00ff9d; font-family: var(--font-mono); }
+  .otw-divider { width: 1px; height: 12px; background: rgba(0,255,157,.3); }
+  .otw-loc { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); font-family: var(--font-mono); }
+  /* ── LOADING SCREEN ──────────────────────────────────────── */
   #loader {
     position: fixed; inset: 0; background: #020408; z-index: 99999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -90,6 +117,8 @@
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color .2s; }
   .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width .3s; }
+  .nav-links a.active { color: var(--accent); }
+  .nav-links a.active::after { width: 100%; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after { width: 100%; }
   .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
@@ -186,6 +215,34 @@
   .skill-bar-fill.green { background: linear-gradient(90deg, #00875a, #00ff9d); }
   .skill-bar-fill.red   { background: linear-gradient(90deg, #aa2040, #ff4d6d); }
   .skill-bar-fill.gold  { background: linear-gradient(90deg, #b07a10, #f5a623); }
+
+  /* ── TESTIMONIALS ───────────────────────────────────────── */
+  #testimonials { border-top: 1px solid var(--border); }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .testi-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2rem; display: flex;
+    flex-direction: column; gap: 1.2rem; transition: all .3s; position: relative;
+  }
+  .testi-card::before {
+    content: '\201C'; position: absolute; top: .8rem; left: 1.2rem;
+    font-size: 4rem; color: var(--accent); opacity: .15;
+    font-family: Georgia, serif; line-height: 1;
+  }
+  .testi-card:hover { border-color: rgba(0,212,255,.3); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+  .testi-quote { font-size: .85rem; color: var(--text2); line-height: 1.9; font-style: italic; padding-top: 1rem; }
+  .testi-author { display: flex; align-items: center; gap: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 1rem;
+    color: var(--accent); flex-shrink: 0;
+  }
+  .testi-meta { flex: 1; }
+  .testi-name { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text); }
+  .testi-role { font-size: .7rem; color: var(--text3); letter-spacing: .08em; margin-top: .15rem; }
+  .testi-platform { font-size: .65rem; color: var(--accent2); letter-spacing: .1em; text-transform: uppercase; }
   /* ── EXPERIENCE ──────────────────────────────────────────── */
   #experience{border-top:1px solid var(--border)}
   .exp-list{display:flex;flex-direction:column;gap:2rem}
@@ -246,6 +303,38 @@
   .cert-verify { display: inline-flex; align-items: center; gap: .3rem; margin-top: .35rem; font-size: .65rem; color: var(--accent2); text-decoration: none; letter-spacing: .08em; text-transform: uppercase; opacity: .7; transition: opacity .2s; }
   .cert-verify:hover { opacity: 1; }
   .cert-verify::before { content: '\2197'; font-size: .7rem; }
+
+  /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
+  @keyframes glitch {
+    0%   { clip-path: inset(40% 0 60% 0); transform: translate(-3px, 0); }
+    10%  { clip-path: inset(10% 0 85% 0); transform: translate(2px, 0); }
+    20%  { clip-path: inset(70% 0 5%  0); transform: translate(-2px, 0); }
+    30%  { clip-path: inset(30% 0 50% 0); transform: translate(3px, 0); }
+    40%  { clip-path: inset(80% 0 10% 0); transform: translate(-1px, 0); }
+    50%  { clip-path: inset(20% 0 70% 0); transform: translate(2px, 0); }
+    60%  { clip-path: inset(55% 0 35% 0); transform: translate(-3px, 0); }
+    70%  { clip-path: inset(5%  0 90% 0); transform: translate(1px, 0); }
+    80%  { clip-path: inset(65% 0 25% 0); transform: translate(-2px, 0); }
+    90%  { clip-path: inset(15% 0 75% 0); transform: translate(3px, 0); }
+    100% { clip-path: inset(40% 0 60% 0); transform: translate(-3px, 0); }
+  }
+  .glitch-title { position: relative; }
+  .glitch-title::before,
+  .glitch-title::after {
+    content: attr(data-text); position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    font-family: inherit; font-size: inherit; font-weight: inherit;
+    letter-spacing: inherit; text-transform: inherit;
+    opacity: 0; pointer-events: none;
+  }
+  .glitch-title.glitching::before {
+    color: #00d4ff; opacity: .7;
+    animation: glitch .18s steps(1) 0s 3;
+  }
+  .glitch-title.glitching::after {
+    color: #00ff9d; opacity: .5;
+    animation: glitch .18s steps(1) .04s 3;
+  }
   /* ── CONTACT ─────────────────────────────────────────────── */
   #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(0,212,255,.03))}
   .contact-inner{max-width:1200px;margin:0 auto}
@@ -357,6 +446,7 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <button id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
@@ -380,6 +470,7 @@
   <a href="#experience" class="mm-link">Experience</a>
   <a href="#projects" class="mm-link">Projects</a>
   <a href="#education" class="mm-link">Education</a>
+  <a href="#testimonials" class="mm-link">Reviews</a>
   <a href="#contact" class="mm-link">Contact</a>
 </div>
 
@@ -408,7 +499,12 @@
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
   <div class="hero-content">
-    <div class="hero-tag">Available for opportunities</div>
+    <div class="otw-banner">
+      <span class="otw-dot"></span>
+      <span class="otw-text">Available for hire</span>
+      <span class="otw-divider"></span>
+      <span class="otw-loc">&#x1F4CD; London, UK</span>
+    </div>
     <h1 class="hero-name">Atharva<br><span>Kulkarni</span></h1>
     <p class="hero-role"><span id="role-text"></span><span class="role-cursor"></span></p>
     <p class="hero-tagline">Turning deep infrastructure knowledge into offensive security expertise &mdash; finding the gaps before adversaries do.</p>
@@ -446,7 +542,7 @@
 <section id="about">
   <div class="section-header reveal">
     <span class="section-num">01 //</span>
-    <h2 class="section-title">About Me</h2>
+    <h2 class="section-title glitch-title" data-text="About Me">About Me</h2>
     <div class="section-line"></div>
   </div>
   <div class="about-grid">
@@ -476,7 +572,7 @@
 <section id="skills">
   <div class="section-header reveal">
     <span class="section-num">02 //</span>
-    <h2 class="section-title">Skills</h2>
+    <h2 class="section-title glitch-title" data-text="Skills">Skills</h2>
     <div class="section-line"></div>
   </div>
   <div class="skills-grid">
@@ -531,7 +627,7 @@
 <section id="experience">
   <div class="section-header reveal">
     <span class="section-num">03 //</span>
-    <h2 class="section-title">Experience</h2>
+    <h2 class="section-title glitch-title" data-text="Experience">Experience</h2>
     <div class="section-line"></div>
   </div>
   <div class="exp-list">
@@ -612,7 +708,7 @@
 <section id="projects">
   <div class="section-header reveal">
     <span class="section-num">04 //</span>
-    <h2 class="section-title">Projects</h2>
+    <h2 class="section-title glitch-title" data-text="Projects">Projects</h2>
     <div class="section-line"></div>
   </div>
   <div class="projects-grid">
@@ -667,7 +763,7 @@
 <section id="education">
   <div class="section-header reveal">
     <span class="section-num">05 //</span>
-    <h2 class="section-title">Education &amp; Certifications</h2>
+    <h2 class="section-title glitch-title" data-text="Education &amp; Certifications">Education &amp; Certifications</h2>
     <div class="section-line"></div>
   </div>
   <div class="edu-certs-grid">
@@ -713,11 +809,47 @@
 </section>
 
 <!-- ── CONTACT ────────────────────────────────────────────── -->
+
+<section id="testimonials">
+  <div class="section-header reveal">
+    <span class="section-num">06 //</span>
+    <h2 class="section-title glitch-title" data-text="Testimonials">Testimonials</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="testi-grid">
+
+    <div class="testi-card reveal">
+      <p class="testi-quote">Atharva demonstrated an unwavering commitment to his tasks. His ability to handle a wide array of responsibilities &mdash; from managing security for laptops for new joiners to troubleshooting network issues &mdash; showcased his versatility and problem-solving skills. His attention to detail and meticulous approach in cybersecurity, network ops, and overall tech support were truly commendable. His proactive attitude greatly contributed to the smooth operation of our IT support functions. He has proven to be a valuable asset, and I am confident that he will continue to excel in his future endeavors.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">KK</div>
+        <div class="testi-meta">
+          <a href="https://www.linkedin.com/in/ketan-karkhanis" target="_blank" rel="noopener" class="testi-name" style="text-decoration:none;color:var(--text);">Ketan Karkhanis <span style="font-size:.65rem;color:var(--accent2);">&#x2197;</span></a>
+          <div class="testi-role">Head &mdash; Enterprise IT &amp; Smart Workplace &middot; Clariant</div>
+          <div class="testi-platform">&#x1F4BC; LinkedIn Recommendation &middot; Oct 2023</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card reveal reveal-delay-1">
+      <p class="testi-quote">Atharva&rsquo;s expertise in network support was evident throughout his internship. His adeptness in configuring and troubleshooting network devices ensured uninterrupted connectivity. Noteworthy was his initiative in setting up VPN connections for remote employees, showcasing his grasp of complex tunneling protocols and encryption methods. His proactive approach stood out &mdash; he not only excelled in routine tasks but also proposed network optimisation and security enhancement measures. He is a promising candidate for any network-related role, and I&rsquo;m confident he will continue making valuable contributions.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SD</div>
+        <div class="testi-meta">
+          <a href="https://www.linkedin.com/in/sunil-dhanawade" target="_blank" rel="noopener" class="testi-name" style="text-decoration:none;color:var(--text);">Sunil Dhanawade <span style="font-size:.65rem;color:var(--accent2);">&#x2197;</span></a>
+          <div class="testi-role">Scientific IT Specialist &middot; Clariant</div>
+          <div class="testi-platform">&#x1F4BC; LinkedIn Recommendation &middot; Aug 2023</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <div id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">06 //</span>
-      <h2 class="section-title">Contact</h2>
+      <span class="section-num">07 //</span>
+      <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
     <div class="contact-grid">
@@ -725,7 +857,7 @@
         <h2>Let's <span>connect</span></h2>
         <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p>
         <div class="contact-links">
-          <a href="mailto:atharvak161&#64;gmail.com" class="contact-link">
+          <a href="/cdn-cgi/l/email-protection#c4a5b0aca5b6b2a5aff5f2f5e2e7f2f0ffa3a9a5ada8eaa7aba9" class="contact-link">
             <div class="contact-link-icon">&#x2709;</div>atharvak161&#64;gmail.com
           </a>
           <a href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" class="contact-link">
@@ -755,7 +887,7 @@
 
 <button id="backToTop" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── LOADING SCREEN ────────────────────────────────────────
 (function(){
   var lines = [
@@ -803,7 +935,26 @@ window.addEventListener('scroll', function(){
   navbar.classList.toggle('scrolled', window.scrollY > 50);
   document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
   updateProgress();
+  updateActiveNav();
 });
+
+// ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
+function updateActiveNav(){
+  var sections = ['about','skills','experience','projects','education','testimonials','contact'];
+  var scrollY = window.scrollY + 120;
+  var current = '';
+  sections.forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(el.offsetTop <= scrollY) current = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if(href === '#' + current) a.classList.add('active');
+    else a.classList.remove('active');
+  });
+}
+updateActiveNav();
 
 // ── MOBILE MENU ───────────────────────────────────────────
 document.getElementById('hamburger').addEventListener('click', function(){ document.getElementById('mobileMenu').classList.add('open'); });
@@ -993,6 +1144,22 @@ document.addEventListener('keydown', function(e){
     skillObs.observe(el);
   });
 })();
+
+
+// ── GLITCH EFFECT ON SECTION TITLES ──────────────────────
+function triggerGlitch(el) {
+  el.classList.add('glitching');
+  setTimeout(function(){ el.classList.remove('glitching'); }, 600);
+}
+var glitchObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var title = e.target.querySelector('.glitch-title');
+      if(title) setTimeout(function(){ triggerGlitch(title); }, 200);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.observe(el); });
 
 // ── CANVAS ANIMATION ─────────────────────────────────────
 (function(){
