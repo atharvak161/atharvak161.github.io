@@ -3,7 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atharva Kulkarni — Security Engineer</title>
+<title>Atharva Kulkarni — Junior Penetration Tester</title>
+<meta name="description" content="Atharva Kulkarni — Junior Penetration Tester, CEH Certified, MSc Applied Cyber Security. Portfolio of security projects, experience and certifications.">
+<meta name="keywords" content="penetration tester, ethical hacker, CEH, cyber security, red team, London">
+<meta name="author" content="Atharva Kulkarni">
+<meta name="theme-color" content="#00d4ff">
+
+<!-- Open Graph / LinkedIn / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atharvak161.github.io">
+<meta property="og:title" content="Atharva Kulkarni — Junior Penetration Tester">
+<meta property="og:description" content="CEH Certified | MSc Applied Cyber Security (GCHQ Accredited) | Targeting Red Team Operations. Portfolio of offensive security projects and experience.">
+<meta property="og:image" content="https://atharvak161.github.io/thumbnail.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Atharva Kulkarni — Junior Penetration Tester">
+<meta name="twitter:description" content="CEH Certified | MSc Applied Cyber Security | Targeting Red Team Operations.">
+<meta name="twitter:image" content="https://atharvak161.github.io/thumbnail.png">
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23080b10'/><text y='50' x='50' dominant-baseline='central' text-anchor='middle' font-size='54' font-family='monospace' font-weight='bold' fill='%2300d4ff'>AK</text><rect x='10' y='68' width='80' height='2' fill='%2300ff9d' rx='1'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -152,7 +172,7 @@
   .stat-label { font-size: .7rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; margin-top: .3rem; }
 
   /* ── PLATFORM BADGES ─────────────────────────────────────── */
-  .platform-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeSlideUp .7s .6s ease both; }
+  .platform-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeSlideUp .7s .8s ease both; opacity: 1; }
   .platform-badge { display: flex; align-items: center; gap: .6rem; padding: .5rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
   .platform-badge:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .platform-badge img { width: 20px; height: 20px; object-fit: contain; }
@@ -216,6 +236,13 @@
   .skill-bar-fill.red   { background: linear-gradient(90deg, #aa2040, #ff4d6d); }
   .skill-bar-fill.gold  { background: linear-gradient(90deg, #b07a10, #f5a623); }
 
+
+  /* ── SKILL RADAR CHART ──────────────────────────────────── */
+  .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+  .radar-svg-wrap { width: 100%; max-width: 420px; }
+  .radar-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.4rem; }
+  .radar-legend-item { display: flex; align-items: center; gap: .4rem; font-size: .72rem; color: var(--text2); font-family: var(--font-mono); letter-spacing: .06em; }
+  .radar-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   /* ── TESTIMONIALS ───────────────────────────────────────── */
   #testimonials { border-top: 1px solid var(--border); }
   .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
@@ -417,6 +444,9 @@
     .platform-badges{gap:.6rem}
   }
 </style>
+
+<!-- GoatCounter Analytics -->
+<script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -520,19 +550,15 @@
       <div class="stat-item"><div class="stat-num">85%</div><div class="stat-label">CSAT Uplift</div></div>
     </div>
     <div class="platform-badges">
-      <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="platform-badge">
-        <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" onerror="this.style.display='none'">
-        <div class="platform-badge-info">
-          <span class="platform-badge-name">TryHackMe</span>
-          <span class="platform-badge-rank">Jr Pentest Path</span>
+      <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="platform-badge" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:.8rem 1rem;">
+        <div style="display:flex;align-items:center;gap:.6rem;">
+          <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
+          <div class="platform-badge-info">
+            <span class="platform-badge-name">TryHackMe</span>
+            <span class="platform-badge-rank">Active &#x25CF;</span>
+          </div>
         </div>
-      </a>
-      <a href="https://app.hackthebox.com/users/atharvak161" target="_blank" rel="noopener" class="platform-badge">
-        <img src="https://www.hackthebox.com/images/favicon.png" alt="HTB" onerror="this.style.display='none'">
-        <div class="platform-badge-info">
-          <span class="platform-badge-name">HackTheBox</span>
-          <span class="platform-badge-rank">Active &#x25CF;</span>
-        </div>
+        <img src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" style="width:360px;height:auto;border-radius:3px;display:block;" onerror="this.style.display='none'">
       </a>
     </div>
   </div>
@@ -1160,6 +1186,129 @@ var glitchObs = new IntersectionObserver(function(entries){
   });
 }, { threshold: 0.3 });
 document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.observe(el); });
+
+
+// ── SKILL RADAR CHART ─────────────────────────────────────
+(function(){
+  var svg = document.getElementById('radarChart');
+  if(!svg) return;
+
+  var cx=200, cy=200, R=150, levels=5;
+  var skills = [
+    { label:'Offensive Security', value:0.75, color:'#00d4ff' },
+    { label:'Networking',         value:0.85, color:'#00ff9d' },
+    { label:'Tools & Platforms',  value:0.82, color:'#ff4d6d' },
+    { label:'Programming',        value:0.74, color:'#f5a623' },
+    { label:'Forensics & Research',value:0.70, color:'#a855f7' },
+    { label:'Infrastructure',     value:0.88, color:'#00d4ff' }
+  ];
+  var n = skills.length;
+
+  function pt(i, r, extra){
+    extra = extra || 0;
+    var angle = (Math.PI*2/n)*i - Math.PI/2;
+    return { x: cx + (r+extra)*Math.cos(angle), y: cy + (r+extra)*Math.sin(angle) };
+  }
+
+  function ns(tag){ return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  // Background web rings
+  for(var l=1; l<=levels; l++){
+    var r = R*(l/levels);
+    var pts = [];
+    for(var i=0;i<n;i++){ var p=pt(i,r); pts.push(p.x+','+p.y); }
+    var poly = ns('polygon');
+    poly.setAttribute('points', pts.join(' '));
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke','#1e2d3d');
+    poly.setAttribute('stroke-width','1');
+    svg.appendChild(poly);
+  }
+
+  // Axis lines
+  for(var i=0;i<n;i++){
+    var p=pt(i,R);
+    var line=ns('line');
+    line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+    line.setAttribute('x2',p.x); line.setAttribute('y2',p.y);
+    line.setAttribute('stroke','#1e2d3d'); line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+  }
+
+  // Data polygon
+  var dataPts = [];
+  for(var i=0;i<n;i++){
+    var p=pt(i, R*skills[i].value);
+    dataPts.push(p.x+','+p.y);
+  }
+  var dataPoly = ns('polygon');
+  dataPoly.setAttribute('points', dataPts.join(' '));
+  dataPoly.setAttribute('fill','rgba(0,212,255,0.1)');
+  dataPoly.setAttribute('stroke','#00d4ff');
+  dataPoly.setAttribute('stroke-width','2');
+  svg.appendChild(dataPoly);
+
+  // Data dots + animate
+  for(var i=0;i<n;i++){
+    (function(idx){
+      var p = pt(idx, R*skills[idx].value);
+      var dot = ns('circle');
+      dot.setAttribute('cx', p.x);
+      dot.setAttribute('cy', p.y);
+      dot.setAttribute('r','5');
+      dot.setAttribute('fill', skills[idx].color);
+      svg.appendChild(dot);
+    })(i);
+  }
+
+  // Labels
+  for(var i=0;i<n;i++){
+    var p=pt(i, R+24);
+    var text=ns('text');
+    text.setAttribute('x',p.x); text.setAttribute('y',p.y);
+    text.setAttribute('text-anchor','middle');
+    text.setAttribute('dominant-baseline','middle');
+    text.setAttribute('font-family',"'Share Tech Mono', monospace");
+    text.setAttribute('font-size','11');
+    text.setAttribute('fill','#8899aa');
+    text.setAttribute('letter-spacing','1');
+    text.textContent = skills[i].label;
+    svg.appendChild(text);
+  }
+
+  // Animate data polygon on scroll
+  var animated = false;
+  var radarObs = new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting && !animated){
+      animated = true;
+      var start = null;
+      var duration = 1200;
+      function animFrame(ts){
+        if(!start) start=ts;
+        var prog = Math.min((ts-start)/duration, 1);
+        var ease = 1 - Math.pow(1-prog, 3);
+        var pts = [];
+        for(var i=0;i<n;i++){
+          var p=pt(i, R*skills[i].value*ease);
+          pts.push(p.x+','+p.y);
+        }
+        dataPoly.setAttribute('points', pts.join(' '));
+        // move dots
+        var dots = svg.querySelectorAll('circle');
+        for(var i=0;i<dots.length;i++){
+          var p2=pt(i, R*skills[i].value*ease);
+          dots[i].setAttribute('cx', p2.x);
+          dots[i].setAttribute('cy', p2.y);
+        }
+        if(prog<1) requestAnimationFrame(animFrame);
+      }
+      // start collapsed
+      dataPoly.setAttribute('points', Array(n).fill(cx+','+cy).join(' '));
+      requestAnimationFrame(animFrame);
+    }
+  }, {threshold:0.4});
+  radarObs.observe(svg);
+})();
 
 // ── CANVAS ANIMATION ─────────────────────────────────────
 (function(){
