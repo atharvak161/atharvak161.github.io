@@ -982,7 +982,7 @@
         <span class="cv-filename"><span>Atharva_Kulkarni</span>_Resume.pdf</span>
       </div>
       <div class="cv-toolbar-right">
-        <button onclick="window.print()" class="cv-btn cv-btn-secondary">&#x1F5A8; Print CV</button>
+        <button onclick="printCV()" class="cv-btn cv-btn-secondary">&#x1F5A8; Print CV</button>
         <a href="Atharva_Kulkarni_Resume.pdf" target="_blank" class="cv-btn cv-btn-secondary">&#x26F6; Full Screen</a>
         <a href="Atharva_Kulkarni_Resume.pdf" download class="cv-btn cv-btn-primary">&#x2913; Download</a>
       </div>
@@ -1453,6 +1453,17 @@ document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.obs
     });
   }
 })();
+
+
+// ── PRINT CV ──────────────────────────────────────────────
+function printCV() {
+  var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank');
+  if (win) {
+    win.addEventListener('load', function() {
+      setTimeout(function() { win.print(); }, 500);
+    });
+  }
+}
 
 // ── CANVAS ANIMATION ─────────────────────────────────────
 (function(){
