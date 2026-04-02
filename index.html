@@ -243,6 +243,101 @@
   .radar-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.4rem; }
   .radar-legend-item { display: flex; align-items: center; gap: .4rem; font-size: .72rem; color: var(--text2); font-family: var(--font-mono); letter-spacing: .06em; }
   .radar-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+
+  /* ── PRINT MODE ─────────────────────────────────────────── */
+  @media print {
+    #net-canvas, .depth-vignette, nav, #loader, #backToTop,
+    #progress-bar, .hero-btns, .platform-badges, .hero-tag,
+    .otw-banner, .hero-stats, #terminal-overlay, #mobileMenu,
+    footer, .section-line, .section-num, #skills, #projects,
+    #testimonials, #cv, #contact, .glitch-title::before,
+    .glitch-title::after, .otw-banner, .role-cursor,
+    .cert-verify, .skill-bar-track, .radar-wrap,
+    body::before, body::after { display: none !important; }
+
+    * { background: #fff !important; color: #000 !important;
+        box-shadow: none !important; text-shadow: none !important;
+        animation: none !important; transition: none !important; }
+
+    html, body { font-family: Georgia, serif !important; font-size: 11pt; line-height: 1.5; }
+
+    h1.hero-name { font-size: 32pt !important; color: #000 !important; letter-spacing: .02em; }
+    h1.hero-name span { color: #1a5276 !important; }
+    .hero-role { font-size: 13pt !important; color: #555 !important; margin-bottom: .5rem; }
+    .hero-tagline { border-left: 3px solid #1a5276 !important; color: #333 !important; font-size: 10pt; }
+
+    #hero { min-height: auto !important; padding: 2rem 2rem 1rem !important; }
+    section { padding: 1.2rem 2rem !important; max-width: 100% !important; page-break-inside: avoid; }
+
+    h2.section-title { font-size: 16pt !important; color: #1a5276 !important;
+      border-bottom: 1.5px solid #1a5276; padding-bottom: .3rem; margin-bottom: 1rem; }
+
+    .about-grid { grid-template-columns: 1fr !important; }
+    .highlight-card { border-left: 3px solid #1a5276 !important; padding: .5rem .8rem; margin-bottom: .4rem; }
+    .highlight-card h4 { font-size: 10pt !important; }
+    .highlight-card p { font-size: 9pt !important; }
+
+    .exp-card { grid-template-columns: 140px 1fr !important; border: none !important;
+      border-bottom: 1px solid #ddd !important; padding: .8rem 0 !important; }
+    .exp-card::after { display: none !important; }
+    .exp-period { color: #1a5276 !important; font-size: 9pt; }
+    .exp-company { font-size: 10pt !important; font-weight: 700; }
+    .exp-main h3 { font-size: 12pt !important; }
+    .exp-main p { font-size: 9.5pt !important; }
+    .exp-achievements li { font-size: 9.5pt !important; }
+    .exp-achievements li::before { color: #1a5276 !important; }
+    .tech-badge { border: 1px solid #ccc !important; font-size: 8pt !important; padding: .1rem .4rem; }
+
+    .edu-certs-grid { grid-template-columns: 1fr 1fr !important; }
+    .timeline-item::before { background: #1a5276 !important; box-shadow: none !important; }
+    .timeline-item { border-left: 1px solid #ccc !important; }
+    .cert-item { border: 1px solid #ccc !important; padding: .4rem .6rem; }
+
+    #about, #experience, #education { display: block !important; border-top: none !important; }
+
+    .reveal { opacity: 1 !important; transform: none !important; }
+
+    @page { margin: 1.5cm 1.8cm; size: A4; }
+  }
+  /* ── CV VIEWER ──────────────────────────────────────────── */
+  #cv { border-top: 1px solid var(--border); }
+  .cv-wrap { display: flex; flex-direction: column; gap: 1rem; }
+  .cv-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px 4px 0 0; padding: .8rem 1.2rem;
+  }
+  .cv-toolbar-left { display: flex; align-items: center; gap: .8rem; }
+  .cv-filename { font-size: .75rem; color: var(--text2); letter-spacing: .08em; }
+  .cv-filename span { color: var(--accent); }
+  .cv-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+  .cv-toolbar-right { display: flex; gap: .6rem; }
+  .cv-btn {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .4rem .9rem; font-family: var(--font-mono); font-size: .72rem;
+    letter-spacing: .08em; text-transform: uppercase; border-radius: 2px;
+    cursor: pointer; transition: all .2s; text-decoration: none;
+  }
+  .cv-btn-primary { background: var(--accent); color: var(--bg); border: 1px solid var(--accent); font-weight: 700; }
+  .cv-btn-primary:hover { background: transparent; color: var(--accent); }
+  .cv-btn-secondary { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+  .cv-btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+  .cv-frame-wrap {
+    position: relative; width: 100%;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 4px 4px; overflow: hidden;
+  }
+  .cv-frame-wrap iframe {
+    width: 100%; height: 780px; border: none; display: block;
+  }
+  .cv-fallback {
+    display: none; padding: 3rem; text-align: center;
+    font-size: .85rem; color: var(--text2); line-height: 1.8;
+  }
+  .cv-fallback a { color: var(--accent); }
+  @media (max-width: 900px) { .cv-frame-wrap iframe { height: 500px; } }
   /* ── TESTIMONIALS ───────────────────────────────────────── */
   #testimonials { border-top: 1px solid var(--border); }
   .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
@@ -477,6 +572,7 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#cv">Resume</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <button id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
@@ -501,6 +597,7 @@
   <a href="#projects" class="mm-link">Projects</a>
   <a href="#education" class="mm-link">Education</a>
   <a href="#testimonials" class="mm-link">Reviews</a>
+  <a href="#cv" class="mm-link">Resume</a>
   <a href="#contact" class="mm-link">Contact</a>
 </div>
 
@@ -871,10 +968,44 @@
   </div>
 </section>
 
+
+<section id="cv">
+  <div class="section-header reveal">
+    <span class="section-num">07 //</span>
+    <h2 class="section-title glitch-title" data-text="Resume">Resume</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="cv-wrap reveal">
+    <div class="cv-toolbar">
+      <div class="cv-toolbar-left">
+        <div class="cv-dot"></div>
+        <span class="cv-filename"><span>Atharva_Kulkarni</span>_Resume.pdf</span>
+      </div>
+      <div class="cv-toolbar-right">
+        <button onclick="window.print()" class="cv-btn cv-btn-secondary">&#x1F5A8; Print CV</button>
+        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank" class="cv-btn cv-btn-secondary">&#x26F6; Full Screen</a>
+        <a href="Atharva_Kulkarni_Resume.pdf" download class="cv-btn cv-btn-primary">&#x2913; Download</a>
+      </div>
+    </div>
+    <div class="cv-frame-wrap">
+      <iframe
+        src="Atharva_Kulkarni_Resume.pdf"
+        title="Atharva Kulkarni Resume"
+        id="cvFrame">
+      </iframe>
+      <div class="cv-fallback" id="cvFallback">
+        Your browser doesn't support embedded PDFs.<br>
+        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank">Click here to view the CV</a> or
+        <a href="Atharva_Kulkarni_Resume.pdf" download>download it directly</a>.
+      </div>
+    </div>
+  </div>
+</section>
+
 <div id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">07 //</span>
+      <span class="section-num">08 //</span>
       <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
@@ -966,7 +1097,7 @@ window.addEventListener('scroll', function(){
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
-  var sections = ['about','skills','experience','projects','education','testimonials','contact'];
+  var sections = ['about','skills','experience','projects','education','testimonials','cv','contact'];
   var scrollY = window.scrollY + 120;
   var current = '';
   sections.forEach(function(id){
@@ -1308,6 +1439,19 @@ document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.obs
     }
   }, {threshold:0.4});
   radarObs.observe(svg);
+})();
+
+
+// ── CV IFRAME FALLBACK ────────────────────────────────────
+(function(){
+  var frame = document.getElementById('cvFrame');
+  var fallback = document.getElementById('cvFallback');
+  if(frame && fallback){
+    frame.addEventListener('error', function(){
+      frame.style.display = 'none';
+      fallback.style.display = 'block';
+    });
+  }
 })();
 
 // ── CANVAS ANIMATION ─────────────────────────────────────
