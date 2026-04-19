@@ -27,10 +27,6 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23080b10'/><text y='50' x='50' dominant-baseline='central' text-anchor='middle' font-size='54' font-family='monospace' font-weight='bold' fill='%2300d4ff'>AK</text><rect x='10' y='68' width='80' height='2' fill='%2300ff9d' rx='1'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- LinkedIn Badge Script -->
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
-
 <style>
   /* ── THEME VARIABLES ─────────────────────────────────────── */
   :root {
@@ -96,6 +92,7 @@
   .hero-name-glitch::before { color: #00d4ff; }
   .hero-name-glitch::after  { color: #ff4d6d; }
 
+  /* Phase 1 — quick stutter */
   @keyframes cineGlitch1 {
     0%   { opacity:0; transform:translate(0,0) skewX(0deg); }
     5%   { opacity:1; clip-path:inset(8% 0 85% 0);  transform:translate(-8px,0) skewX(-3deg); }
@@ -113,6 +110,7 @@
     100% { opacity:0; }
   }
 
+  /* Phase 2 — red channel offset */
   @keyframes cineGlitch2 {
     0%   { opacity:0; transform:translate(0,0); }
     8%   { opacity:.8; clip-path:inset(55% 0 20% 0); transform:translate(10px,0) skewX(4deg);  }
@@ -128,6 +126,7 @@
     100% { opacity:0; }
   }
 
+  /* Phase 3 — whole element shake */
   @keyframes cineShake {
     0%,100% { transform: translate(0,0) skewX(0deg); }
     10%     { transform: translate(-3px, 1px) skewX(-1deg); }
@@ -245,7 +244,7 @@
   .stat-label { font-size: .7rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; margin-top: .3rem; }
 
   /* ── PLATFORM BADGES ─────────────────────────────────────── */
-  .platform-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeSlideUp .7s .8s ease both; opacity: 1; align-items: flex-start; }
+  .platform-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeSlideUp .7s .8s ease both; opacity: 1; }
   .platform-badge { display: flex; align-items: center; gap: .6rem; padding: .5rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
   .platform-badge:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .platform-badge img { width: 20px; height: 20px; object-fit: contain; }
@@ -253,16 +252,6 @@
   .platform-badge-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
   .platform-badge-rank { font-size: .8rem; color: var(--text); font-weight: 700; }
   .thm-badge-wrap img { height: 28px; width: auto; }
-
-  /* ── LINKEDIN BADGE THEME SWITCHING ───────────────────── */
-  .li-badge-wrap { display: flex; align-items: flex-start; }
-  .li-badge { line-height: 0; }
-  /* Dark mode: show dark badge, hide light */
-  [data-theme="dark"]  .li-badge-light { display: none; }
-  [data-theme="dark"]  .li-badge-dark  { display: block; }
-  /* Light mode: show light badge, hide dark */
-  [data-theme="light"] .li-badge-light { display: block; }
-  [data-theme="light"] .li-badge-dark  { display: none; }
 
   @keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
@@ -305,6 +294,7 @@
   .skill-category:nth-child(4) .skill-tag{border-color:rgba(245,166,35,.2);color:rgba(245,166,35,.75);background:rgba(245,166,35,.04)}
   .skill-category:nth-child(4) .skill-tag:hover{background:rgba(245,166,35,.1);border-color:#f5a623;color:#f5a623}
 
+
   /* ── SKILL PROFICIENCY BARS ────────────────────────────── */
   .skill-bars { display: flex; flex-direction: column; gap: .85rem; margin-top: .4rem; }
   .skill-bar-item { display: flex; flex-direction: column; gap: .3rem; }
@@ -318,12 +308,14 @@
   .skill-bar-fill.red   { background: linear-gradient(90deg, #aa2040, #ff4d6d); }
   .skill-bar-fill.gold  { background: linear-gradient(90deg, #b07a10, #f5a623); }
 
+
   /* ── SKILL RADAR CHART ──────────────────────────────────── */
   .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 2rem; }
   .radar-svg-wrap { width: 100%; max-width: 420px; }
   .radar-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.4rem; }
   .radar-legend-item { display: flex; align-items: center; gap: .4rem; font-size: .72rem; color: var(--text2); font-family: var(--font-mono); letter-spacing: .06em; }
   .radar-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
 
   /* ── PRINT MODE ─────────────────────────────────────────── */
   @media print {
@@ -500,6 +492,7 @@
   .cert-info{flex:1}
   .cert-info h4{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
   .cert-info .cert-id{font-size:.68rem;color:var(--text3);font-family:var(--font-mono);letter-spacing:.06em}
+
 
   .cert-verify { display: inline-flex; align-items: center; gap: .3rem; margin-top: .35rem; font-size: .65rem; color: var(--accent2); text-decoration: none; letter-spacing: .08em; text-transform: uppercase; opacity: .7; transition: opacity .2s; }
   .cert-verify:hover { opacity: 1; }
@@ -725,11 +718,7 @@
       <div class="stat-item"><div class="stat-num">4+</div><div class="stat-label">Years Experience</div></div>
       <div class="stat-item"><div class="stat-num">85%</div><div class="stat-label">CSAT Uplift</div></div>
     </div>
-
-    <!-- ── PLATFORM BADGES ──────────────────────────────── -->
     <div class="platform-badges">
-
-      <!-- TryHackMe Badge -->
       <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="platform-badge" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:.8rem 1rem;">
         <div style="display:flex;align-items:center;gap:.6rem;">
           <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
@@ -740,20 +729,7 @@
         </div>
         <img src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" style="width:360px;height:auto;border-radius:3px;display:block;" onerror="this.style.display='none'">
       </a>
-
-      <!-- LinkedIn Badge — theme-aware -->
-      <div class="li-badge-wrap">
-        <!-- Light theme (shown when site is in light mode) -->
-        <div class="li-badge li-badge-light">
-          <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="atharva-kulkarni-a94b9a20b" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://uk.linkedin.com/in/atharva-kulkarni-a94b9a20b?trk=profile-badge">Atharva Kulkarni</a></div>
-        </div>
-        <!-- Dark theme (shown when site is in dark mode) -->
-        <div class="li-badge li-badge-dark">
-          <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="dark" data-type="HORIZONTAL" data-vanity="atharva-kulkarni-a94b9a20b" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://uk.linkedin.com/in/atharva-kulkarni-a94b9a20b?trk=profile-badge">Atharva Kulkarni</a></div>
-        </div>
-      </div>
-
-    </div><!-- /platform-badges -->
+    </div>
   </div>
 </section>
 
@@ -1027,7 +1003,8 @@
   </div>
 </section>
 
-<!-- ── TESTIMONIALS ────────────────────────────────────────── -->
+<!-- ── CONTACT ────────────────────────────────────────────── -->
+
 <section id="testimonials">
   <div class="section-header reveal">
     <span class="section-num">06 //</span>
@@ -1063,7 +1040,7 @@
   </div>
 </section>
 
-<!-- ── CV ─────────────────────────────────────────────────── -->
+
 <section id="cv">
   <div class="section-header reveal">
     <span class="section-num">07 //</span>
@@ -1097,7 +1074,6 @@
   </div>
 </section>
 
-<!-- ── CONTACT ────────────────────────────────────────────── -->
 <div id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
@@ -1169,6 +1145,7 @@
     setTimeout(function(){ loader.style.display = 'none'; }, 700);
   }
   setTimeout(dismissLoader, 2400);
+  // Safety fallback — force dismiss after 5s no matter what
   setTimeout(function(){ if(loader && loader.style.display !== 'none'){ dismissLoader(); } }, 5000);
 })();
 
@@ -1373,6 +1350,8 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape' && terminalOpen) closeTerminal();
 });
 
+
+
 // ── SKILL BAR ANIMATION ───────────────────────────────────
 (function(){
   var skillObs = new IntersectionObserver(function(entries){
@@ -1395,6 +1374,7 @@ document.addEventListener('keydown', function(e){
   });
 })();
 
+
 // ── GLITCH EFFECT ON SECTION TITLES ──────────────────────
 function triggerGlitch(el) {
   el.classList.add('glitching');
@@ -1410,6 +1390,130 @@ var glitchObs = new IntersectionObserver(function(entries){
 }, { threshold: 0.3 });
 document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.observe(el); });
 
+
+// ── SKILL RADAR CHART ─────────────────────────────────────
+(function(){
+  var svg = document.getElementById('radarChart');
+  if(!svg) return;
+
+  var cx=200, cy=200, R=150, levels=5;
+  var skills = [
+    { label:'Offensive Security', value:0.75, color:'#00d4ff' },
+    { label:'Networking',         value:0.85, color:'#00ff9d' },
+    { label:'Tools & Platforms',  value:0.82, color:'#ff4d6d' },
+    { label:'Programming',        value:0.74, color:'#f5a623' },
+    { label:'Forensics & Research',value:0.70, color:'#a855f7' },
+    { label:'Infrastructure',     value:0.88, color:'#00d4ff' }
+  ];
+  var n = skills.length;
+
+  function pt(i, r, extra){
+    extra = extra || 0;
+    var angle = (Math.PI*2/n)*i - Math.PI/2;
+    return { x: cx + (r+extra)*Math.cos(angle), y: cy + (r+extra)*Math.sin(angle) };
+  }
+
+  function ns(tag){ return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+  // Background web rings
+  for(var l=1; l<=levels; l++){
+    var r = R*(l/levels);
+    var pts = [];
+    for(var i=0;i<n;i++){ var p=pt(i,r); pts.push(p.x+','+p.y); }
+    var poly = ns('polygon');
+    poly.setAttribute('points', pts.join(' '));
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke','#1e2d3d');
+    poly.setAttribute('stroke-width','1');
+    svg.appendChild(poly);
+  }
+
+  // Axis lines
+  for(var i=0;i<n;i++){
+    var p=pt(i,R);
+    var line=ns('line');
+    line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+    line.setAttribute('x2',p.x); line.setAttribute('y2',p.y);
+    line.setAttribute('stroke','#1e2d3d'); line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+  }
+
+  // Data polygon
+  var dataPts = [];
+  for(var i=0;i<n;i++){
+    var p=pt(i, R*skills[i].value);
+    dataPts.push(p.x+','+p.y);
+  }
+  var dataPoly = ns('polygon');
+  dataPoly.setAttribute('points', dataPts.join(' '));
+  dataPoly.setAttribute('fill','rgba(0,212,255,0.1)');
+  dataPoly.setAttribute('stroke','#00d4ff');
+  dataPoly.setAttribute('stroke-width','2');
+  svg.appendChild(dataPoly);
+
+  // Data dots + animate
+  for(var i=0;i<n;i++){
+    (function(idx){
+      var p = pt(idx, R*skills[idx].value);
+      var dot = ns('circle');
+      dot.setAttribute('cx', p.x);
+      dot.setAttribute('cy', p.y);
+      dot.setAttribute('r','5');
+      dot.setAttribute('fill', skills[idx].color);
+      svg.appendChild(dot);
+    })(i);
+  }
+
+  // Labels
+  for(var i=0;i<n;i++){
+    var p=pt(i, R+24);
+    var text=ns('text');
+    text.setAttribute('x',p.x); text.setAttribute('y',p.y);
+    text.setAttribute('text-anchor','middle');
+    text.setAttribute('dominant-baseline','middle');
+    text.setAttribute('font-family',"'Share Tech Mono', monospace");
+    text.setAttribute('font-size','11');
+    text.setAttribute('fill','#8899aa');
+    text.setAttribute('letter-spacing','1');
+    text.textContent = skills[i].label;
+    svg.appendChild(text);
+  }
+
+  // Animate data polygon on scroll
+  var animated = false;
+  var radarObs = new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting && !animated){
+      animated = true;
+      var start = null;
+      var duration = 1200;
+      function animFrame(ts){
+        if(!start) start=ts;
+        var prog = Math.min((ts-start)/duration, 1);
+        var ease = 1 - Math.pow(1-prog, 3);
+        var pts = [];
+        for(var i=0;i<n;i++){
+          var p=pt(i, R*skills[i].value*ease);
+          pts.push(p.x+','+p.y);
+        }
+        dataPoly.setAttribute('points', pts.join(' '));
+        // move dots
+        var dots = svg.querySelectorAll('circle');
+        for(var i=0;i<dots.length;i++){
+          var p2=pt(i, R*skills[i].value*ease);
+          dots[i].setAttribute('cx', p2.x);
+          dots[i].setAttribute('cy', p2.y);
+        }
+        if(prog<1) requestAnimationFrame(animFrame);
+      }
+      // start collapsed
+      dataPoly.setAttribute('points', Array(n).fill(cx+','+cy).join(' '));
+      requestAnimationFrame(animFrame);
+    }
+  }, {threshold:0.4});
+  radarObs.observe(svg);
+})();
+
+
 // ── CV IFRAME FALLBACK ────────────────────────────────────
 (function(){
   var frame = document.getElementById('cvFrame');
@@ -1422,6 +1526,7 @@ document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.obs
   }
 })();
 
+
 // ── PRINT CV ──────────────────────────────────────────────
 function printCV() {
   var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank');
@@ -1431,6 +1536,7 @@ function printCV() {
     });
   }
 }
+
 
 // ── HERO NAME INTERMITTENT GLITCH — CINEMATIC ────────────
 (function(){
@@ -1442,6 +1548,7 @@ function printCV() {
     els.forEach(function(el){ el.classList.add('is-glitching'); });
     setTimeout(function(){
       els.forEach(function(el){ el.classList.remove('is-glitching'); });
+      // Short pause then another burst if count > 1
       if(count > 1) {
         setTimeout(function(){ runBurst(count - 1); }, 80 + Math.random() * 120);
       }
@@ -1449,11 +1556,14 @@ function printCV() {
   }
 
   function scheduleGlitch() {
+    // Fire 1-3 rapid bursts in a row (like a bad signal)
     var bursts = 1 + Math.floor(Math.random() * 3);
     runBurst(bursts);
+    // Wait 5-15 seconds before next sequence
     setTimeout(scheduleGlitch, 5000 + Math.random() * 10000);
   }
 
+  // First hit after 3.5s
   setTimeout(scheduleGlitch, 3500);
 })();
 
@@ -1551,6 +1661,7 @@ function printCV() {
       n.x+=n.vx;n.y+=n.vy;
       if(n.x<-20)n.x=W+20;if(n.x>W+20)n.x=-20;if(n.y<-20)n.y=H+20;if(n.y>H+20)n.y=-20;
     }
+
     requestAnimationFrame(frame);
   }
   window.addEventListener('resize',function(){ resize(); init(); });
