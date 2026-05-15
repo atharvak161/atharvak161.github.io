@@ -1484,7 +1484,8 @@ document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.obs
 
 // ── PRINT CV ──────────────────────────────────────────────
 function printCV() {
-  window.open('Atharva_Kulkarni_Resume.pdf', '_blank');
+  var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank');
+  if(win) win.addEventListener('load', function(){ setTimeout(function(){ win.print(); }, 500); });
 }
 
 
