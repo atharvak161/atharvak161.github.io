@@ -582,9 +582,9 @@
   #terminal-input{flex:1;background:none;border:none;outline:none;color:#e8edf2;font-family:var(--font-mono);font-size:.8rem;caret-color:#00d4ff}
 
   /* ── SCROLL ANIMATIONS ───────────────────────────────────── */
-  .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+  .reveal{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(0.22,1,0.36,1),transform .9s cubic-bezier(0.22,1,0.36,1)}
   .reveal.visible{opacity:1;transform:translateY(0)}
-  .reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+  .reveal-delay-1{transition-delay:.12s}.reveal-delay-2{transition-delay:.25s}.reveal-delay-3{transition-delay:.38s}
 
   /* ── LINKEDIN BADGE ─────────────────────────────────────── */
   .li-badge{display:flex;flex-direction:column;width:220px;border-radius:8px;overflow:hidden;text-decoration:none;flex-shrink:0;align-self:flex-start;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1d2226;box-shadow:0 0 0 1px #38434f;transition:transform .2s,box-shadow .2s}
@@ -1254,7 +1254,7 @@ document.querySelectorAll('.mm-link').forEach(function(l){ l.addEventListener('c
 // ── SCROLL REVEAL ─────────────────────────────────────────
 var revealObs = new IntersectionObserver(function(entries){
   entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.15, rootMargin: '0px 0px -70px 0px' });
 document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el); });
 
 // ── TYPEWRITER ROLE ROTATOR ───────────────────────────────
