@@ -280,7 +280,10 @@
   .skill-category { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color .25s; position: relative; overflow: hidden; }
   .skill-category::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
   .skill-category:nth-child(1)::before{background:var(--accent)}.skill-category:nth-child(2)::before{background:var(--accent2)}.skill-category:nth-child(3)::before{background:var(--accent3)}.skill-category:nth-child(4)::before{background:#f5a623}
-  .skill-category:hover{border-color:var(--accent)}
+  .skill-category:nth-child(1):hover{border-color:var(--accent)}
+  .skill-category:nth-child(2):hover{border-color:var(--accent2)}
+  .skill-category:nth-child(3):hover{border-color:var(--accent3)}
+  .skill-category:nth-child(4):hover{border-color:#f5a623}
   .skill-category h3{font-family:var(--font-display);font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem}
   .skill-category:nth-child(1) h3{color:var(--accent)}.skill-category:nth-child(2) h3{color:var(--accent2)}.skill-category:nth-child(3) h3{color:var(--accent3)}.skill-category:nth-child(4) h3{color:#f5a623}
   .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
