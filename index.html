@@ -311,6 +311,35 @@
 
 
 
+  /* ── CURRENTLY LEARNING ─────────────────────────────────── */
+  #learning{border-top:1px solid var(--border)}
+  .learning-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+  .learning-block h3{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
+  .goal-list{display:flex;flex-direction:column;gap:.8rem}
+  .goal-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s}
+  .goal-item:hover{border-color:var(--accent2);transform:translateX(4px)}
+  .goal-icon{width:36px;height:36px;border-radius:50%;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem}
+  .goal-info h4{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+  .goal-info p{font-size:.75rem;color:var(--text2);line-height:1.6}
+  .goal-status{font-size:.65rem;color:var(--accent2);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;display:block}
+  .goal-status.targeting{color:var(--accent)}
+  .roadmap-list{display:flex;flex-direction:column}
+  .roadmap-item{display:flex;gap:1rem;align-items:flex-start}
+  .roadmap-marker{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+  .roadmap-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .roadmap-dot.done{background:var(--accent2);box-shadow:0 0 8px rgba(0,255,157,.5)}
+  .roadmap-dot.active{background:var(--accent);box-shadow:0 0 8px rgba(0,212,255,.5);animation:blink 1.5s step-end infinite}
+  .roadmap-dot.next{background:transparent;border:1.5px solid var(--text3)}
+  .roadmap-line{width:1px;flex:1;background:var(--border);min-height:16px;margin:3px 0}
+  .roadmap-content{padding-bottom:1.2rem;flex:1}
+  .roadmap-content h4{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.15rem}
+  .roadmap-content p{font-size:.75rem;color:var(--text2);line-height:1.5;margin-bottom:.3rem}
+  .roadmap-tag{font-size:.63rem;padding:.15rem .55rem;border-radius:2px;letter-spacing:.07em;border:1px solid;display:inline-block}
+  .roadmap-tag.done{border-color:rgba(0,255,157,.3);color:var(--accent2);background:rgba(0,255,157,.05)}
+  .roadmap-tag.active{border-color:rgba(0,212,255,.3);color:var(--accent);background:rgba(0,212,255,.05)}
+  .roadmap-tag.next{border-color:var(--border);color:var(--text3)}
+  @media(max-width:900px){.learning-grid{grid-template-columns:1fr;gap:2rem}}
+
   /* ── PRINT MODE ─────────────────────────────────────────── */
   @media print {
     #net-canvas, .depth-vignette, nav, #loader, #backToTop,
@@ -668,6 +697,7 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
+    <li><a href="#learning">Learning</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#cv">Resume</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -693,6 +723,7 @@
   <a href="#experience" class="mm-link">Experience</a>
   <a href="#projects" class="mm-link">Projects</a>
   <a href="#education" class="mm-link">Education</a>
+  <a href="#learning" class="mm-link">Learning</a>
   <a href="#testimonials" class="mm-link">Reviews</a>
   <a href="#cv" class="mm-link">Resume</a>
   <a href="#contact" class="mm-link">Contact</a>
@@ -1054,11 +1085,96 @@
   </div>
 </section>
 
+<!-- ── CURRENTLY LEARNING ─────────────────────────────────── -->
+<section id="learning">
+  <div class="section-header reveal">
+    <span class="section-num">06 //</span>
+    <h2 class="section-title glitch-title" data-text="Currently Learning">Currently Learning</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="learning-grid">
+    <div class="learning-block reveal">
+      <h3>Active Focus</h3>
+      <div class="goal-list">
+        <div class="goal-item">
+          <div class="goal-icon">&#x1F3AF;</div>
+          <div class="goal-info">
+            <h4>TryHackMe — Offensive Pentesting Path</h4>
+            <p>Advanced exploitation, Active Directory attacks, and post-exploitation methodology beyond the Jr path.</p>
+            <span class="goal-status">&#x25CF; In Progress</span>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-icon">&#x1F4BB;</div>
+          <div class="goal-info">
+            <h4>HackTheBox — Active Machines</h4>
+            <p>Practising real-world enumeration, foothold identification, and privilege escalation on live boxes.</p>
+            <span class="goal-status">&#x25CF; Ongoing</span>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-icon">&#x1F4D6;</div>
+          <div class="goal-info">
+            <h4>OSCP Preparation</h4>
+            <p>Building methodology for OffSec Certified Professional — buffer overflows, manual exploitation, and structured report writing.</p>
+            <span class="goal-status targeting">&#x25C6; Targeting 2025–26</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="learning-block reveal reveal-delay-2">
+      <h3>Certification Roadmap</h3>
+      <div class="roadmap-list">
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot done"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <h4>CEH V12</h4>
+            <p>Certified Ethical Hacker — foundations of offensive security</p>
+            <span class="roadmap-tag done">&#x2713; Completed</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot done"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <h4>TryHackMe Jr Pentest Path</h4>
+            <p>Structured junior penetration testing curriculum</p>
+            <span class="roadmap-tag done">&#x2713; Completed</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot active"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <h4>eJPT — eLearnSecurity Junior Penetration Tester</h4>
+            <p>Hands-on entry-level pentesting certification</p>
+            <span class="roadmap-tag active">&#x25CF; In Progress</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot next"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <h4>OSCP — OffSec Certified Professional</h4>
+            <p>Industry-standard offensive security certification</p>
+            <span class="roadmap-tag next">&#x25A1; Upcoming</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot next"></div></div>
+          <div class="roadmap-content">
+            <h4>CRTO — Certified Red Team Operator</h4>
+            <p>Red team operations, C2 frameworks, and adversary simulation</p>
+            <span class="roadmap-tag next">&#x25A1; Long-term Goal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── TESTIMONIALS ──────────────────────────────────────── -->
 
 <section id="testimonials">
   <div class="section-header reveal">
-    <span class="section-num">06 //</span>
+    <span class="section-num">07 //</span>
     <h2 class="section-title glitch-title" data-text="Testimonials">Testimonials</h2>
     <div class="section-line"></div>
   </div>
@@ -1094,7 +1210,7 @@
 
 <section id="cv">
   <div class="section-header reveal">
-    <span class="section-num">07 //</span>
+    <span class="section-num">08 //</span>
     <h2 class="section-title glitch-title" data-text="Resume">Resume</h2>
     <div class="section-line"></div>
   </div>
@@ -1129,7 +1245,7 @@
 <section id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">08 //</span>
+      <span class="section-num">09 //</span>
       <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
@@ -1144,8 +1260,8 @@
           <a href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" class="contact-link">
             <div class="contact-link-icon">in</div>linkedin.com/in/atharva1
           </a>
-          <a href="tel:07768839871" class="contact-link">
-            <div class="contact-link-icon">&#x260F;</div>07768 839871
+          <a class="contact-link" id="phone-link">
+            <div class="contact-link-icon">&#x260F;</div><span id="phone-display"></span>
           </a>
         </div>
       </div>
@@ -1221,7 +1337,7 @@ window.addEventListener('scroll', function(){
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
-  var sections = ['about','skills','experience','projects','education','testimonials','cv','contact'];
+  var sections = ['about','skills','experience','projects','education','learning','testimonials','cv','contact'];
   var scrollY = window.scrollY + 120;
   var current = '';
   sections.forEach(function(id){
@@ -1623,6 +1739,13 @@ function printCV() {
   window.addEventListener('mouseleave',function(){ mouse.x=-9999; mouse.y=-9999; });
   document.addEventListener('visibilitychange',function(){ if(document.hidden){ cancelAnimationFrame(rafId); } else { frame(); } });
   resize(); init(); frame();
+})();
+
+// ── PHONE OBFUSCATION ─────────────────────────────────────
+(function(){
+  var p = ['077','68','839','871'].join('');
+  var el = document.getElementById('phone-link');
+  if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
 })();
 </script>
 </body>
