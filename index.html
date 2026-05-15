@@ -208,6 +208,7 @@
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
   nav.scrolled { padding: .7rem 3rem; box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
+  .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color .2s; }
@@ -1233,6 +1234,7 @@ function updateActiveNav(){
     if(href === '#' + current) a.classList.add('active');
     else a.classList.remove('active');
   });
+  document.querySelector('.nav-logo').classList.toggle('active', current === '');
 }
 updateActiveNav();
 
