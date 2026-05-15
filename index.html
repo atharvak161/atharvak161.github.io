@@ -191,11 +191,13 @@
   [data-theme="light"] #net-canvas { opacity: .12; }
   [data-theme="light"] body {
     background-image:
-      linear-gradient(rgba(0,119,170,.22) 1.5px, transparent 1.5px),
-      linear-gradient(90deg, rgba(0,119,170,.22) 1.5px, transparent 1.5px),
-      linear-gradient(rgba(0,119,170,.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,119,170,.1) 1px, transparent 1px);
-    background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+      repeating-radial-gradient(ellipse at 10% 20%, transparent 0, transparent 28px, rgba(0,119,170,.11) 29px, transparent 30px),
+      repeating-radial-gradient(ellipse at 88% 12%, transparent 0, transparent 22px, rgba(0,135,90,.09) 23px, transparent 24px),
+      repeating-radial-gradient(ellipse at 50% 52%, transparent 0, transparent 34px, rgba(0,119,170,.08) 35px, transparent 36px),
+      repeating-radial-gradient(ellipse at 18% 82%, transparent 0, transparent 20px, rgba(0,135,90,.09) 21px, transparent 22px),
+      repeating-radial-gradient(ellipse at 82% 78%, transparent 0, transparent 30px, rgba(0,119,170,.09) 31px, transparent 32px),
+      repeating-radial-gradient(ellipse at 65% 28%, transparent 0, transparent 18px, rgba(0,135,90,.08) 19px, transparent 20px);
+    background-attachment: fixed;
   }
   .depth-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(8,11,16,0.35) 100%); pointer-events: none; z-index: 1; transition: background .3s; }
   [data-theme="light"] .depth-vignette { background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(240,244,248,0.75) 100%); }
