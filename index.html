@@ -1131,19 +1131,58 @@
     </div>
   </div>
 
-  <!-- CTF Writeups Placeholder -->
-  <div class="reveal" style="margin-top:2.5rem;padding:2rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:4px;">
-    <div style="display:flex;align-items:flex-start;gap:1.2rem;flex-wrap:wrap;">
-      <div style="font-size:1.8rem;flex-shrink:0;">&#x1F4DD;</div>
-      <div style="flex:1;min-width:260px;">
-        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.5rem;">CTF Writeups &amp; Security Research</h3>
-        <p style="font-size:.82rem;color:var(--text2);line-height:1.8;margin-bottom:1rem;">Currently building an offensive security portfolio &mdash; CTF walkthroughs, HackTheBox machine notes, and security research will be published here and on GitHub as they are completed.</p>
-        <a href="https://github.com/atharvak161" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.1rem;background:transparent;border:1px solid var(--accent2);color:var(--accent2);font-family:var(--font-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .2s;" onmouseover="this.style.background='rgba(0,255,157,.08)'" onmouseout="this.style.background='transparent'">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
-          Follow on GitHub for writeups
-        </a>
+  <!-- Offensive Security Writeups -->
+  <div class="reveal" style="margin-top:3.5rem;margin-bottom:.8rem;display:flex;align-items:center;gap:1.5rem;">
+    <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:.06em;text-transform:uppercase;">&#x1F4DD; Offensive Security Writeups</h3>
+    <div class="section-line"></div>
+  </div>
+  <p class="reveal" style="font-size:.82rem;color:var(--text2);margin-bottom:2rem;max-width:680px;">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation.</p>
+  <div class="projects-grid">
+    <a href="writeups/flagvault2.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F9F5;</div>
       </div>
-    </div>
+      <div><div class="project-org">TryHackMe</div><h3>Flag Vault 2</h3></div>
+      <p>Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-134 &middot; CWE-787 &middot; A03:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    <a href="writeups/flagvault.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F4BE;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Flag Vault</h3></div>
+      <p>Exploited a stack buffer overflow (CWE-121) via gets() to overwrite an adjacent stack variable and bypass authentication.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-121 &middot; CWE-676 &middot; A04:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    <a href="writeups/capture.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F510;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Capture!</h3></div>
+      <p>Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-307 &middot; CWE-200 &middot; A07:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    <a href="writeups/simplectf.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F3F3;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Simple CTF</h3></div>
+      <p>Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3 9.8) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2019-9053 &middot; CWE-89 &middot; A01:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    <a href="writeups/picklerick.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F952;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Pickle Rick</h3></div>
+      <p>Retrieved credentials via information disclosure in HTML comments and robots.txt, then achieved RCE and root escalation through a misconfigured sudo policy.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-540 &middot; CWE-284 &middot; A01:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
   </div>
 </section>
 

