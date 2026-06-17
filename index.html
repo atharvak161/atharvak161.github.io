@@ -264,6 +264,21 @@
   .platform-badge-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
   .platform-badge-rank { font-size: .8rem; color: var(--text); font-weight: 700; }
   .thm-badge-wrap img { height: 28px; width: auto; }
+  /* right-hand column: TryHackMe + GitHub stacked beside the LinkedIn card */
+  .platform-col { display: flex; flex-direction: column; gap: 1rem; align-self: flex-start; }
+  /* TryHackMe anchor — unboxed: no surface, no border, no padding, no hover box */
+  .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all .25s; }
+  .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
+  .thm-link img.thm-banner { width: 360px; max-width: 100%; height: auto; border-radius: 3px; display: block; }
+  /* GitHub card — self-contained, matches the boxed-card look */
+  .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; max-width: 100%; box-sizing: border-box; padding: .85rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
+  .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  .gh-card svg { width: 28px; height: 28px; color: var(--text); flex-shrink: 0; transition: color .25s; }
+  .gh-card:hover svg { color: var(--accent); }
+  .gh-card-info { display: flex; flex-direction: column; min-width: 0; }
+  .gh-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
+  .gh-card-handle { font-size: .9rem; color: var(--text); font-weight: 700; line-height: 1.2; }
+  .gh-card-cta { margin-left: auto; font-size: .72rem; color: var(--accent); font-weight: 700; letter-spacing: .04em; white-space: nowrap; }
 
   @keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
@@ -876,16 +891,26 @@
           <span class="li-badge-cta">View full profile</span>
         </div>
       </a>
-      <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="platform-badge" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:.8rem 1rem;">
-        <div style="display:flex;align-items:center;gap:.6rem;">
-          <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
-          <div class="platform-badge-info">
-            <span class="platform-badge-name">TryHackMe</span>
-            <span class="platform-badge-rank">Active &#x25CF;</span>
+      <div class="platform-col">
+        <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="thm-link">
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
+            <div class="platform-badge-info">
+              <span class="platform-badge-name">TryHackMe</span>
+              <span class="platform-badge-rank">Active &#x25CF;</span>
+            </div>
           </div>
-        </div>
-        <img src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" style="width:360px;max-width:100%;height:auto;border-radius:3px;display:block;" onerror="this.style.display='none'">
-      </a>
+          <img class="thm-banner" src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" onerror="this.style.display='none'">
+        </a>
+        <a href="https://github.com/atharvak161" target="_blank" rel="noopener" class="gh-card" aria-label="Atharva Kulkarni on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <div class="gh-card-info">
+            <span class="gh-card-name">GitHub</span>
+            <span class="gh-card-handle">@atharvak161</span>
+          </div>
+          <span class="gh-card-cta">View profile &#x2192;</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
