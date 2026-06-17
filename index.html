@@ -271,7 +271,7 @@
   .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
   .thm-link img.thm-banner { width: 360px; max-width: 100%; height: auto; border-radius: 3px; display: block; }
   /* GitHub card — self-contained, matches the boxed-card look */
-  .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; max-width: 100%; box-sizing: border-box; padding: .85rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
+  .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
   .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .gh-card svg { width: 28px; height: 28px; color: var(--text); flex-shrink: 0; transition: color .25s; }
   .gh-card:hover svg { color: var(--accent); }
@@ -893,13 +893,6 @@
       </a>
       <div class="platform-col">
         <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="thm-link">
-          <div style="display:flex;align-items:center;gap:.6rem;">
-            <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
-            <div class="platform-badge-info">
-              <span class="platform-badge-name">TryHackMe</span>
-              <span class="platform-badge-rank">Active &#x25CF;</span>
-            </div>
-          </div>
           <img class="thm-banner" src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" onerror="this.style.display='none'">
         </a>
         <a href="https://github.com/atharvak161" target="_blank" rel="noopener" class="gh-card" aria-label="Atharva Kulkarni on GitHub">
