@@ -630,10 +630,34 @@
   .reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
 
   /* ── LINKEDIN BADGE ─────────────────────────────────────── */
-  .li-embed-light{display:none}
-  .li-embed-dark{display:block}
-  [data-theme="light"] .li-embed-light{display:block}
-  [data-theme="light"] .li-embed-dark{display:none}
+  .li-badge{display:flex;flex-direction:column;width:220px;border-radius:8px;overflow:hidden;text-decoration:none;flex-shrink:0;align-self:flex-start;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1d2226;box-shadow:0 0 0 1px #38434f;transition:transform .2s,box-shadow .2s}
+  [data-theme="light"] .li-badge{background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 2px 10px rgba(0,0,0,.08)}
+  .li-badge:hover{transform:translateY(-2px);box-shadow:0 0 0 1.5px rgba(10,102,194,.7),0 8px 22px rgba(0,0,0,.35)}
+  [data-theme="light"] .li-badge:hover{box-shadow:0 0 0 1.5px rgba(10,102,194,.7),0 8px 22px rgba(0,0,0,.14)}
+  /* cover strip — LinkedIn's background photo area; contains the logo */
+  .li-badge-cover{height:52px;background:linear-gradient(135deg,#313e4d 0%,#253545 100%);display:flex;align-items:flex-start;padding:.5rem .7rem;flex-shrink:0}
+  [data-theme="light"] .li-badge-cover{background:linear-gradient(135deg,#dce8f5 0%,#c8ddf0 100%)}
+  .li-badge-hd{display:flex;align-items:center;gap:.36rem}
+  .li-in-box{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:2px;background:#0a66c2;color:#fff;font-family:Georgia,serif;font-size:12px;font-weight:700;line-height:1;flex-shrink:0}
+  .li-wordmark{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.88);letter-spacing:-.005em}
+  [data-theme="light"] .li-wordmark{color:rgba(0,0,0,.7)}
+  /* profile area — negative margin pulls avatar up over the cover bottom edge */
+  .li-badge-bd{margin-top:-26px;padding:0 .85rem .1rem;display:flex;flex-direction:column;align-items:center;gap:.38rem}
+  .li-badge-av{width:72px;height:72px;border-radius:50%;background:linear-gradient(145deg,#0e76a8 0%,#0a66c2 100%);display:flex;align-items:center;justify-content:center;font-size:1.48rem;font-weight:700;color:#fff;letter-spacing:.02em;outline:3.5px solid #1d2226;outline-offset:0;flex-shrink:0;position:relative;z-index:1}
+  [data-theme="light"] .li-badge-av{outline-color:#fff}
+  .li-badge-nm{font-size:.9rem;font-weight:700;color:#e7e7e7;text-align:center;line-height:1.3}
+  [data-theme="light"] .li-badge-nm{color:#191919}
+  .li-badge-hl{font-size:.68rem;color:#9ba4b0;text-align:center;line-height:1.5;padding:0 .2rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  [data-theme="light"] .li-badge-hl{color:#555}
+  .li-badge-items{width:100%;display:flex;flex-direction:column;gap:.3rem;border-top:1px solid #2c3640;padding-top:.55rem;margin-top:.1rem}
+  [data-theme="light"] .li-badge-items{border-color:#e2eaf2}
+  .li-badge-item{display:flex;align-items:center;gap:.35rem;font-size:.67rem;color:#9ba4b0;line-height:1.3}
+  [data-theme="light"] .li-badge-item{color:#555}
+  .li-badge-item svg{flex-shrink:0;opacity:.75}
+  /* CTA — full-width solid blue pill, same as LinkedIn */
+  .li-badge-ft{padding:.7rem .85rem .9rem}
+  .li-badge-cta{display:block;text-align:center;background:#0a66c2;color:#fff;font-size:.78rem;font-weight:600;padding:.52rem 0;border-radius:20px;letter-spacing:.01em;transition:background .15s}
+  .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
   @media(max-width:900px){
@@ -826,14 +850,32 @@
       <div class="stat-item"><div class="stat-num">85%</div><div class="stat-label">CSAT Uplift</div></div>
     </div>
     <div class="platform-badges">
-      <div class="li-embed-wrap">
-        <div class="li-embed li-embed-light">
-          <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="VERTICAL" data-vanity="atharva-kulkarni-a94b9a20b" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://uk.linkedin.com/in/atharva-kulkarni-a94b9a20b?trk=profile-badge">Atharva Kulkarni</a></div>
+      <a class="li-badge" href="https://www.linkedin.com/in/atharva1" target="_blank" rel="noopener" aria-label="Atharva Kulkarni on LinkedIn">
+        <div class="li-badge-cover">
+          <div class="li-badge-hd">
+            <span class="li-in-box">in</span>
+            <span class="li-wordmark">LinkedIn</span>
+          </div>
         </div>
-        <div class="li-embed li-embed-dark">
-          <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="dark" data-type="VERTICAL" data-vanity="atharva-kulkarni-a94b9a20b" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://uk.linkedin.com/in/atharva-kulkarni-a94b9a20b?trk=profile-badge">Atharva Kulkarni</a></div>
+        <div class="li-badge-bd">
+          <div class="li-badge-av">AK</div>
+          <div class="li-badge-nm">Atharva Kulkarni</div>
+          <div class="li-badge-hl">Junior Penetration Tester | MSc Applied Cyber Security | Certified Ethical Hacker (CEH) | Fortinet NSE | Targeting Red Teaming and Offensive Security | TryHackMe | HackTheBox</div>
+          <div class="li-badge-items">
+            <div class="li-badge-item">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" aria-hidden="true"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4C8.9 3 8 3.9 8 5v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-8-2h4v2h-4V5z"/></svg>
+              <span>Eurostop Ltd.</span>
+            </div>
+            <div class="li-badge-item">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" aria-hidden="true"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+              <span>Queen's University Belfast</span>
+            </div>
+          </div>
         </div>
-      </div>
+        <div class="li-badge-ft">
+          <span class="li-badge-cta">View full profile</span>
+        </div>
+      </a>
       <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="platform-badge" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:.8rem 1rem;">
         <div style="display:flex;align-items:center;gap:.6rem;">
           <img src="https://assets.tryhackme.com/img/favicon.png" alt="THM" width="20" height="20" onerror="this.style.display='none'">
@@ -1899,6 +1941,5 @@ function printCV() {
   if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
 })();
 </script>
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 </body>
 </html>
