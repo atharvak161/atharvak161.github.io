@@ -270,6 +270,20 @@
   .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all .25s; }
   .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
   .thm-link img.thm-banner { width: 360px; max-width: 100%; height: auto; border-radius: 8px; display: block; }
+  .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+  .thm-card:hover { border-color: #a2ea2a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  .thm-card-head { display: flex; align-items: center; gap: .75rem; }
+  .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border); transition: border-color .25s; }
+  .thm-card:hover .thm-card-avatar { border-color: #a2ea2a; }
+  .thm-card-info { display: flex; flex-direction: column; min-width: 0; }
+  .thm-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
+  .thm-card-handle { font-size: .9rem; color: var(--text); font-weight: 700; line-height: 1.2; }
+  .thm-card-pts { margin-left: auto; font-size: 1.05rem; font-weight: 800; color: #a2ea2a; line-height: 1; white-space: nowrap; }
+  .thm-card-pts small { font-size: .6rem; font-weight: 600; color: var(--text3); margin-left: .15rem; }
+  .thm-card-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; border-top: 1px solid var(--border); padding-top: .7rem; }
+  .thm-stat { display: flex; flex-direction: column; align-items: center; gap: .15rem; }
+  .thm-stat b { font-size: 1rem; font-weight: 800; color: var(--text); line-height: 1; }
+  .thm-stat span { font-size: .58rem; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
   /* GitHub card — self-contained, matches the boxed-card look */
   .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
   .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
@@ -413,12 +427,18 @@
     .exp-achievements li::before { color: #1a5276 !important; }
     .tech-badge { border: 1px solid #ccc !important; font-size: 8pt !important; padding: .1rem .4rem; }
 
-    .edu-certs-grid { grid-template-columns: 1fr 1fr !important; }
     .timeline-item::before { background: #1a5276 !important; box-shadow: none !important; }
     .timeline-item { border-left: 1px solid #ccc !important; }
-    .cert-item { border: 1px solid #ccc !important; padding: .4rem .6rem; }
+    .certs-grid { grid-template-columns: 1fr 1fr !important; gap: .6rem !important; }
+    .cert-card { border: 1px solid #ccc !important; padding: .5rem .7rem !important; }
+    .cert-card::before { display: none !important; }
+    .cert-card-badge { display: none !important; }
+    .cert-card-issuer { color: #1a5276 !important; font-size: 8pt !important; }
+    .cert-card-name { font-size: 10pt !important; }
+    .cert-card-foot { border-top: 1px solid #ddd !important; padding-top: .3rem !important; }
+    .cert-card-id, .cert-pill { font-size: 8.5pt !important; }
 
-    #about, #experience, #education { display: block !important; border-top: none !important; }
+    #about, #experience, #education, #certifications { display: block !important; border-top: none !important; }
 
     .reveal { opacity: 1 !important; transform: none !important; }
 
@@ -434,7 +454,7 @@
     border-radius: 4px 4px 0 0; padding: .8rem 1.2rem;
   }
   .cv-toolbar-left { display: flex; align-items: center; gap: .8rem; }
-  .cv-filename { font-size: .75rem; color: var(--text2); letter-spacing: .08em; }
+  .cv-filename { font-size: .75rem; color: var(--accent); letter-spacing: .08em; }
   .cv-filename span { color: var(--accent); }
   .cv-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
   .cv-toolbar-right { display: flex; gap: .6rem; }
@@ -549,6 +569,28 @@
   .cert-verify { display: inline-flex; align-items: center; gap: .3rem; margin-top: .35rem; font-size: .65rem; color: var(--accent2); text-decoration: none; letter-spacing: .08em; text-transform: uppercase; opacity: .7; transition: opacity .2s; }
   .cert-verify:hover { opacity: 1; }
   .cert-verify::before { content: '\2197'; font-size: .7rem; }
+
+  /* ── CERTIFICATIONS (dedicated section) ─────────────────── */
+  #certifications{border-top:1px solid var(--border)}
+  .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
+  .cert-card{position:relative;display:flex;flex-direction:column;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.8rem;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
+  .cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cert-accent,var(--accent))}
+  .cert-card:hover{transform:translateY(-4px);border-color:var(--cert-accent,var(--accent));box-shadow:0 18px 40px rgba(0,0,0,.4)}
+  .cert-card.ceh{--cert-accent:var(--accent2)}
+  .cert-card.nse{--cert-accent:var(--accent2)}
+  .cert-card.thm{--cert-accent:var(--accent2)}
+  .cert-card-top{display:flex;align-items:flex-start;gap:1rem}
+  .cert-card-badge{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background:color-mix(in srgb,var(--cert-accent) 12%,transparent);border:1px solid color-mix(in srgb,var(--cert-accent) 30%,transparent)}
+  .cert-card-head{flex:1;min-width:0}
+  .cert-card-issuer{font-size:.62rem;color:var(--cert-accent);letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:.35rem;display:block}
+  .cert-card-name{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.25}
+  .cert-card-foot{margin-top:auto;border-top:1px solid var(--border);padding-top:.9rem}
+  .cert-card-id{font-family:var(--font-mono);font-size:.7rem;color:var(--text2);letter-spacing:.06em;word-break:break-all}
+  .cert-card-id .lbl{color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-size:.62rem;margin-right:.4rem}
+  .cert-card-id .val{color:var(--text);font-weight:700}
+  .cert-pill{display:inline-flex;align-items:center;gap:.45rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cert-accent)}
+  .cert-pill::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--cert-accent);box-shadow:0 0 8px var(--cert-accent);animation:blink 1.5s step-end infinite}
+  @media(max-width:600px){.certs-grid{grid-template-columns:1fr}}
 
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
   @keyframes glitch {
@@ -787,6 +829,7 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
+    <li><a href="#certifications">Certs</a></li>
     <li><a href="#learning">Learning</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#cv">Resume</a></li>
@@ -813,6 +856,7 @@
   <a href="#experience" class="mm-link">Experience</a>
   <a href="#projects" class="mm-link">Projects</a>
   <a href="#education" class="mm-link">Education</a>
+  <a href="#certifications" class="mm-link">Certifications</a>
   <a href="#learning" class="mm-link">Learning</a>
   <a href="#testimonials" class="mm-link">Reviews</a>
   <a href="#cv" class="mm-link">Resume</a>
@@ -892,9 +936,24 @@
         </div>
       </a>
       <div class="platform-col">
-        <a href="https://tryhackme.com/p/atharvak161" target="_blank" rel="noopener" class="thm-link">
-          <img class="thm-banner" src="https://tryhackme-badges.s3.amazonaws.com/atharvak161.png" alt="TryHackMe Stats" onerror="this.style.display='none'">
-        </a>
+        <div class="thm-link">
+          <a class="thm-card" href="https://tryhackme.com/p/AtharvaK911" target="_blank" rel="noopener" aria-label="Atharva on TryHackMe">
+            <div class="thm-card-head">
+              <img class="thm-card-avatar" src="https://tryhackme-images.s3.amazonaws.com/user-avatars/63879addf6080c0048a27b26-1775127277617" alt="" onerror="this.style.display='none'">
+              <div class="thm-card-info">
+                <span class="thm-card-name">TryHackMe &middot; Top 15%</span>
+                <span class="thm-card-handle">@AtharvaK911</span>
+              </div>
+              <span class="thm-card-pts">3,757<small>pts</small></span>
+            </div>
+            <div class="thm-card-stats">
+              <div class="thm-stat"><b>41</b><span>Rooms</span></div>
+              <div class="thm-stat"><b>34</b><span>Streak</span></div>
+              <div class="thm-stat"><b>8</b><span>Badges</span></div>
+              <div class="thm-stat"><b>L7</b><span>Level</span></div>
+            </div>
+          </a>
+        </div>
         <a href="https://github.com/atharvak161" target="_blank" rel="noopener" class="gh-card" aria-label="Atharva Kulkarni on GitHub">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
           <div class="gh-card-info">
@@ -1239,46 +1298,81 @@
 <section id="education">
   <div class="section-header reveal">
     <span class="section-num">05 //</span>
-    <h2 class="section-title glitch-title" data-text="Education &amp; Certifications">Education &amp; Certifications</h2>
+    <h2 class="section-title glitch-title" data-text="Education">Education</h2>
     <div class="section-line"></div>
   </div>
-  <div class="edu-certs-grid">
-    <div class="edu-block reveal">
-      <h3>Education</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="timeline-period">2022 &mdash; 2023</span>
-          <h4>MSc Applied Cyber Security</h4>
-          <p class="inst">Queen's University Belfast</p>
-          <p>GCHQ-accredited. Modules: Network Security &amp; Monitoring, Malware Analysis, Software Assurance, Computer Forensics, Applied Cryptography. Dissertation: ML Attacks on PUFs.</p>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-period">2019 &mdash; 2022</span>
-          <h4>BSc Computer Science</h4>
-          <p class="inst">Pillai College of Arts, Commerce &amp; Sciences</p>
-          <p>Core modules in network technologies, routing protocols, Cisco infrastructure, and network security. Python specialisation.</p>
-        </div>
+  <div class="edu-block reveal">
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="timeline-period">2022 &mdash; 2023</span>
+        <h4>MSc Applied Cyber Security</h4>
+        <p class="inst">Queen's University Belfast</p>
+        <p>GCHQ-accredited. Modules: Network Security &amp; Monitoring, Malware Analysis, Software Assurance, Computer Forensics, Applied Cryptography. Dissertation: ML Attacks on PUFs.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-period">2019 &mdash; 2022</span>
+        <h4>BSc Computer Science</h4>
+        <p class="inst">Pillai College of Arts, Commerce &amp; Sciences</p>
+        <p>Core modules in network technologies, routing protocols, Cisco infrastructure, and network security. Python specialisation.</p>
       </div>
     </div>
-    <div class="certs-block reveal reveal-delay-2">
-      <h3>Certifications</h3>
-      <div class="cert-list">
-        <div class="cert-item">
-          <div class="cert-badge">&#x1F6E1;</div>
-          <div class="cert-info"><h4>Certified Ethical Hacker (CEH V12)</h4><div class="cert-id">ID: ECC9421760853</div></div>
+  </div>
+</section>
+
+<!-- ── CERTIFICATIONS ─────────────────────────────────────── -->
+<section id="certifications">
+  <div class="section-header reveal">
+    <span class="section-num">06 //</span>
+    <h2 class="section-title glitch-title" data-text="Certifications">Certifications</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card ceh reveal">
+      <div class="cert-card-top">
+        <div class="cert-card-badge">&#x1F6E1;</div>
+        <div class="cert-card-head">
+          <span class="cert-card-issuer">EC-Council</span>
+          <div class="cert-card-name">Certified Ethical Hacker (CEH V12)</div>
         </div>
-        <div class="cert-item">
-          <div class="cert-badge">&#x1F512;</div>
-          <div class="cert-info"><h4>Fortinet NSE Level 1</h4><div class="cert-id">ID: PggZRhVh2p</div></div>
+      </div>
+      <div class="cert-card-foot">
+        <div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">ECC9421760853</span></div>
+      </div>
+    </div>
+    <div class="cert-card nse reveal reveal-delay-1">
+      <div class="cert-card-top">
+        <div class="cert-card-badge">&#x1F512;</div>
+        <div class="cert-card-head">
+          <span class="cert-card-issuer">Fortinet</span>
+          <div class="cert-card-name">Network Security Expert (NSE) Level 1</div>
         </div>
-        <div class="cert-item">
-          <div class="cert-badge">&#x1F512;</div>
-          <div class="cert-info"><h4>Fortinet NSE Level 2</h4><div class="cert-id">ID: uTMYfCWHCd</div></div>
+      </div>
+      <div class="cert-card-foot">
+        <div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">PggZRhVh2p</span></div>
+      </div>
+    </div>
+    <div class="cert-card nse reveal reveal-delay-2">
+      <div class="cert-card-top">
+        <div class="cert-card-badge">&#x1F512;</div>
+        <div class="cert-card-head">
+          <span class="cert-card-issuer">Fortinet</span>
+          <div class="cert-card-name">Network Security Expert (NSE) Level 2</div>
         </div>
-        <div class="cert-item">
-          <div class="cert-badge">&#x1F3AF;</div>
-          <div class="cert-info"><h4>TryHackMe &mdash; Junior Penetration Testing Path</h4><div class="cert-id"><span style="color:var(--accent2);font-weight:700;">&#x25CF; ACTIVE</span></div></div>
+      </div>
+      <div class="cert-card-foot">
+        <div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">uTMYfCWHCd</span></div>
+      </div>
+    </div>
+    <div class="cert-card thm reveal reveal-delay-3">
+      <div class="cert-card-top">
+        <div class="cert-card-badge">&#x1F3AF;</div>
+        <div class="cert-card-head">
+          <span class="cert-card-issuer">TryHackMe</span>
+          <div class="cert-card-name">Junior Penetration Testing Path</div>
         </div>
+      </div>
+      <div class="cert-card-foot">
+        <span class="cert-pill">In Progress &middot; Active</span>
       </div>
     </div>
   </div>
@@ -1287,7 +1381,7 @@
 <!-- ── CURRENTLY LEARNING ─────────────────────────────────── -->
 <section id="learning">
   <div class="section-header reveal">
-    <span class="section-num">06 //</span>
+    <span class="section-num">07 //</span>
     <h2 class="section-title glitch-title" data-text="Currently Learning">Currently Learning</h2>
     <div class="section-line"></div>
   </div>
@@ -1381,7 +1475,7 @@
 
 <section id="testimonials">
   <div class="section-header reveal">
-    <span class="section-num">07 //</span>
+    <span class="section-num">08 //</span>
     <h2 class="section-title glitch-title" data-text="Testimonials">Testimonials</h2>
     <div class="section-line"></div>
   </div>
@@ -1417,7 +1511,7 @@
 
 <section id="cv">
   <div class="section-header reveal">
-    <span class="section-num">08 //</span>
+    <span class="section-num">09 //</span>
     <h2 class="section-title glitch-title" data-text="Resume">Resume</h2>
     <div class="section-line"></div>
   </div>
@@ -1452,7 +1546,7 @@
 <section id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">09 //</span>
+      <span class="section-num">10 //</span>
       <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
@@ -1547,7 +1641,7 @@ window.addEventListener('scroll', function(){
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
-  var sections = ['about','skills','experience','projects','education','learning','testimonials','cv','contact'];
+  var sections = ['about','skills','experience','projects','education','certifications','learning','testimonials','cv','contact'];
   var scrollY = window.scrollY + 120;
   var current = '';
   sections.forEach(function(id){
