@@ -785,6 +785,8 @@
 <!-- GoatCounter Analytics -->
 <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
 </head>
 <body>
 
@@ -1568,7 +1570,7 @@
 </section>
 
 <footer>
-  <p>Built with intention &middot; <span>Atharva Kulkarni</span> &copy; 2026 &middot; London, UK &middot; <span style="color:var(--text3);font-size:.65rem">Press Ctrl+Alt+T for terminal</span></p>
+  <p>Built with intention &middot; <span>Atharva Kulkarni</span> &copy; 2026 &middot; London, UK &middot; <span style="color:var(--text3);font-size:.65rem">Press Ctrl+Alt+T (or &#x2318;+Option+T) for terminal</span></p>
 </footer>
 
 <button id="backToTop" title="Back to top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
@@ -1754,6 +1756,9 @@ var termResponses = {
     { t:'t-out', v:'  ls projects     — list projects' },
     { t:'t-out', v:'  cat skills.txt  — view skill set' },
     { t:'t-out', v:'  cat certs.txt   — view certifications' },
+    { t:'t-out', v:'  cat about.txt   — about me' },
+    { t:'t-out', v:'  sudo hire-me    — availability' },
+    { t:'t-out', v:'  goto <section>  — jump to a section' },
     { t:'t-out', v:'  nmap localhost  — port scan' },
     { t:'t-out', v:'  clear           — clear terminal' },
     { t:'t-out', v:'  exit            — close terminal' }
@@ -1765,6 +1770,18 @@ var termResponses = {
     { t:'t-green', v:'80/tcp   open   http' },
     { t:'t-green', v:'443/tcp  open   https' },
     { t:'t-out', v:'Nmap done: 1 IP address (1 host up)' }
+  ],
+  'cat about.txt': [
+    { t:'t-out', v:'Atharva Kulkarni — Security Analyst transitioning into offensive security.' },
+    { t:'t-out', v:'MSc Applied Cyber Security (GCHQ-accredited) | CEH V12 Certified.' },
+    { t:'t-out', v:'4+ years of enterprise IT & security operations experience.' },
+    { t:'t-out', v:'Focus: Penetration Testing & Red Teaming. Based in London, UK.' }
+  ],
+  'sudo hire-me': [
+    { t:'t-green', v:'[sudo] access granted ✓' },
+    { t:'t-out', v:'Open to Junior Penetration Tester / Security Analyst roles in London/UK.' },
+    { t:'t-out', v:'Reach out via the Contact section below, or grab the resume.' },
+    { t:'t-yellow', v:'Tip: try "goto contact" or "goto resume".' }
   ],
   'exit': [{ t:'t-out', v:'Closing terminal...' }]
 };
@@ -1822,6 +1839,27 @@ termInput.addEventListener('keydown', function(e){
   termPromptLine(cmd);
   if(cmd === 'clear'){ termBody.innerHTML = ''; return; }
   if(cmd === 'exit'){ termPrint([{t:'t-out',v:'Goodbye.'}]); setTimeout(closeTerminal, 600); return; }
+  if(cmd.indexOf('goto ') === 0 || cmd.indexOf('cd ') === 0){
+    var target = cmd.slice(cmd.indexOf(' ') + 1).trim();
+    var sectionMap = {
+      about:'about', skills:'skills', experience:'experience', exp:'experience',
+      projects:'projects', education:'education', edu:'education',
+      certifications:'certifications', certs:'certifications', cert:'certifications',
+      learning:'learning', testimonials:'testimonials', reviews:'testimonials',
+      cv:'cv', resume:'cv', contact:'contact'
+    };
+    var id = sectionMap[target];
+    if(id){
+      termPrint([{t:'t-green', v:'> navigating to ' + target + '...'}]);
+      var sec = document.getElementById(id);
+      if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(closeTerminal, 500);
+    } else {
+      termPrint([{t:'t-red', v:'goto: section not found: ' + target}]);
+    }
+    termBody.scrollTop = termBody.scrollHeight;
+    return;
+  }
   var resp = termResponses[cmd];
   if(resp){ termPrint(resp); }
   else { termPrint([{t:'t-red', v:'bash: ' + cmd + ': command not found. Try "help".'}]); }
@@ -1830,6 +1868,7 @@ termInput.addEventListener('keydown', function(e){
 
 document.addEventListener('keydown', function(e){
   if(e.ctrlKey && e.altKey && e.key.toLowerCase() === 't'){ e.preventDefault(); terminalOpen ? closeTerminal() : openTerminal(); }
+  if(e.metaKey && e.altKey && e.code === 'KeyT'){ e.preventDefault(); terminalOpen ? closeTerminal() : openTerminal(); }
   if(e.key === 'Escape' && terminalOpen) closeTerminal();
 });
 
@@ -2036,6 +2075,23 @@ function printCV() {
   var p = ['077','68','839','871'].join('');
   var el = document.getElementById('phone-link');
   if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
+})();
+
+// ── SECTION-TITLE DECRYPT SCRAMBLE (runs alongside flicker) ──
+(function(){
+  if(!window.gsap) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(window.gsap && window.ScrambleTextPlugin) gsap.registerPlugin(ScrambleTextPlugin);
+  var scrambleObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var el = entry.target;
+        scrambleObs.unobserve(el);
+        gsap.to(el, { duration:1.1, scrambleText:{ text: el.getAttribute('data-text'), chars:'01<>/[]{}#$%&', speed:0.55, revealDelay:0.2 } });
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.section-title.glitch-title').forEach(function(el){ scrambleObs.observe(el); });
 })();
 </script>
 </body>
