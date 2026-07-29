@@ -344,21 +344,6 @@
   .skill-category:nth-child(4) .skill-tag:hover{background:rgba(245,166,35,.1);border-color:#f5a623;color:#f5a623}
 
 
-  /* ── SKILL PROFICIENCY BARS ────────────────────────────── */
-  .skill-bars { display: flex; flex-direction: column; gap: .85rem; margin-top: .4rem; }
-  .skill-bar-item { display: flex; flex-direction: column; gap: .3rem; }
-  .skill-bar-label { display: flex; justify-content: space-between; align-items: center; }
-  .skill-bar-name { font-size: .72rem; color: var(--text2); letter-spacing: .06em; }
-  .skill-bar-pct { font-size: .65rem; color: var(--text3); }
-  .skill-bar-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .skill-bar-fill { height: 100%; width: 0; border-radius: 2px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
-  .skill-bar-fill.cyan  { background: linear-gradient(90deg, #0077aa, #00d4ff); }
-  .skill-bar-fill.green { background: linear-gradient(90deg, #00875a, #00ff9d); }
-  .skill-bar-fill.red   { background: linear-gradient(90deg, #aa2040, #ff4d6d); }
-  .skill-bar-fill.gold  { background: linear-gradient(90deg, #b07a10, #f5a623); }
-
-
-
   /* ── CURRENTLY LEARNING ─────────────────────────────────── */
   #learning{border-top:1px solid var(--border)}
   .learning-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
@@ -396,7 +381,6 @@
     footer, .section-line, .section-num, #skills, #projects,
     #testimonials, #cv, #contact, .glitch-title::before,
     .glitch-title::after, .role-cursor,
-    .skill-bar-track,
     body::before, body::after { display: none !important; }
 
     * { background: #fff !important; color: #000 !important;
@@ -784,7 +768,7 @@
   ],
   "sameAs": [
     "https://www.linkedin.com/in/atharva1",
-    "https://tryhackme.com/p/atharvak161"
+    "https://tryhackme.com/p/AtharvaK911"
   ]
 }
 </script>
@@ -792,8 +776,8 @@
 <!-- GoatCounter Analytics -->
 <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrambleTextPlugin.min.js"></script>
 </head>
 <body>
 
@@ -1924,57 +1908,45 @@ document.addEventListener('keydown', function(e){
 
 
 
-// ── SKILL BAR ANIMATION ───────────────────────────────────
-(function(){
-  var skillObs = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        var bars = entry.target.querySelectorAll('.skill-bars[data-animated="false"]');
-        bars.forEach(function(barGroup){
-          barGroup.setAttribute('data-animated','true');
-          barGroup.querySelectorAll('.skill-bar-fill').forEach(function(fill){
-            setTimeout(function(){
-              fill.style.width = fill.getAttribute('data-width') + '%';
-            }, 100);
-          });
-        });
-        skillObs.unobserve(entry.target);
-      }
-    });
-  }, {threshold: 0.3});
-  document.querySelectorAll('.skill-category').forEach(function(el){
-    skillObs.observe(el);
-  });
-})();
-
-
 // ── GLITCH EFFECT ON SECTION TITLES ──────────────────────
 function triggerGlitch(el) {
   el.classList.add('glitching');
   setTimeout(function(){ el.classList.remove('glitching'); }, 600);
 }
-var glitchObs = new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){
-      var title = e.target.querySelector('.glitch-title');
-      if(title) setTimeout(function(){ triggerGlitch(title); }, 200);
-      glitchObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.3 });
-document.querySelectorAll('.section-header').forEach(function(el){ glitchObs.observe(el); });
 
 
 
 // ── CV IFRAME FALLBACK ────────────────────────────────────
+// An embedded PDF that fails to render does NOT fire the iframe 'error'
+// event, so we also run a load-timeout probe: once the frame is in view
+// (it's loading="lazy") we wait a few seconds for a 'load' signal; if none
+// arrives, we reveal the fallback. The 200-OK normal case fires 'load' well
+// within the window, so it is never regressed.
 (function(){
   var frame = document.getElementById('cvFrame');
   var fallback = document.getElementById('cvFallback');
-  if(frame && fallback){
-    frame.addEventListener('error', function(){
-      frame.style.display = 'none';
-      fallback.style.display = 'block';
-    });
+  if(!frame || !fallback) return;
+  var loaded = false, probeStarted = false;
+  function showFallback(){
+    if(loaded) return;
+    frame.style.display = 'none';
+    fallback.style.display = 'block';
+  }
+  frame.addEventListener('load', function(){ loaded = true; });
+  frame.addEventListener('error', showFallback);
+  function startProbe(){
+    if(probeStarted) return;
+    probeStarted = true;
+    setTimeout(showFallback, 6000);
+  }
+  // Defer the probe until the lazy iframe has actually entered view.
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ startProbe(); io.disconnect(); } });
+    }, { threshold: 0.01 });
+    io.observe(frame);
+  } else {
+    startProbe();
   }
 })();
 
@@ -2127,21 +2099,43 @@ function printCV() {
   if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
 })();
 
-// ── SECTION-TITLE DECRYPT SCRAMBLE (runs alongside flicker) ──
+// ── SECTION-TITLE DECRYPT SCRAMBLE + FLICKER (staggered, repeating) ──
+// Sequence per entry: scramble runs FIRST as the title crosses into view,
+// then the blue/white flicker follows a beat later (~320ms) so both effects
+// are clearly perceptible instead of competing for the same instant. Both
+// re-arm each time a title fully leaves and re-enters the viewport.
 (function(){
-  if(!window.gsap) return;
+  // Reduced-motion path: leave titles static, run neither effect.
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if(window.gsap && window.ScrambleTextPlugin) gsap.registerPlugin(ScrambleTextPlugin);
-  var scrambleObs = new IntersectionObserver(function(entries){
+
+  function runScramble(el){
+    if(!window.gsap) return; // harmless safety net; flicker still runs below
+    gsap.killTweensOf(el); // guard against overlapping tweens on the same title
+    gsap.to(el, { duration:1.1, scrambleText:{ text: el.getAttribute('data-text'), chars:'01<>/[]{}#$%&', speed:0.55, revealDelay:0.2 } });
+  }
+
+  function fire(el){
+    runScramble(el);                                         // 1) decrypt scramble
+    setTimeout(function(){ triggerGlitch(el); }, 320);       // 2) flicker a beat later
+  }
+
+  var obs = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        var el = entry.target;
-        scrambleObs.unobserve(el);
-        gsap.to(el, { duration:1.1, scrambleText:{ text: el.getAttribute('data-text'), chars:'01<>/[]{}#$%&', speed:0.55, revealDelay:0.2 } });
+      var el = entry.target;
+      if(entry.intersectionRatio === 0){
+        el.dataset.fxArmed = 'true';                         // fully left → re-arm
+      } else if(entry.intersectionRatio >= 0.4 && el.dataset.fxArmed !== 'false'){
+        el.dataset.fxArmed = 'false';                        // debounce: fire once per entry
+        fire(el);
       }
     });
-  }, { threshold: 0.4 });
-  document.querySelectorAll('.section-title.glitch-title').forEach(function(el){ scrambleObs.observe(el); });
+  }, { threshold: [0, 0.4] });
+
+  document.querySelectorAll('.section-title.glitch-title').forEach(function(el){
+    el.dataset.fxArmed = 'true';
+    obs.observe(el);
+  });
 })();
 </script>
 <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
