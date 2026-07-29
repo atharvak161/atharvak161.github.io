@@ -1766,24 +1766,6 @@ var termResponses = {
     { t:'t-out', v:'Location : London, UK' },
     { t:'t-out', v:'Focus    : Penetration Testing → Red Teaming' }
   ],
-  'ls projects': [
-    { t:'t-green', v:'drwxr-xr-x  ml-attacks-on-pufs/' },
-    { t:'t-green', v:'drwxr-xr-x  honey-encryption/' },
-    { t:'t-green', v:'drwxr-xr-x  ntfs-digital-forensics/' },
-    { t:'t-green', v:'drwxr-xr-x  ctf-labs-tryhackme-htb/' }
-  ],
-  'cat skills.txt': [
-    { t:'t-out', v:'[Offensive]  Penetration Testing, CEH, OSINT, Web App Security' },
-    { t:'t-out', v:'[Network]    TCP/IP, Active Directory, Cisco, Firewall Config' },
-    { t:'t-out', v:'[Tools]      Burp Suite, Nmap, Metasploit, Wireshark, Kali' },
-    { t:'t-out', v:'[Code]       Python, SQL, Bash, PowerShell' }
-  ],
-  'cat certs.txt': [
-    { t:'t-green', v:'[+] Certified Ethical Hacker V12  :: ECC9421760853' },
-    { t:'t-green', v:'[+] Fortinet NSE Level 1          :: PggZRhVh2p' },
-    { t:'t-green', v:'[+] Fortinet NSE Level 2          :: uTMYfCWHCd' },
-    { t:'t-green', v:'[+] TryHackMe Jr Pentest Path     :: COMPLETED' }
-  ],
   'help': [
     { t:'t-yellow', v:'Available commands:' },
     { t:'t-out', v:'  whoami          — identity info' },
@@ -1844,6 +1826,54 @@ function termPromptLine(cmd){
   termBody.appendChild(div);
 }
 
+function termSlugify(s){
+  return s.toLowerCase()
+    .replace(/[—–]/g, '-')
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function buildLsProjects(){
+  var titles = document.querySelectorAll('#projects .project-card h3');
+  if(!titles.length) return [{ t:'t-out', v:'none found' }];
+  var lines = [];
+  titles.forEach(function(h){
+    lines.push({ t:'t-green', v:'drwxr-xr-x  ' + termSlugify(h.textContent.trim()) + '/' });
+  });
+  return lines;
+}
+
+function buildSkillsTxt(){
+  var cats = document.querySelectorAll('#skills .skill-category');
+  if(!cats.length) return [{ t:'t-out', v:'none found' }];
+  var lines = [];
+  cats.forEach(function(cat){
+    var h3 = cat.querySelector('h3');
+    var name = h3 ? h3.textContent.trim() : 'Unknown';
+    var tags = Array.prototype.map.call(cat.querySelectorAll('.skill-tag'), function(t){ return t.textContent.trim(); });
+    lines.push({ t:'t-out', v:'[' + name + ']  ' + tags.join(', ') });
+  });
+  return lines;
+}
+
+function buildCertsTxt(){
+  var cards = document.querySelectorAll('#certifications .cert-card');
+  if(!cards.length) return [{ t:'t-out', v:'none found' }];
+  var lines = [];
+  cards.forEach(function(card){
+    var nameEl = card.querySelector('.cert-card-name');
+    var name = nameEl ? nameEl.textContent.trim() : 'Unknown Certification';
+    var idEl = card.querySelector('.cert-card-id .val');
+    var pillEl = card.querySelector('.cert-pill');
+    var label = idEl ? idEl.textContent.trim() : (pillEl ? pillEl.textContent.trim() : 'Verified');
+    lines.push({ t:'t-green', v:'[+] ' + name + '  :: ' + label });
+  });
+  return lines;
+}
+
 function openTerminal(){
   terminalOpen = true;
   termOverlay.classList.add('open');
@@ -1894,6 +1924,9 @@ termInput.addEventListener('keydown', function(e){
     termBody.scrollTop = termBody.scrollHeight;
     return;
   }
+  if(cmd === 'ls projects'){ termPrint(buildLsProjects()); termBody.scrollTop = termBody.scrollHeight; return; }
+  if(cmd === 'cat skills.txt'){ termPrint(buildSkillsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
+  if(cmd === 'cat certs.txt'){ termPrint(buildCertsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   var resp = termResponses[cmd];
   if(resp){ termPrint(resp); }
   else { termPrint([{t:'t-red', v:'bash: ' + cmd + ': command not found. Try "help".'}]); }
