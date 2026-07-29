@@ -2105,8 +2105,8 @@ function printCV() {
 // are clearly perceptible instead of competing for the same instant. Both
 // re-arm each time a title fully leaves and re-enters the viewport.
 (function(){
-  // Reduced-motion path: leave titles static, run neither effect.
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Both effects run regardless of prefers-reduced-motion: the site owner
+  // explicitly wants the scramble + flicker to fire on scroll on his machine.
   if(window.gsap && window.ScrambleTextPlugin) gsap.registerPlugin(ScrambleTextPlugin);
 
   function runScramble(el){
