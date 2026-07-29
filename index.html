@@ -232,11 +232,16 @@
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
   /* ── HERO ────────────────────────────────────────────────── */
-  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
   @keyframes pulseGlow { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7} }
   .hero-content { max-width: 800px; position: relative; z-index: 2; }
+  /* ── HERO BADGES (right column stack — holds Credly + any future badges) ── */
+  .hero-badges { position: relative; z-index: 2; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; animation: fadeSlideUp .7s .6s ease both; }
+  .hero-badge-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .85rem; display: flex; align-items: center; justify-content: center; transition: border-color .25s, transform .25s; }
+  .hero-badge-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .hero-badge-card > div { background: #fff; border-radius: 6px; overflow: hidden; line-height: 0; }
   @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   h1.hero-name { font-family: var(--font-display); font-size: clamp(3.5rem,10vw,8rem); font-weight: 800; line-height: 0.95; letter-spacing: .04em; text-transform: uppercase; color: var(--text); animation: fadeSlideUp .7s .1s ease both; margin-bottom: .3rem; }
   .hero-role { font-family: 'Rajdhani', sans-serif; font-size: clamp(1rem,2.5vw,1.6rem); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--text2); animation: fadeSlideUp .7s .2s ease both; margin-bottom: 1.5rem; min-height: 2rem; }
@@ -705,7 +710,8 @@
   /* ── RESPONSIVE ──────────────────────────────────────────── */
   @media(max-width:900px){
     nav{padding:1rem 1.5rem}.nav-links{display:none}.hamburger{display:flex}
-    #hero{padding:7rem 1.5rem 3rem}
+    #hero{padding:7rem 1.5rem 3rem;flex-direction:column}
+    .hero-badges{flex-direction:row;flex-wrap:wrap;justify-content:center;margin-top:1rem}
     section{padding:4rem 1.5rem}
     .about-grid{grid-template-columns:1fr;gap:2rem}
     .exp-card{grid-template-columns:1fr;gap:.5rem}
@@ -718,6 +724,7 @@
     .projects-grid{grid-template-columns:1fr}.skills-grid{grid-template-columns:1fr}
     .hero-stats{gap:1rem;flex-wrap:wrap}
     .platform-badges{gap:.6rem}
+    .hero-badges{flex-direction:column;align-items:center}
   }
 </style>
 
@@ -952,6 +959,11 @@
       </div>
     </div>
   </div>
+  <aside class="hero-badges" aria-label="Credentials">
+    <div class="hero-badge-card">
+      <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="c8062133-aeff-4ab2-bc9f-86c6039210bd" data-share-badge-host="https://www.credly.com"></div>
+    </div>
+  </aside>
 </section>
 
 <!-- ── ABOUT ──────────────────────────────────────────────── -->
@@ -2132,5 +2144,6 @@ function printCV() {
   document.querySelectorAll('.section-title.glitch-title').forEach(function(el){ scrambleObs.observe(el); });
 })();
 </script>
+<script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
