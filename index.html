@@ -563,8 +563,9 @@
   .cert-card-id{font-family:var(--font-mono);font-size:.7rem;color:var(--text2);letter-spacing:.06em;word-break:break-all}
   .cert-card-id .lbl{color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-size:.62rem;margin-right:.4rem}
   .cert-card-id .val{color:var(--text);font-weight:700}
-  .cert-pill{display:inline-flex;align-items:center;gap:.45rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cert-accent)}
+  .cert-pill{display:inline-flex;align-items:center;gap:.45rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cert-accent);text-decoration:none;cursor:pointer}
   .cert-pill::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--cert-accent);box-shadow:0 0 8px var(--cert-accent);animation:blink 1.5s step-end infinite}
+  a.cert-pill:hover{opacity:.75;text-decoration:underline}
   @media(max-width:600px){.certs-grid{grid-template-columns:1fr}}
 
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
@@ -1393,7 +1394,7 @@
         </div>
       </div>
       <div class="cert-card-foot">
-        <span class="cert-pill">Completed &middot; Verified</span>
+        <a class="cert-pill" href="https://assets.tryhackme.com/certification-certificate/6a6473ed83b00ef659529027.pdf" target="_blank" rel="noopener">Completed</a>
       </div>
     </div>
     <div class="cert-card thm reveal reveal-delay-3">
