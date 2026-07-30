@@ -241,7 +241,8 @@
   .hero-badges { position: relative; z-index: 2; flex-shrink: 0; align-self: flex-start; margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; animation: fadeSlideUp .7s .6s ease both; }
   .hero-badge-card { padding: .85rem; display: flex; align-items: center; justify-content: center; transition: transform .25s; }
   .hero-badge-card:hover { transform: translateY(-2px); }
-  .hero-badge-card > div { border-radius: 6px; overflow: hidden; line-height: 0; }
+  .hero-badge-card > a { border-radius: 6px; overflow: hidden; line-height: 0; display: inline-block; }
+  .hero-badge-card img { display: block; width: 130px; height: 130px; }
   @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   h1.hero-name { font-family: var(--font-display); font-size: clamp(3.5rem,10vw,8rem); font-weight: 800; line-height: 0.95; letter-spacing: .04em; text-transform: uppercase; color: var(--text); animation: fadeSlideUp .7s .1s ease both; margin-bottom: .3rem; }
   .hero-role { font-family: 'Rajdhani', sans-serif; font-size: clamp(1rem,2.5vw,1.6rem); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--text2); animation: fadeSlideUp .7s .2s ease both; margin-bottom: 1.5rem; min-height: 2rem; }
@@ -946,7 +947,9 @@
   </div>
   <aside class="hero-badges" aria-label="Credentials">
     <div class="hero-badge-card">
-      <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="c8062133-aeff-4ab2-bc9f-86c6039210bd" data-share-badge-host="https://www.credly.com"></div>
+      <a href="https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url" target="_blank" rel="noopener" aria-label="Pre Security (SEC0) — verify on Credly">
+        <img src="assets/badges/pre-security-sec0.png" alt="TryHackMe Pre Security (SEC0) badge" width="130" height="130" loading="lazy">
+      </a>
     </div>
   </aside>
 </section>
@@ -2184,6 +2187,5 @@ function printCV() {
   });
 })();
 </script>
-<script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
