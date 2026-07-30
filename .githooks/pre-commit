@@ -1,0 +1,12 @@
+#!/bin/sh
+# Portfolio consistency invariants — see tools/check-consistency.mjs
+# Bypass only with a deliberate --no-verify and a good reason.
+if command -v node >/dev/null 2>&1; then
+  node tools/check-consistency.mjs || {
+    echo ""
+    echo "pre-commit BLOCKED: surfaces disagree. Fix the drift above, or re-run with --no-verify if you truly mean it."
+    exit 1
+  }
+else
+  echo "pre-commit: node not found — skipping consistency check." >&2
+fi

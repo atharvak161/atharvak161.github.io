@@ -36,14 +36,16 @@
   :root {
     --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
     --border: #1e2d3d; --accent: #00d4ff; --accent-rgb: 0,212,255; --accent2: #00ff9d; --accent2-rgb: 0,255,157;
-    --accent3: #ff4d6d; --text: #e8edf2; --text2: #8899aa; --text3: #556677;
+    --accent3: #ff4d6d; --accent3-rgb: 255,77,109; --accent4: #f5a623; --accent4-rgb: 245,166,35;
+    --text: #e8edf2; --text2: #8899aa; --text3: #556677;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
   }
   [data-theme="light"] {
     --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
     --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00875a; --accent2-rgb: 0,135,90;
-    --accent3: #e03050; --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+    --accent3: #e03050; --accent3-rgb: 224,48,80; --accent4: #b8730f; --accent4-rgb: 184,115,15;
+    --text: #0f172a; --text2: #475569; --text3: #94a3b8;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -325,24 +327,23 @@
   .skills-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(270px,1fr)); gap: 1.5rem; }
   .skill-category { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color .25s; position: relative; overflow: hidden; }
   .skill-category::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-  .skill-category:nth-child(1)::before{background:var(--accent)}.skill-category:nth-child(2)::before{background:var(--accent2)}.skill-category:nth-child(3)::before{background:var(--accent3)}.skill-category:nth-child(4)::before{background:#f5a623}
-  .skill-category:nth-child(1):hover{border-color:var(--accent)}
-  .skill-category:nth-child(2):hover{border-color:var(--accent2)}
-  .skill-category:nth-child(3):hover{border-color:var(--accent3)}
-  .skill-category:nth-child(4):hover{border-color:#f5a623}
-  .skill-category h3{font-family:var(--font-display);font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem}
-  .skill-category:nth-child(1) h3{color:var(--accent)}.skill-category:nth-child(2) h3{color:var(--accent2)}.skill-category:nth-child(3) h3{color:var(--accent3)}.skill-category:nth-child(4) h3{color:#f5a623}
+  /* Category colour is bound to MEANING, not DOM position — red team = offence,
+     blue team = defence (industry convention). Set data-team on the category;
+     reordering or inserting categories can no longer scramble the palette. */
+  .skill-category[data-team="red"]   { --cat: var(--accent3); --cat-rgb: var(--accent3-rgb); }
+  .skill-category[data-team="blue"]  { --cat: var(--accent);  --cat-rgb: var(--accent-rgb);  }
+  .skill-category[data-team="green"] { --cat: var(--accent2); --cat-rgb: var(--accent2-rgb); }
+  .skill-category[data-team="amber"] { --cat: var(--accent4); --cat-rgb: var(--accent4-rgb); }
+  /* Fallback so an un-tagged future category degrades gracefully instead of going colourless */
+  .skill-category { --cat: var(--accent); --cat-rgb: var(--accent-rgb); }
+  .skill-category::before{background:var(--cat)}
+  .skill-category:hover{border-color:var(--cat)}
+  .skill-category h3{font-family:var(--font-display);font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem;color:var(--cat)}
   .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
   .skill-tag{font-size:.72rem;padding:.3rem .7rem;border-radius:2px;letter-spacing:.05em;border:1px solid;transition:all .2s}
   .skill-tag:hover{transform:translateY(-2px)}
-  .skill-category:nth-child(1) .skill-tag{border-color:rgba(0,212,255,.25);color:rgba(0,212,255,.8);background:rgba(0,212,255,.05)}
-  .skill-category:nth-child(1) .skill-tag:hover{background:rgba(0,212,255,.12);border-color:var(--accent);color:var(--accent)}
-  .skill-category:nth-child(2) .skill-tag{border-color:rgba(0,255,157,.2);color:rgba(0,255,157,.75);background:rgba(0,255,157,.04)}
-  .skill-category:nth-child(2) .skill-tag:hover{background:rgba(0,255,157,.1);border-color:var(--accent2);color:var(--accent2)}
-  .skill-category:nth-child(3) .skill-tag{border-color:rgba(255,77,109,.2);color:rgba(255,77,109,.75);background:rgba(255,77,109,.04)}
-  .skill-category:nth-child(3) .skill-tag:hover{background:rgba(255,77,109,.1);border-color:var(--accent3);color:var(--accent3)}
-  .skill-category:nth-child(4) .skill-tag{border-color:rgba(245,166,35,.2);color:rgba(245,166,35,.75);background:rgba(245,166,35,.04)}
-  .skill-category:nth-child(4) .skill-tag:hover{background:rgba(245,166,35,.1);border-color:#f5a623;color:#f5a623}
+  .skill-category .skill-tag{border-color:rgba(var(--cat-rgb),.25);color:rgba(var(--cat-rgb),.8);background:rgba(var(--cat-rgb),.05)}
+  .skill-category .skill-tag:hover{background:rgba(var(--cat-rgb),.12);border-color:var(--cat);color:var(--cat)}
 
 
   /* ── CURRENTLY LEARNING ─────────────────────────────────── */
@@ -760,6 +761,12 @@
       "name": "Fortinet NSE Level 2",
       "credentialCategory": "certification",
       "recognizedBy": { "@type": "Organization", "name": "Fortinet" }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Pre Security (SEC0)",
+      "credentialCategory": "certification",
+      "recognizedBy": { "@type": "Organization", "name": "TryHackMe" }
     }
   ],
   "knowsAbout": [
@@ -992,7 +999,7 @@
     <div class="section-line"></div>
   </div>
   <div class="skills-grid">
-    <div class="skill-category reveal">
+    <div class="skill-category reveal" data-team="red">
       <h3>Offensive Security</h3>
       <div class="skill-tags">
         <span class="skill-tag">Penetration Testing</span>
@@ -1009,7 +1016,7 @@
         <span class="skill-tag">Cryptography</span>
       </div>
     </div>
-    <div class="skill-category reveal reveal-delay-1">
+    <div class="skill-category reveal reveal-delay-1" data-team="green">
       <h3>Tools &amp; Platforms</h3>
       <div class="skill-tags">
         <span class="skill-tag">Burp Suite</span>
@@ -1026,7 +1033,7 @@
         <span class="skill-tag">HackTheBox</span>
       </div>
     </div>
-    <div class="skill-category reveal reveal-delay-2">
+    <div class="skill-category reveal reveal-delay-2" data-team="blue">
       <h3>Infrastructure &amp; Defensive</h3>
       <div class="skill-tags">
         <span class="skill-tag">TCP/IP &amp; LAN/WAN</span>
@@ -1047,7 +1054,7 @@
         <span class="skill-tag">Threat Mitigation</span>
       </div>
     </div>
-    <div class="skill-category reveal reveal-delay-3">
+    <div class="skill-category reveal reveal-delay-3" data-team="amber">
       <h3>Certifications &amp; Programming</h3>
       <div class="skill-tags">
         <span class="skill-tag">CEH V12</span>
@@ -1055,6 +1062,7 @@
         <span class="skill-tag">MSc Applied Cyber Security</span>
         <span class="skill-tag">GCHQ-Accredited</span>
         <span class="skill-tag">Fortinet NSE 1 &amp; 2</span>
+        <span class="skill-tag">Pre Security (SEC0)</span>
         <span class="skill-tag">Python</span>
         <span class="skill-tag">Bash / Shell</span>
         <span class="skill-tag">PowerShell</span>
