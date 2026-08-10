@@ -599,7 +599,11 @@
   .badge-card.t-rare:hover{box-shadow:0 9px 24px -8px rgba(245,166,35,.7)}
   .badge-card.t-epic{border-color:rgba(215,161,255,.48);box-shadow:0 0 17px -5px rgba(215,161,255,.62)}
   .badge-card.t-epic:hover{box-shadow:0 9px 26px -8px rgba(215,161,255,.8)}
-  @media(max-width:600px){.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}}
+  .badge-desc{position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(5px);width:max-content;max-width:196px;background:var(--surface-2,#141a24);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.7rem;font-weight:500;line-height:1.45;text-align:center;box-shadow:0 10px 26px -10px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;z-index:20}
+  .badge-desc::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border)}
+  .badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(prefers-reduced-motion:reduce){.badge-desc{transition:opacity .22s ease;transform:translateX(-50%)}.badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{transform:translateX(-50%)}}
+  @media(max-width:600px){.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}.badge-desc{max-width:150px}}
 
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
   @keyframes glitch {
@@ -967,7 +971,7 @@
                 <span class="thm-card-name">TryHackMe &middot; Top 6%</span>
                 <span class="thm-card-handle">@AtharvaK911</span>
               </div>
-              <span class="thm-card-pts"><svg class="thm-pts-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6-6-6M12 19h8"/></svg>0x8<small>Hacker</small></span>
+              <span class="thm-card-pts"><svg class="thm-pts-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6-6-6M12 19h8"/></svg>0x9<small>Mage</small></span>
             </div>
             <div class="thm-card-stats">
               <div class="thm-stat">
@@ -1007,7 +1011,7 @@
       </a>
     </div>
     <div class="hero-badge-card">
-      <a href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="TryHackMe Platinum League — 1st place (view on TryHackMe)">
+      <a href="https://tryhackme.com/AtharvaK911/badges/platinum-league?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="TryHackMe Platinum League — 1st place (view on TryHackMe)">
         <img src="assets/badges/thm/platinum-league.png" alt="TryHackMe Platinum League — 1st place badge" width="130" height="130" loading="lazy">
       </a>
     </div>
@@ -1491,56 +1495,67 @@
       <img src="assets/badges/pre-security-sec0.png" alt="Pre Security (SEC0) badge" loading="lazy">
       <span class="badge-name">Pre Security (SEC0)</span>
       <span class="badge-tag">Exam</span>
+      <span class="badge-desc">TryHackMe Pre Security certification</span>
     </a>
-    <a class="badge-card t-epic epic reveal reveal-delay-1" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Platinum League — 1st place on TryHackMe">
+    <a class="badge-card t-epic epic reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/platinum-league?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Platinum League — 1st place on TryHackMe">
       <img src="assets/badges/thm/platinum-league.png" alt="Platinum League badge" loading="lazy">
       <span class="badge-name">Platinum League</span>
       <span class="badge-tag">epic: 0.3%</span>
+      <span class="badge-desc">Platinum League 1st place</span>
     </a>
-    <a class="badge-card t-rare reveal reveal-delay-1" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="First Mobile Quiz badge on TryHackMe">
+    <a class="badge-card t-rare reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/first-mobile-quiz?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="First Mobile Quiz badge on TryHackMe">
       <img src="assets/badges/thm/first-mobile-quiz.png" alt="First Mobile Quiz badge" loading="lazy">
       <span class="badge-name">First Mobile Quiz</span>
       <span class="badge-tag">rare: 1.3%</span>
+      <span class="badge-desc">Completing your first quiz or recap on the mobile app!</span>
     </a>
-    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Intro to Web Hacking badge on TryHackMe">
+    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/intro-to-web-hacking?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Intro to Web Hacking badge on TryHackMe">
       <img src="assets/badges/thm/intro-to-web-hacking.png" alt="Intro to Web Hacking badge" loading="lazy">
       <span class="badge-name">Intro to Web Hacking</span>
       <span class="badge-tag">rare: 6.1%</span>
+      <span class="badge-desc">Completing the 'Introduction to Web Hacking' module</span>
     </a>
-    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="30 Day Streak badge on TryHackMe">
+    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/30-day-streak?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="30 Day Streak badge on TryHackMe">
       <img src="assets/badges/thm/streak-30.png" alt="30 Day Streak badge" loading="lazy">
       <span class="badge-name">30 Day Streak</span>
       <span class="badge-tag">rare: 6.3%</span>
+      <span class="badge-desc">Hacking for 30 days solid</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="3 Day Streak badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/3-day-streak?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="3 Day Streak badge on TryHackMe">
       <img src="assets/badges/thm/streak-3.png" alt="3 Day Streak badge" loading="lazy">
       <span class="badge-name">3 Day Streak</span>
       <span class="badge-tag">common: 11.3%</span>
+      <span class="badge-desc">Achieving a 3 day hacking streak</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Networking Nerd badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/network-fundamentals?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Networking Nerd badge on TryHackMe">
       <img src="assets/badges/thm/network-fundamentals.png" alt="Networking Nerd badge" loading="lazy">
       <span class="badge-name">Networking Nerd</span>
       <span class="badge-tag">common: 15.5%</span>
+      <span class="badge-desc">Completing the 'Network Fundamentals' module</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="World Wide Web badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/AtharvaK911/badges/world-wide-web?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="World Wide Web badge on TryHackMe">
       <img src="assets/badges/thm/how-the-web-works.png" alt="World Wide Web badge" loading="lazy">
       <span class="badge-name">World Wide Web</span>
       <span class="badge-tag">common: 17.1%</span>
+      <span class="badge-desc">Completing the 'How The Web Works' module</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="7 Day Streak badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/AtharvaK911/badges/7-day-streak?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="7 Day Streak badge on TryHackMe">
       <img src="assets/badges/thm/streak-7.png" alt="7 Day Streak badge" loading="lazy">
       <span class="badge-name">7 Day Streak</span>
       <span class="badge-tag">common: 17.2%</span>
+      <span class="badge-desc">Achieving a 7 day hacking streak</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Webbed badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/AtharvaK911/badges/web-fund?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Webbed badge on TryHackMe">
       <img src="assets/badges/thm/web-fundamentals.png" alt="Webbed badge" loading="lazy">
       <span class="badge-name">Webbed</span>
       <span class="badge-tag">common: 21.4%</span>
+      <span class="badge-desc">Understands how the world wide web works</span>
     </a>
-    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="cat linux.txt badge on TryHackMe">
+    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/AtharvaK911/badges/terminaled?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="cat linux.txt badge on TryHackMe">
       <img src="assets/badges/thm/terminaled.png" alt="cat linux.txt badge" loading="lazy">
       <span class="badge-name">cat linux.txt</span>
       <span class="badge-tag">common: 28.2%</span>
+      <span class="badge-desc">Being competent in Linux</span>
     </a>
   </div>
 </section>
