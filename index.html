@@ -577,7 +577,7 @@
   .badges-intro{color:var(--text-dim);margin:0 0 1.5rem;font-size:.95rem}
   .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
   .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
-  .badge-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 10px 26px -12px rgba(0,0,0,.55)}
+  .badge-card:hover{transform:translateY(-4px)}
   .badge-card img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
   .badge-name{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.3}
   .badge-tag{font-size:.66rem;letter-spacing:.08em;text-transform:none;font-weight:700;color:var(--text-dim);background:var(--surface-2,rgba(255,255,255,.05));border:1px solid var(--border);border-radius:20px;padding:.12rem .55rem}
@@ -590,6 +590,15 @@
   .badge-card.t-common .badge-tag{color:#8fd6a6;border-color:rgba(143,214,166,.35);background:rgba(143,214,166,.06)}
   .badge-card.t-rare .badge-tag{color:#f5a623;border-color:rgba(245,166,35,.42);background:rgba(245,166,35,.08)}
   .badge-card.t-epic .badge-tag{color:#d7a1ff;border-color:rgba(215,161,255,.5);background:rgba(215,161,255,.1)}
+  /* Per-tier coloured border + glow on every badge (matches its tag colour). */
+  .badge-card.t-exam{border-color:rgba(62,207,142,.42);box-shadow:0 0 15px -6px rgba(62,207,142,.55)}
+  .badge-card.t-exam:hover{box-shadow:0 9px 24px -8px rgba(62,207,142,.72)}
+  .badge-card.t-common{border-color:rgba(143,214,166,.38);box-shadow:0 0 15px -6px rgba(143,214,166,.42)}
+  .badge-card.t-common:hover{box-shadow:0 9px 24px -8px rgba(143,214,166,.6)}
+  .badge-card.t-rare{border-color:rgba(245,166,35,.42);box-shadow:0 0 15px -6px rgba(245,166,35,.5)}
+  .badge-card.t-rare:hover{box-shadow:0 9px 24px -8px rgba(245,166,35,.7)}
+  .badge-card.t-epic{border-color:rgba(215,161,255,.48);box-shadow:0 0 17px -5px rgba(215,161,255,.62)}
+  .badge-card.t-epic:hover{box-shadow:0 9px 26px -8px rgba(215,161,255,.8)}
   @media(max-width:600px){.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}}
 
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
@@ -1473,7 +1482,6 @@
     <h2 class="section-title glitch-title" data-text="Badges">Badges</h2>
     <div class="section-line"></div>
   </div>
-  <p class="badges-intro reveal">Earned on TryHackMe. Every badge links to my live profile — opens in a new tab.</p>
   <!-- ORDER RULE: exam badges first (SEC0, then SEC1… as earned), then the
        Platinum League win, then the rest. Add new exam badges at the top of
        this grid to keep that order. -->
@@ -1603,8 +1611,8 @@
         <div class="roadmap-item">
           <div class="roadmap-marker"><div class="roadmap-dot next"></div><div class="roadmap-line"></div></div>
           <div class="roadmap-content">
-            <h4>TryHackMe — Penetration Tester Path (PT1)</h4>
-            <p>Intermediate penetration testing path on TryHackMe</p>
+            <h4>TryHackMe — Penetration Tester (PT1)</h4>
+            <p>Intermediate penetration testing certification &mdash; the PT1 exam</p>
             <span class="roadmap-tag next">&#x25A1; Upcoming</span>
           </div>
         </div>
@@ -1613,6 +1621,14 @@
           <div class="roadmap-content">
             <h4>OSCP — OffSec Certified Professional</h4>
             <p>Industry-standard offensive security certification</p>
+            <span class="roadmap-tag next">&#x25A1; Upcoming</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-marker"><div class="roadmap-dot next"></div><div class="roadmap-line"></div></div>
+          <div class="roadmap-content">
+            <h4>CPTS — Certified Penetration Testing Specialist</h4>
+            <p>Hands-on penetration testing certification &mdash; Hack The Box</p>
             <span class="roadmap-tag next">&#x25A1; Upcoming</span>
           </div>
         </div>
