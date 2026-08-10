@@ -289,9 +289,12 @@
   .thm-card-pts { margin-left: auto; font-size: 1.05rem; font-weight: 800; color: #a2ea2a; line-height: 1; white-space: nowrap; }
   .thm-card-pts small { font-size: .6rem; font-weight: 600; color: var(--text3); margin-left: .15rem; }
   .thm-card-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; border-top: 1px solid var(--border); padding-top: .7rem; }
-  .thm-stat { display: flex; flex-direction: column; align-items: center; gap: .15rem; }
+  .thm-stat { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
   .thm-stat b { font-size: 1rem; font-weight: 800; color: var(--text); line-height: 1; }
   .thm-stat span { font-size: .58rem; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+  .thm-stat-icon { width: 15px; height: 15px; color: #a2ea2a; opacity: .9; margin-bottom: .15rem; }
+  .thm-pts-icon { width: 14px; height: 14px; vertical-align: -1px; margin-right: .4rem; color: #a2ea2a; }
+  .thm-card-pts small { margin-left: .35rem; }
   /* GitHub card — self-contained, matches the boxed-card look */
   .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
   .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
@@ -954,13 +957,25 @@
                 <span class="thm-card-name">TryHackMe &middot; Top 6%</span>
                 <span class="thm-card-handle">@AtharvaK911</span>
               </div>
-              <span class="thm-card-pts">0x8<small>Hacker</small></span>
+              <span class="thm-card-pts"><svg class="thm-pts-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l6-6-6-6M12 19h8"/></svg>0x8<small>Hacker</small></span>
             </div>
             <div class="thm-card-stats">
-              <div class="thm-stat"><b>75</b><span>Rooms</span></div>
-              <div class="thm-stat"><b>86</b><span>Streak</span></div>
-              <div class="thm-stat"><b>10</b><span>Badges</span></div>
-              <div class="thm-stat"><b>143.8K</b><span>Rank</span></div>
+              <div class="thm-stat">
+                <svg class="thm-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M14 12h.01"/></svg>
+                <b>75</b><span>Rooms</span>
+              </div>
+              <div class="thm-stat">
+                <svg class="thm-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                <b>86</b><span>Streak</span>
+              </div>
+              <div class="thm-stat">
+                <svg class="thm-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg>
+                <b>10</b><span>Badges</span>
+              </div>
+              <div class="thm-stat">
+                <svg class="thm-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6m12 5h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22m7-7.34V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                <b>143.8K</b><span>Rank</span>
+              </div>
             </div>
           </a>
         </div>
