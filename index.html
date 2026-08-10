@@ -1942,6 +1942,7 @@ var termResponses = {
     { t:'t-out', v:'  cat skills.txt  — view skill set' },
     { t:'t-out', v:'  cat certs.txt   — view certifications' },
     { t:'t-out', v:'  cat badges.txt  — badges + view links' },
+    { t:'t-out', v:'  cat projects.txt— projects + repo links' },
     { t:'t-out', v:'  cat about.txt   — about me' },
     { t:'t-out', v:'  sudo hire-me    — availability' },
     { t:'t-out', v:'  goto <section>  — jump to a section' },
@@ -1978,14 +1979,16 @@ function termPrint(lines){
     div.className = 't-line ' + l.t;
     if(l.url){
       // Clickable verify/share link — opens in a new tab so the terminal (and
-      // the portfolio) is never lost. Label via textContent keeps it XSS-safe.
-      div.textContent = l.v + ' ';
+      // the portfolio) is never lost. The raw URL is NEVER shown; it lives behind
+      // a human label (l.linkText) so the terminal stays clean for every case.
+      // textContent (not innerHTML) keeps it XSS-safe.
+      if(l.v) div.textContent = l.v + ' ';
       var a = document.createElement('a');
       a.className = 't-link';
       a.href = l.url;
       a.target = '_blank';
       a.rel = 'noopener';
-      a.textContent = l.url;
+      a.textContent = l.linkText || 'open ↗';
       div.appendChild(a);
     } else {
       div.textContent = l.v;
@@ -2019,12 +2022,57 @@ function termSlugify(s){
     .replace(/-+/g, '-');
 }
 
+// Live-read a project's link exactly as the Projects section uses it — the card's
+// own href (jobscope/finance → GitHub, the rest → live demo). Non-link cards
+// (academic work) and self/hash links return '' so they get no terminal link.
+function projectLink(card){
+  var linkEl = card.tagName === 'A' ? card : card.querySelector('a[href]');
+  if(!linkEl) return '';
+  var href = linkEl.href; // resolved absolute
+  if(!/^https?:\/\//.test(href)) return '';
+  if(href.replace(/#.*$/, '') === location.href.replace(/#.*$/, '')) return '';
+  return href;
+}
+function projectLinkLabel(href){
+  return /github\.com/.test(href) ? '→ view on GitHub ↗' : '→ view demo ↗';
+}
+// Org text with any github.com/... token stripped, so the raw URL is never shown
+// in the terminal (it lives behind the clickable link instead).
+function projectOrgClean(card){
+  var org = card.querySelector('.project-org');
+  if(!org) return '';
+  return org.textContent.trim()
+    .replace(/\s*·?\s*github\.com\/\S+/i, '')
+    .replace(/\s*·\s*$/, '')
+    .trim();
+}
+
 function buildLsProjects(){
-  var titles = document.querySelectorAll('#projects .project-card h3');
-  if(!titles.length) return [{ t:'t-out', v:'none found' }];
+  var cards = document.querySelectorAll('#projects .project-card');
+  if(!cards.length) return [{ t:'t-out', v:'none found' }];
   var lines = [];
-  titles.forEach(function(h){
-    lines.push({ t:'t-green', v:'drwxr-xr-x  ' + termSlugify(h.textContent.trim()) + '/' });
+  cards.forEach(function(card){
+    var h = card.querySelector('h3');
+    var slug = termSlugify((h ? h.textContent : 'project').trim());
+    var link = projectLink(card);
+    if(link){ lines.push({ t:'t-green', v:'drwxr-xr-x  ', url: link, linkText: slug + '/' }); }
+    else { lines.push({ t:'t-green', v:'drwxr-xr-x  ' + slug + '/' }); }
+  });
+  return lines;
+}
+
+function buildProjectsTxt(){
+  var cards = document.querySelectorAll('#projects .project-card');
+  if(!cards.length) return [{ t:'t-out', v:'none found' }];
+  var lines = [];
+  cards.forEach(function(card){
+    var h = card.querySelector('h3');
+    var name = h ? h.textContent.trim() : 'Project';
+    var org = projectOrgClean(card);
+    lines.push({ t:'t-green', v:'[*] ' + name + (org ? '  (' + org + ')' : '') });
+    // Link mirrors the Projects section exactly; URL hidden behind a clean label.
+    var link = projectLink(card);
+    if(link){ lines.push({ t:'t-out', v:'   ', url: link, linkText: projectLinkLabel(link) }); }
   });
   return lines;
 }
@@ -2067,7 +2115,7 @@ function buildBadgesTxt(){
     var tagEl = card.querySelector('.badge-tag');
     var tag = tagEl ? '  [' + tagEl.textContent.trim() + ']' : '';
     lines.push({ t:'t-green', v:'[*] ' + name + tag });
-    if(card.href) lines.push({ t:'t-out', v:'    view:', url: card.href });
+    if(card.href) lines.push({ t:'t-out', v:'   ', url: card.href, linkText: '→ view badge ↗' });
   });
   return lines;
 }
@@ -2124,6 +2172,7 @@ termInput.addEventListener('keydown', function(e){
     return;
   }
   if(cmd === 'ls projects'){ termPrint(buildLsProjects()); termBody.scrollTop = termBody.scrollHeight; return; }
+  if(cmd === 'cat projects.txt'){ termPrint(buildProjectsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   if(cmd === 'cat skills.txt'){ termPrint(buildSkillsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   if(cmd === 'cat certs.txt'){ termPrint(buildCertsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   if(cmd === 'cat badges.txt'){ termPrint(buildBadgesTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
