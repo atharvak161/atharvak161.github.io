@@ -570,6 +570,25 @@
   a.cert-pill:hover{opacity:.75;text-decoration:underline}
   @media(max-width:600px){.certs-grid{grid-template-columns:1fr}}
 
+  /* ── BADGES ─────────────────────────────────────────────── */
+  .badges-intro{color:var(--text-dim);margin:0 0 1.5rem;font-size:.95rem}
+  .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
+  .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
+  .badge-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 10px 26px -12px rgba(0,0,0,.55)}
+  .badge-card img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+  .badge-name{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.3}
+  .badge-tag{font-size:.66rem;letter-spacing:.08em;text-transform:none;font-weight:700;color:var(--text-dim);background:var(--surface-2,rgba(255,255,255,.05));border:1px solid var(--border);border-radius:20px;padding:.12rem .55rem}
+  .badge-card.exam{border-color:rgba(0,212,255,.35)}
+  .badge-card.exam .badge-tag{color:var(--accent);border-color:rgba(0,212,255,.4)}
+  .badge-card.epic{border-color:rgba(199,146,234,.4)}
+  .badge-card.epic .badge-tag{color:#c792ea;border-color:rgba(199,146,234,.45)}
+  /* Rarity-tier tag colours — distinct, non-blue, readable on the dark card. */
+  .badge-card.t-exam .badge-tag{color:#3ecf8e;border-color:rgba(62,207,142,.45);background:rgba(62,207,142,.08)}
+  .badge-card.t-common .badge-tag{color:#8fd6a6;border-color:rgba(143,214,166,.35);background:rgba(143,214,166,.06)}
+  .badge-card.t-rare .badge-tag{color:#f5a623;border-color:rgba(245,166,35,.42);background:rgba(245,166,35,.08)}
+  .badge-card.t-epic .badge-tag{color:#d7a1ff;border-color:rgba(215,161,255,.5);background:rgba(215,161,255,.1)}
+  @media(max-width:600px){.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}}
+
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
   @keyframes glitch {
     0%   { clip-path: inset(40% 0 60% 0); transform: translate(-3px, 0); }
@@ -655,6 +674,8 @@
   .terminal-body::-webkit-scrollbar-thumb{background:#1e2d3d;border-radius:2px}
   .t-line{font-size:.8rem;line-height:1.6;white-space:pre-wrap;word-break:break-all}
   .t-prompt{color:#00d4ff}.t-cmd{color:#e8edf2}.t-out{color:#8899aa}.t-green{color:#00ff9d}.t-red{color:#ff4d6d}.t-yellow{color:#f5a623}
+  .t-link{color:#00d4ff;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+  .t-link:hover{color:#5fe3ff}
   .terminal-input-row{display:flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem .8rem;border-top:1px solid #1e2d3d}
   .t-prompt-label{color:#00d4ff;font-size:.8rem;white-space:nowrap}
   #terminal-input{flex:1;background:none;border:none;outline:none;color:#e8edf2;font-family:var(--font-mono);font-size:.8rem;caret-color:#00d4ff}
@@ -817,6 +838,7 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#certifications">Certs</a></li>
+    <li><a href="#badges">Badges</a></li>
     <li><a href="#learning">Learning</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#cv">Resume</a></li>
@@ -844,6 +866,7 @@
   <a href="#projects" class="mm-link">Projects</a>
   <a href="#education" class="mm-link">Education</a>
   <a href="#certifications" class="mm-link">Certifications</a>
+  <a href="#badges" class="mm-link">Badges</a>
   <a href="#learning" class="mm-link">Learning</a>
   <a href="#testimonials" class="mm-link">Reviews</a>
   <a href="#cv" class="mm-link">Resume</a>
@@ -928,16 +951,16 @@
             <div class="thm-card-head">
               <img class="thm-card-avatar" src="https://tryhackme-images.s3.amazonaws.com/user-avatars/63879addf6080c0048a27b26-1775127277617" alt="" onerror="this.style.display='none'">
               <div class="thm-card-info">
-                <span class="thm-card-name">TryHackMe &middot; Top 15%</span>
+                <span class="thm-card-name">TryHackMe &middot; Top 6%</span>
                 <span class="thm-card-handle">@AtharvaK911</span>
               </div>
-              <span class="thm-card-pts">3,757<small>pts</small></span>
+              <span class="thm-card-pts">0x8<small>Hacker</small></span>
             </div>
             <div class="thm-card-stats">
-              <div class="thm-stat"><b>41</b><span>Rooms</span></div>
-              <div class="thm-stat"><b>34</b><span>Streak</span></div>
-              <div class="thm-stat"><b>8</b><span>Badges</span></div>
-              <div class="thm-stat"><b>L7</b><span>Level</span></div>
+              <div class="thm-stat"><b>75</b><span>Rooms</span></div>
+              <div class="thm-stat"><b>86</b><span>Streak</span></div>
+              <div class="thm-stat"><b>10</b><span>Badges</span></div>
+              <div class="thm-stat"><b>143.8K</b><span>Rank</span></div>
             </div>
           </a>
         </div>
@@ -956,6 +979,11 @@
     <div class="hero-badge-card">
       <a href="https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url" target="_blank" rel="noopener" aria-label="Pre Security (SEC0) — verify on Credly">
         <img src="assets/badges/pre-security-sec0.png" alt="TryHackMe Pre Security (SEC0) badge" width="130" height="130" loading="lazy">
+      </a>
+    </div>
+    <div class="hero-badge-card">
+      <a href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="TryHackMe Platinum League — 1st place (view on TryHackMe)">
+        <img src="assets/badges/thm/platinum-league.png" alt="TryHackMe Platinum League — 1st place badge" width="130" height="130" loading="lazy">
       </a>
     </div>
   </aside>
@@ -1423,10 +1451,80 @@
   </div>
 </section>
 
+<!-- ── BADGES ─────────────────────────────────────────────── -->
+<section id="badges">
+  <div class="section-header reveal">
+    <span class="section-num">07 //</span>
+    <h2 class="section-title glitch-title" data-text="Badges">Badges</h2>
+    <div class="section-line"></div>
+  </div>
+  <p class="badges-intro reveal">Earned on TryHackMe. Every badge links to my live profile — opens in a new tab.</p>
+  <!-- ORDER RULE: exam badges first (SEC0, then SEC1… as earned), then the
+       Platinum League win, then the rest. Add new exam badges at the top of
+       this grid to keep that order. -->
+  <div class="badges-grid">
+    <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url" target="_blank" rel="noopener" aria-label="Pre Security (SEC0) — verify on Credly">
+      <img src="assets/badges/pre-security-sec0.png" alt="Pre Security (SEC0) badge" loading="lazy">
+      <span class="badge-name">Pre Security (SEC0)</span>
+      <span class="badge-tag">Exam</span>
+    </a>
+    <a class="badge-card t-epic epic reveal reveal-delay-1" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Platinum League — 1st place on TryHackMe">
+      <img src="assets/badges/thm/platinum-league.png" alt="Platinum League badge" loading="lazy">
+      <span class="badge-name">Platinum League</span>
+      <span class="badge-tag">epic: 0.3%</span>
+    </a>
+    <a class="badge-card t-rare reveal reveal-delay-1" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="First Mobile Quiz badge on TryHackMe">
+      <img src="assets/badges/thm/first-mobile-quiz.png" alt="First Mobile Quiz badge" loading="lazy">
+      <span class="badge-name">First Mobile Quiz</span>
+      <span class="badge-tag">rare: 1.3%</span>
+    </a>
+    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Intro to Web Hacking badge on TryHackMe">
+      <img src="assets/badges/thm/intro-to-web-hacking.png" alt="Intro to Web Hacking badge" loading="lazy">
+      <span class="badge-name">Intro to Web Hacking</span>
+      <span class="badge-tag">rare: 6.1%</span>
+    </a>
+    <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="30 Day Streak badge on TryHackMe">
+      <img src="assets/badges/thm/streak-30.png" alt="30 Day Streak badge" loading="lazy">
+      <span class="badge-name">30 Day Streak</span>
+      <span class="badge-tag">rare: 6.3%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="3 Day Streak badge on TryHackMe">
+      <img src="assets/badges/thm/streak-3.png" alt="3 Day Streak badge" loading="lazy">
+      <span class="badge-name">3 Day Streak</span>
+      <span class="badge-tag">common: 11.3%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-3" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Networking Nerd badge on TryHackMe">
+      <img src="assets/badges/thm/network-fundamentals.png" alt="Networking Nerd badge" loading="lazy">
+      <span class="badge-name">Networking Nerd</span>
+      <span class="badge-tag">common: 15.5%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="World Wide Web badge on TryHackMe">
+      <img src="assets/badges/thm/how-the-web-works.png" alt="World Wide Web badge" loading="lazy">
+      <span class="badge-name">World Wide Web</span>
+      <span class="badge-tag">common: 17.1%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="7 Day Streak badge on TryHackMe">
+      <img src="assets/badges/thm/streak-7.png" alt="7 Day Streak badge" loading="lazy">
+      <span class="badge-name">7 Day Streak</span>
+      <span class="badge-tag">common: 17.2%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="Webbed badge on TryHackMe">
+      <img src="assets/badges/thm/web-fundamentals.png" alt="Webbed badge" loading="lazy">
+      <span class="badge-name">Webbed</span>
+      <span class="badge-tag">common: 21.4%</span>
+    </a>
+    <a class="badge-card t-common reveal reveal-delay-5" href="https://tryhackme.com/p/AtharvaK911?tab=badges" target="_blank" rel="noopener" aria-label="cat linux.txt badge on TryHackMe">
+      <img src="assets/badges/thm/terminaled.png" alt="cat linux.txt badge" loading="lazy">
+      <span class="badge-name">cat linux.txt</span>
+      <span class="badge-tag">common: 28.2%</span>
+    </a>
+  </div>
+</section>
+
 <!-- ── CURRENTLY LEARNING ─────────────────────────────────── -->
 <section id="learning">
   <div class="section-header reveal">
-    <span class="section-num">07 //</span>
+    <span class="section-num">08 //</span>
     <h2 class="section-title glitch-title" data-text="Currently Learning">Currently Learning</h2>
     <div class="section-line"></div>
   </div>
@@ -1520,7 +1618,7 @@
 
 <section id="testimonials">
   <div class="section-header reveal">
-    <span class="section-num">08 //</span>
+    <span class="section-num">09 //</span>
     <h2 class="section-title glitch-title" data-text="Testimonials">Testimonials</h2>
     <div class="section-line"></div>
   </div>
@@ -1556,7 +1654,7 @@
 
 <section id="cv">
   <div class="section-header reveal">
-    <span class="section-num">09 //</span>
+    <span class="section-num">10 //</span>
     <h2 class="section-title glitch-title" data-text="Resume">Resume</h2>
     <div class="section-line"></div>
   </div>
@@ -1568,7 +1666,7 @@
       </div>
       <div class="cv-toolbar-right">
         <button onclick="printCV()" class="cv-btn cv-btn-secondary">&#x1F5A8; Print CV</button>
-        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank" class="cv-btn cv-btn-secondary">&#x26F6; Full Screen</a>
+        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank" rel="noopener" class="cv-btn cv-btn-secondary">&#x26F6; Full Screen</a>
         <a href="Atharva_Kulkarni_Resume.pdf" download class="cv-btn cv-btn-primary">&#x2913; Download</a>
       </div>
     </div>
@@ -1581,7 +1679,7 @@
       </iframe>
       <div class="cv-fallback" id="cvFallback">
         Your browser doesn't support embedded PDFs.<br>
-        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank">Click here to view the CV</a> or
+        <a href="Atharva_Kulkarni_Resume.pdf" target="_blank" rel="noopener">Click here to view the CV</a> or
         <a href="Atharva_Kulkarni_Resume.pdf" download>download it directly</a>.
       </div>
     </div>
@@ -1591,7 +1689,7 @@
 <section id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">10 //</span>
+      <span class="section-num">11 //</span>
       <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
@@ -1686,7 +1784,7 @@ window.addEventListener('scroll', function(){
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
-  var sections = ['about','skills','experience','projects','education','certifications','learning','testimonials','cv','contact'];
+  var sections = ['about','skills','experience','projects','education','certifications','badges','learning','testimonials','cv','contact'];
   var scrollY = window.scrollY + 120;
   var current = '';
   sections.forEach(function(id){
@@ -1796,6 +1894,7 @@ var termResponses = {
     { t:'t-out', v:'  ls projects     — list projects' },
     { t:'t-out', v:'  cat skills.txt  — view skill set' },
     { t:'t-out', v:'  cat certs.txt   — view certifications' },
+    { t:'t-out', v:'  cat badges.txt  — badges + view links' },
     { t:'t-out', v:'  cat about.txt   — about me' },
     { t:'t-out', v:'  sudo hire-me    — availability' },
     { t:'t-out', v:'  goto <section>  — jump to a section' },
@@ -1830,7 +1929,20 @@ function termPrint(lines){
   lines.forEach(function(l){
     var div = document.createElement('div');
     div.className = 't-line ' + l.t;
-    div.textContent = l.v;
+    if(l.url){
+      // Clickable verify/share link — opens in a new tab so the terminal (and
+      // the portfolio) is never lost. Label via textContent keeps it XSS-safe.
+      div.textContent = l.v + ' ';
+      var a = document.createElement('a');
+      a.className = 't-link';
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = l.url;
+      div.appendChild(a);
+    } else {
+      div.textContent = l.v;
+    }
     termBody.appendChild(div);
   });
   termBody.scrollTop = termBody.scrollHeight;
@@ -1898,6 +2010,21 @@ function buildCertsTxt(){
   return lines;
 }
 
+function buildBadgesTxt(){
+  var cards = document.querySelectorAll('#badges .badge-card');
+  if(!cards.length) return [{ t:'t-out', v:'none found' }];
+  var lines = [];
+  cards.forEach(function(card){
+    var nameEl = card.querySelector('.badge-name');
+    var name = nameEl ? nameEl.textContent.trim() : 'Badge';
+    var tagEl = card.querySelector('.badge-tag');
+    var tag = tagEl ? '  [' + tagEl.textContent.trim() + ']' : '';
+    lines.push({ t:'t-green', v:'[*] ' + name + tag });
+    if(card.href) lines.push({ t:'t-out', v:'    view:', url: card.href });
+  });
+  return lines;
+}
+
 function openTerminal(){
   terminalOpen = true;
   termOverlay.classList.add('open');
@@ -1933,6 +2060,7 @@ termInput.addEventListener('keydown', function(e){
       about:'about', skills:'skills', experience:'experience', exp:'experience',
       projects:'projects', education:'education', edu:'education',
       certifications:'certifications', certs:'certifications', cert:'certifications',
+      badges:'badges', badge:'badges',
       learning:'learning', testimonials:'testimonials', reviews:'testimonials',
       cv:'cv', resume:'cv', contact:'contact'
     };
@@ -1951,6 +2079,7 @@ termInput.addEventListener('keydown', function(e){
   if(cmd === 'ls projects'){ termPrint(buildLsProjects()); termBody.scrollTop = termBody.scrollHeight; return; }
   if(cmd === 'cat skills.txt'){ termPrint(buildSkillsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   if(cmd === 'cat certs.txt'){ termPrint(buildCertsTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
+  if(cmd === 'cat badges.txt'){ termPrint(buildBadgesTxt()); termBody.scrollTop = termBody.scrollHeight; return; }
   var resp = termResponses[cmd];
   if(resp){ termPrint(resp); }
   else { termPrint([{t:'t-red', v:'bash: ' + cmd + ': command not found. Try "help".'}]); }
