@@ -1779,6 +1779,132 @@
 <button id="backToTop" title="Back to top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x2191;</button>
 
 <script>
+/* ══════════════════════════════════════════════════════════════════
+   SINGLE SOURCE OF TRUTH (SSOT)
+   Each cert / skill / project / badge is declared ONCE in `SITE` and every
+   surface (section cards, hero strip, skills tags, JSON-LD, terminal) is
+   rendered from it — so a partial, drifted update is structurally impossible.
+   Runtime render for now; templates are pure so a build step can prerender
+   the same output to static HTML for crawlers later (see SSOT_BUILD_PROGRESS.md).
+   ══════════════════════════════════════════════════════════════════ */
+window.SITE = window.SITE || {};
+
+SITE.jobTitle = 'Security Analyst | Offensive Security';
+SITE.knowsAbout = ['Penetration Testing','Ethical Hacking','Red Teaming','Network Security','Active Directory','Web Application Security','OSINT','Digital Forensics','Cryptography','Burp Suite','Nmap','Metasploit','Kali Linux','Python','SQL'];
+
+/* identity: one place for the rotating hero roles + <title> + meta description +
+   OG/Twitter social tags. renderIdentity() syncs the live DOM from these. */
+SITE.identity = {
+  roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
+  title: 'Atharva Kulkarni — Junior Penetration Tester | Offensive Security | CEH V12 | MSc Cyber Security',
+  metaDescription: 'Atharva Kulkarni — CEH V12 Certified, GCHQ-accredited MSc Applied Cyber Security graduate. Security Analyst transitioning into offensive security and penetration testing. London, UK.',
+  ogTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
+  ogDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into offensive security and penetration testing. Portfolio of security projects and experience.',
+  twTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
+  twDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into penetration testing and red team operations.'
+};
+
+/* certs: one entry → certs section card + JSON-LD hasCredential (if earned)
+   name=full (card), jsonLdName=formal (structured data), badge=emoji, cls=accent,
+   credentialId OR pill{text,href?} for the card foot, earned gates JSON-LD. */
+SITE.certs = [
+  { id:'ceh',  earned:true,  cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853' },
+  { id:'nse1', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 1', jsonLdName:'Fortinet NSE Level 1', badge:'\u{1F512}', credentialId:'PggZRhVh2p' },
+  { id:'nse2', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 2', jsonLdName:'Fortinet NSE Level 2', badge:'\u{1F512}', credentialId:'uTMYfCWHCd' },
+  { id:'sec0', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Pre Security (SEC0)', jsonLdName:'Pre Security (SEC0)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'https://assets.tryhackme.com/certification-certificate/6a6473ed83b00ef659529027.pdf' } },
+  { id:'jrpt', earned:false, cls:'thm', issuer:'TryHackMe',  name:'Junior Penetration Testing Path', badge:'\u{1F3AF}', pill:{ text:'In Progress · Active' } }
+];
+
+/* THM per-badge share link from a slug (sharerId is constant for this account). */
+SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges/'+slug+'?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26'; };
+
+/* badges: one entry → #badges card + terminal `cat badges.txt` (live DOM) ONLY.
+   The hero top-of-page badge strip is deliberately NOT driven by this — it is a
+   manual hand-picked favourites list (static HTML in the hero). Adding/editing a
+   badge here updates the Badges section + terminal, never the hero.
+   ORDER = exam first, then Platinum, then by rarity.
+   tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
+SITE.badges = [
+  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/pre-security-sec0.png', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
+  { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.png', tag:'epic: 0.3%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
+  { id:'firstmobile',tier:'t-rare',   cls2:'',     name:'First Mobile Quiz', img:'assets/badges/thm/first-mobile-quiz.png', tag:'rare: 1.3%',  desc:'Completing your first quiz or recap on the mobile app!', slug:'first-mobile-quiz' },
+  { id:'introweb',   tier:'t-rare',   cls2:'',     name:'Intro to Web Hacking', img:'assets/badges/thm/intro-to-web-hacking.png', tag:'rare: 6.1%', desc:"Completing the 'Introduction to Web Hacking' module", slug:'intro-to-web-hacking' },
+  { id:'streak30',   tier:'t-rare',   cls2:'',     name:'30 Day Streak', img:'assets/badges/thm/streak-30.png', tag:'rare: 6.3%',       desc:'Hacking for 30 days solid',                             slug:'30-day-streak' },
+  { id:'streak3',    tier:'t-common', cls2:'',     name:'3 Day Streak', img:'assets/badges/thm/streak-3.png', tag:'common: 11.3%',      desc:'Achieving a 3 day hacking streak',                      slug:'3-day-streak' },
+  { id:'netnerd',    tier:'t-common', cls2:'',     name:'Networking Nerd', img:'assets/badges/thm/network-fundamentals.png', tag:'common: 15.5%', desc:"Completing the 'Network Fundamentals' module",    slug:'network-fundamentals' },
+  { id:'www',        tier:'t-common', cls2:'',     name:'World Wide Web', img:'assets/badges/thm/how-the-web-works.png', tag:'common: 17.1%', desc:"Completing the 'How The Web Works' module",         slug:'world-wide-web' },
+  { id:'streak7',    tier:'t-common', cls2:'',     name:'7 Day Streak', img:'assets/badges/thm/streak-7.png', tag:'common: 17.2%',      desc:'Achieving a 7 day hacking streak',                      slug:'7-day-streak' },
+  { id:'webbed',     tier:'t-common', cls2:'',     name:'Webbed', img:'assets/badges/thm/web-fundamentals.png', tag:'common: 21.4%',    desc:'Understands how the world wide web works',              slug:'web-fund' },
+  { id:'terminaled', tier:'t-common', cls2:'',     name:'cat linux.txt', img:'assets/badges/thm/terminaled.png', tag:'common: 28.2%',   desc:'Being competent in Linux',                              slug:'terminaled' }
+];
+
+function ssotEsc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function renderCerts(){
+  var grid = document.querySelector('#certifications .certs-grid');
+  if(!grid) return;
+  var delays = ['', ' reveal-delay-1', ' reveal-delay-2', ' reveal-delay-2', ' reveal-delay-3'];
+  grid.innerHTML = SITE.certs.map(function(c, i){
+    var foot;
+    if(c.credentialId){
+      foot = '<div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">'+ssotEsc(c.credentialId)+'</span></div>';
+    } else if(c.pill && c.pill.href){
+      foot = '<a class="cert-pill" href="'+ssotEsc(c.pill.href)+'" target="_blank" rel="noopener">'+ssotEsc(c.pill.text)+'</a>';
+    } else {
+      foot = '<span class="cert-pill">'+(c.pill ? ssotEsc(c.pill.text) : '')+'</span>';
+    }
+    return '<div class="cert-card '+ssotEsc(c.cls)+' reveal'+(delays[i]||'')+'">'
+      + '<div class="cert-card-top"><div class="cert-card-badge">'+c.badge+'</div>'
+      + '<div class="cert-card-head"><span class="cert-card-issuer">'+ssotEsc(c.issuer)+'</span>'
+      + '<div class="cert-card-name">'+ssotEsc(c.name)+'</div></div></div>'
+      + '<div class="cert-card-foot">'+foot+'</div></div>';
+  }).join('');
+}
+
+function renderBadges(){
+  var grid = document.querySelector('#badges .badges-grid');
+  if(!grid) return;
+  var delays = ['',' reveal-delay-1',' reveal-delay-1',' reveal-delay-2',' reveal-delay-2',' reveal-delay-3',' reveal-delay-3',' reveal-delay-4',' reveal-delay-4',' reveal-delay-5',' reveal-delay-5'];
+  grid.innerHTML = SITE.badges.map(function(b, i){
+    var href = b.href || SITE.thmShare(b.slug);
+    var aria = b.aria || (b.name + ' badge on TryHackMe');
+    var cls = 'badge-card ' + b.tier + (b.cls2 ? ' ' + b.cls2 : '') + ' reveal' + (delays[i] || '');
+    return '<a class="'+cls+'" href="'+ssotEsc(href)+'" target="_blank" rel="noopener" aria-label="'+ssotEsc(aria)+'">'
+      + '<img src="'+ssotEsc(b.img)+'" alt="'+ssotEsc(b.name)+' badge" loading="lazy">'
+      + '<span class="badge-name">'+ssotEsc(b.name)+'</span>'
+      + '<span class="badge-tag">'+ssotEsc(b.tag)+'</span>'
+      + '<span class="badge-desc">'+ssotEsc(b.desc)+'</span></a>';
+  }).join('');
+}
+
+function renderJsonLd(){
+  var el = document.querySelector('script[type="application/ld+json"]'); if(!el) return;
+  var data; try{ data = JSON.parse(el.textContent); }catch(e){ return; }
+  data.jobTitle = SITE.jobTitle;
+  data.hasCredential = SITE.certs.filter(function(c){ return c.earned; }).map(function(c){
+    return { '@type':'EducationalOccupationalCredential', name: c.jsonLdName || c.name, credentialCategory:'certification', recognizedBy: { '@type':'Organization', name: c.issuer } };
+  });
+  data.knowsAbout = SITE.knowsAbout;
+  el.textContent = JSON.stringify(data, null, 2);
+}
+
+function renderIdentity(){
+  var id = SITE.identity; if(!id) return;
+  if(id.title) document.title = id.title;
+  function m(sel, val){ var el = document.querySelector(sel); if(el && val) el.setAttribute('content', val); }
+  m('meta[name="description"]', id.metaDescription);
+  m('meta[property="og:title"]', id.ogTitle);
+  m('meta[property="og:description"]', id.ogDescription);
+  m('meta[name="twitter:title"]', id.twTitle);
+  m('meta[name="twitter:description"]', id.twDescription);
+}
+
+function renderAll(){
+  try { renderCerts(); renderBadges(); renderIdentity(); renderJsonLd(); }
+  catch(e){ console.error('[SSOT] render failed:', e); }
+}
+renderAll();
+
 // ── LOADING SCREEN ────────────────────────────────────────
 (function(){
   var lines = [
@@ -1865,7 +1991,7 @@ document.querySelectorAll('.reveal').forEach(function(el){ revealObs.observe(el)
 
 // ── TYPEWRITER ROLE ROTATOR ───────────────────────────────
 (function(){
-  var roles = ['Junior Penetration Tester', 'Security Analyst', 'Ethical Hacker', 'Offensive Security', 'Red Team Aspirant', 'CTF Competitor', 'Security Researcher'];
+  var roles = (window.SITE && SITE.identity && SITE.identity.roles) || ['Junior Penetration Tester', 'Security Analyst', 'Ethical Hacker', 'Offensive Security', 'Red Team Aspirant', 'CTF Competitor', 'Security Researcher'];
   var el = document.getElementById('role-text');
   var roleIdx = 0, charIdx = 0, deleting = false;
   function type(){
