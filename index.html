@@ -244,7 +244,9 @@
   .hero-badge-card { padding: .85rem; display: flex; align-items: center; justify-content: center; transition: transform .25s; }
   .hero-badge-card:hover { transform: translateY(-2px); }
   .hero-badge-card > a { border-radius: 6px; overflow: hidden; line-height: 0; display: inline-block; }
-  .hero-badge-card img { display: block; width: 130px; height: 130px; }
+  /* object-fit keeps non-square badge art (league badges are ~443x500) in proportion
+     inside the fixed 130px box — never hardcode a square onto a new badge image. */
+  .hero-badge-card img { display: block; width: 130px; height: 130px; object-fit: contain; }
   @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   h1.hero-name { font-family: var(--font-display); font-size: clamp(3.5rem,10vw,8rem); font-weight: 800; line-height: 0.95; letter-spacing: .04em; text-transform: uppercase; color: var(--text); animation: fadeSlideUp .7s .1s ease both; margin-bottom: .3rem; }
   .hero-role { font-family: 'Rajdhani', sans-serif; font-size: clamp(1rem,2.5vw,1.6rem); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--text2); animation: fadeSlideUp .7s .2s ease both; margin-bottom: 1.5rem; min-height: 2rem; }
