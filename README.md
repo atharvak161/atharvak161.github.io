@@ -29,6 +29,93 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 └── .githooks/pre-commit           runs the checker before every commit
 ```
 
+## Architecture
+
+### Delivery
+
+```
+   your machine                GitHub                    the internet
+  ┌──────────────┐         ┌──────────────┐          ┌────────────────┐
+  │ edit         │         │ repo: main   │          │ Fastly CDN     │
+  │ index.html   │ push ──▶│              │ ──build─▶│ (GitHub Pages) │
+  │              │         │ pages-build- │          │                │
+  │ pre-commit ✓ │         │ deployment   │          │ TLS: Let's     │
+  └──────────────┘         └──────────────┘          │ Encrypt, auto  │
+         │                                            └───────┬────────┘
+         │ blocked if the                                     │
+         │ checker fails                                      ▼
+         ▼                                        atharvaxsecurity.com
+  tools/check-consistency.mjs                     (CNAME + 4 A records
+                                                   at GoDaddy, DNSSEC on)
+```
+
+No build step. The repository *is* the artifact — what is committed is what is
+served, byte for byte. There is no bundler, no transpiler, no `node_modules`,
+and no CI beyond the Pages deploy itself. `tools/check-consistency.mjs` runs
+locally as a pre-commit gate, never in the cloud.
+
+### Runtime
+
+One HTML document. All CSS in one `<style>`, all JavaScript in two inline
+`<script>` blocks, GSAP vendored locally. Nothing is fetched at runtime except
+Google Fonts and a single analytics beacon.
+
+```
+index.html
+│
+├── <head>            static meta, later overwritten by renderIdentity()
+│                     static JSON-LD, later overwritten by renderJsonLd()
+│
+├── <body>            static markup for every section
+│                     ├── hero            hand-written, badge strip included
+│                     ├── #certifications static cards ← overwritten
+│                     ├── #badges         static cards ← overwritten
+│                     └── everything else static, never re-rendered
+│
+├── <script> SSOT     window.SITE = { identity, certs, badges }
+│                     renderAll() on DOMContentLoaded:
+│                       renderCerts()    → #certifications .certs-grid
+│                       renderBadges()   → #badges .badges-grid
+│                       renderIdentity() → <title>, meta, OG, Twitter
+│                       renderJsonLd()   → structured data
+│
+└── <script> terminal buildCertsTxt()  reads the RENDERED DOM
+                      buildBadgesTxt() reads the RENDERED DOM
+                      → so the terminal follows the SSOT for free
+```
+
+### Why it is shaped this way
+
+**Static markup first, rendered markup second.** Every SSOT-driven section
+ships real HTML in the file and is replaced on load. That costs duplication —
+the fallbacks must be kept in sync by hand — and buys a site that still works
+with JavaScript disabled, and structured data that a non-executing crawler can
+still read. The consistency checker exists to catch the drift this design
+invites.
+
+**The terminal reads the DOM, not the data.** `cat certs.txt` queries
+`#certifications .cert-card` rather than `SITE.certs`. One less place to update,
+and it can never disagree with what the visitor sees.
+
+**Dependencies are vendored, not fetched.** GSAP sits in `assets/vendor/`
+rather than loading from a CDN, so an outage or a compromised CDN cannot take
+the page down or inject into it. Certificates are self-hosted in
+`assets/certs/` for the same reason — a credential should not disappear because
+an issuer reorganised their asset paths.
+
+**The single-file constraint is deliberate.** At roughly 170 KB it is past the
+point most people would split into modules. Splitting would mean a build step,
+and a build step means the deployed output is no longer the reviewed source.
+The trade is made knowingly: harder to navigate, impossible to mis-deploy.
+
+### Known limits of this stack
+
+GitHub Pages serves the site with no configurable response headers, so there is
+no Content-Security-Policy, HSTS or X-Frame-Options, and no way to add them
+without putting a proxy in front. It also offers no redirects, so moving an
+asset path breaks anyone holding cached HTML until `max-age=600` expires. Both
+are accepted trade-offs for zero-config hosting, not oversights.
+
 ## The one thing to understand: the SSOT
 
 Certifications, badges and identity strings are each declared **once**, in
