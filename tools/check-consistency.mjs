@@ -134,6 +134,10 @@ import { existsSync } from 'node:fs';
 for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"/g)) {
   const p = m[1].split(/[?#]/)[0];
   if (!p || p === '/') continue;
+  // The SSOT renderers build markup by string concatenation, so the regex also
+  // matches template fragments like `'+ssotEsc(b.img)+'`. Those are code, not
+  // paths — the real values are checked via SITE.badges/SITE.certs above.
+  if (p.includes("'+") || p.includes("+'") || p.includes('${')) continue;
   if (!existsSync(join(root, p))) warn.push(`Referenced asset not found on disk: ${p}`);
 }
 
