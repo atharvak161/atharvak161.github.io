@@ -1026,7 +1026,7 @@
   <aside class="hero-badges" aria-label="Credentials">
     <div class="hero-badge-card">
       <a href="https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url" target="_blank" rel="noopener" aria-label="Cyber Security 101 (SEC1) — verify on Credly">
-        <img src="assets/badges/cyber-security-101-sec1.png" alt="TryHackMe Cyber Security 101 (SEC1) badge" width="130" height="130" loading="lazy">
+        <img src="assets/badges/thm/cyber-security-101-sec1.png" alt="TryHackMe Cyber Security 101 (SEC1) badge" width="130" height="130" loading="lazy">
       </a>
     </div>
     <div class="hero-badge-card">
@@ -1482,7 +1482,7 @@
         </div>
       </div>
       <div class="cert-card-foot">
-        <a class="cert-pill" href="https://assets.tryhackme.com/certification-certificate/6aa556b8d38c7aa229bbca58.pdf" target="_blank" rel="noopener">Completed</a>
+        <a class="cert-pill" href="assets/certs/TryHackMe-SEC1-Certificate.pdf" target="_blank" rel="noopener">Completed</a>
       </div>
     </div>
     <div class="cert-card thm reveal reveal-delay-2">
@@ -1494,7 +1494,7 @@
         </div>
       </div>
       <div class="cert-card-foot">
-        <a class="cert-pill" href="https://assets.tryhackme.com/certification-certificate/6a6473ed83b00ef659529027.pdf" target="_blank" rel="noopener">Completed</a>
+        <a class="cert-pill" href="assets/certs/TryHackMe-SEC0-Certificate.pdf" target="_blank" rel="noopener">Completed</a>
       </div>
     </div>
     <div class="cert-card thm reveal reveal-delay-3">
@@ -1525,13 +1525,13 @@
        ORDER: exam badge first, then League 1st-place wins, then by rarity. -->
   <div class="badges-grid">
     <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url" target="_blank" rel="noopener" aria-label="Cyber Security 101 (SEC1) &mdash; verify on Credly">
-      <img src="assets/badges/cyber-security-101-sec1.png" alt="Cyber Security 101 (SEC1) badge" loading="lazy">
+      <img src="assets/badges/thm/cyber-security-101-sec1.png" alt="Cyber Security 101 (SEC1) badge" loading="lazy">
       <span class="badge-name">Cyber Security 101 (SEC1)</span>
       <span class="badge-tag">Exam</span>
       <span class="badge-desc">TryHackMe Cyber Security 101 certification</span>
     </a>
     <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url" target="_blank" rel="noopener" aria-label="Pre Security (SEC0) &mdash; verify on Credly">
-      <img src="assets/badges/pre-security-sec0.png" alt="Pre Security (SEC0) badge" loading="lazy">
+      <img src="assets/badges/thm/pre-security-sec0.png" alt="Pre Security (SEC0) badge" loading="lazy">
       <span class="badge-name">Pre Security (SEC0)</span>
       <span class="badge-tag">Exam</span>
       <span class="badge-desc">TryHackMe Pre Security certification</span>
@@ -1838,8 +1838,8 @@ SITE.certs = [
   { id:'ceh',  earned:true,  cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853', certUrl:'assets/certs/CEH-V12-Certificate.pdf' },
   { id:'nse1', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 1', jsonLdName:'Fortinet NSE Level 1', badge:'\u{1F512}', credentialId:'PggZRhVh2p' },
   { id:'nse2', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 2', jsonLdName:'Fortinet NSE Level 2', badge:'\u{1F512}', credentialId:'uTMYfCWHCd' },
-  { id:'sec1', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Cyber Security 101 (SEC1)', jsonLdName:'Cyber Security 101 (SEC1)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'https://assets.tryhackme.com/certification-certificate/6aa556b8d38c7aa229bbca58.pdf' } },
-  { id:'sec0', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Pre Security (SEC0)', jsonLdName:'Pre Security (SEC0)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'https://assets.tryhackme.com/certification-certificate/6a6473ed83b00ef659529027.pdf' } },
+  { id:'sec1', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Cyber Security 101 (SEC1)', jsonLdName:'Cyber Security 101 (SEC1)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC1-Certificate.pdf' } },
+  { id:'sec0', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Pre Security (SEC0)', jsonLdName:'Pre Security (SEC0)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC0-Certificate.pdf' } },
   { id:'jrpt', earned:false, cls:'thm', issuer:'TryHackMe',  name:'Junior Penetration Testing Path', badge:'\u{1F3AF}', pill:{ text:'In Progress · Active' } }
 ];
 
@@ -1856,8 +1856,8 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    module badges and low-signal ones are deliberately omitted.
    tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
 SITE.badges = [
-  { id:'sec1',       tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/cyber-security-101-sec1.png', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
-  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/pre-security-sec0.png', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
+  { id:'sec1',       tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.png', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
+  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.png', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
   { id:'ruby',       tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.png', tag:'epic: 0.1%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
   { id:'sapphire',   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.png', tag:'epic: 0.3%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
   { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.png', tag:'epic: 0.3%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },

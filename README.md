@@ -14,16 +14,18 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
 ├── assets/
-│   ├── badges/
-│   │   ├── cyber-security-101-sec1.png   exam badges, transparent PNG
-│   │   ├── pre-security-sec0.png
-│   │   └── thm/                          TryHackMe badge art (8 files)
+│   ├── badges/thm/                all TryHackMe badge art (10 PNGs)
+│   │                              exam badges + league and room badges
+│   ├── certs/                     every certificate PDF, self-hosted
+│   │   ├── CEH-V12-Certificate.pdf
+│   │   ├── TryHackMe-SEC0-Certificate.pdf
+│   │   └── TryHackMe-SEC1-Certificate.pdf
 │   ├── img/atharva.jpg
-│   └── vendor/                           GSAP + ScrambleTextPlugin, vendored
-│                                         deliberately — no CDN dependency
-├── writeups/                             5 standalone CTF writeups
-├── tools/check-consistency.mjs           invariant checker (see below)
-└── .githooks/pre-commit                  runs the checker before every commit
+│   └── vendor/                    GSAP + ScrambleTextPlugin, vendored
+│                                  deliberately — no CDN dependency
+├── writeups/                      5 standalone CTF writeups
+├── tools/check-consistency.mjs    invariant checker (see below)
+└── .githooks/pre-commit           runs the checker before every commit
 ```
 
 ## The one thing to understand: the SSOT
@@ -63,6 +65,18 @@ JavaScript — which means drift here is invisible in a browser:
 `og:image` already cached by LinkedIn, X and Slack; `Atharva_Kulkarni_Resume.pdf`
 has been linked from job applications. Moving either into `assets/` would tidy
 the tree and break live links. They stay at root on purpose.
+
+## Asset conventions
+
+**All badge art lives in `assets/badges/thm/`.** Every badge on the site is a
+TryHackMe badge, so there is no second directory. Exam badges (SEC0, SEC1) sit
+alongside the league and room badges rather than one level up.
+
+**All certificates live in `assets/certs/`, self-hosted.** Cert cards link to
+these local copies rather than to the issuer's URL. That keeps every credential
+under this repo's control and immune to an issuer reorganising their asset
+paths. The trade-off is that a self-hosted copy will not reflect a later
+reissue — re-download if a certificate is ever replaced.
 
 ## Verification
 
