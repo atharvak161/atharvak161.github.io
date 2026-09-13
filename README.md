@@ -9,7 +9,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── index.html                     the whole site — markup, CSS, JS, SSOT
 ├── CNAME                          custom domain for GitHub Pages
 ├── robots.txt                     → sitemap.xml
-├── sitemap.xml                    6 URLs: home + 5 writeups
+├── sitemap.xml                    7 URLs: home + 6 writeups
 ├── thumbnail.png                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 ├── resume-archive/                superseded CVs, one dated folder each
@@ -24,7 +24,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 │   ├── img/atharva.jpg
 │   └── vendor/                    GSAP + ScrambleTextPlugin, vendored
 │                                  deliberately — no CDN dependency
-├── writeups/                      5 standalone CTF writeups
+├── writeups/                      6 standalone CTF writeups
 ├── tools/check-consistency.mjs    invariant checker (see below)
 └── .githooks/pre-commit           runs the checker before every commit
 ```
