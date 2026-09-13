@@ -12,6 +12,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── sitemap.xml                    6 URLs: home + 5 writeups
 ├── thumbnail.png                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
+├── resume-archive/                superseded CVs, one dated folder each
 │
 ├── assets/
 │   ├── badges/thm/                all TryHackMe badge art (10 PNGs)
