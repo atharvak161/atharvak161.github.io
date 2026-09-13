@@ -568,6 +568,13 @@
   .cert-card-name{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.25}
   .cert-card-foot{margin-top:auto;border-top:1px solid var(--border);padding-top:.9rem}
   .cert-card-id{font-family:var(--font-mono);font-size:.7rem;color:var(--text2);letter-spacing:.06em;word-break:break-all}
+  /* The credential ID becomes an <a> when the cert has a downloadable
+     certificate. Keep it looking identical to the non-linked <div>, and only
+     signal interactivity on hover. */
+  a.cert-card-id{display:block;text-decoration:none;transition:color .2s}
+  a.cert-card-id:hover{color:var(--accent)}
+  a.cert-card-id:hover .val{text-decoration:underline}
+  a.cert-card-id:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
   .cert-card-id .lbl{color:var(--text3);text-transform:uppercase;letter-spacing:.12em;font-size:.62rem;margin-right:.4rem}
   .cert-card-id .val{color:var(--text);font-weight:700}
   .cert-pill{display:inline-flex;align-items:center;gap:.45rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cert-accent);text-decoration:none;cursor:pointer}
@@ -1439,7 +1446,7 @@
         </div>
       </div>
       <div class="cert-card-foot">
-        <div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">ECC9421760853</span></div>
+        <a class="cert-card-id" href="assets/certs/CEH-V12-Certificate.pdf" target="_blank" rel="noopener"><span class="lbl">Credential ID</span><span class="val">ECC9421760853</span></a>
       </div>
     </div>
     <div class="cert-card nse reveal reveal-delay-1">
@@ -1828,7 +1835,7 @@ SITE.identity = {
    name=full (card), jsonLdName=formal (structured data), badge=emoji, cls=accent,
    credentialId OR pill{text,href?} for the card foot, earned gates JSON-LD. */
 SITE.certs = [
-  { id:'ceh',  earned:true,  cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853' },
+  { id:'ceh',  earned:true,  cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853', certUrl:'assets/certs/CEH-V12-Certificate.pdf' },
   { id:'nse1', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 1', jsonLdName:'Fortinet NSE Level 1', badge:'\u{1F512}', credentialId:'PggZRhVh2p' },
   { id:'nse2', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 2', jsonLdName:'Fortinet NSE Level 2', badge:'\u{1F512}', credentialId:'uTMYfCWHCd' },
   { id:'sec1', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Cyber Security 101 (SEC1)', jsonLdName:'Cyber Security 101 (SEC1)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'https://assets.tryhackme.com/certification-certificate/6aa556b8d38c7aa229bbca58.pdf' } },
@@ -1870,7 +1877,10 @@ function renderCerts(){
   grid.innerHTML = SITE.certs.map(function(c, i){
     var foot;
     if(c.credentialId){
-      foot = '<div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">'+ssotEsc(c.credentialId)+'</span></div>';
+      var idInner = '<span class="lbl">Credential ID</span><span class="val">'+ssotEsc(c.credentialId)+'</span>';
+      foot = c.certUrl
+        ? '<a class="cert-card-id" href="'+ssotEsc(c.certUrl)+'" target="_blank" rel="noopener">'+idInner+'</a>'
+        : '<div class="cert-card-id">'+idInner+'</div>';
     } else if(c.pill && c.pill.href){
       foot = '<a class="cert-pill" href="'+ssotEsc(c.pill.href)+'" target="_blank" rel="noopener">'+ssotEsc(c.pill.text)+'</a>';
     } else {
