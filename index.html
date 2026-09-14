@@ -324,7 +324,7 @@
   .about-highlights { display: flex; flex-direction: column; gap: 1rem; }
   .highlight-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; transition: all .25s; }
   .highlight-card:hover { border-left-color: var(--accent2); background: rgba(var(--accent-rgb),.04); transform: translateX(4px); }
-  .highlight-card h4 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+  .highlight-card h4, .highlight-card h3 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
   .highlight-card p { font-size: .78rem; color: var(--text2); line-height: 1.6; }
 
   /* ── SKILLS ──────────────────────────────────────────────── */
@@ -409,7 +409,7 @@
 
     .about-grid { grid-template-columns: 1fr !important; }
     .highlight-card { border-left: 3px solid #1a5276 !important; padding: .5rem .8rem; margin-bottom: .4rem; }
-    .highlight-card h4 { font-size: 10pt !important; }
+    .highlight-card h4, .highlight-card h3 { font-size: 10pt !important; }
     .highlight-card p { font-size: 9pt !important; }
 
     .exp-card { grid-template-columns: 140px 1fr !important; border: none !important;
@@ -548,7 +548,7 @@
   .timeline-item:last-child{border-left:1px solid transparent}
   .timeline-item::before{content:'';position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(0,212,255,.5)}
   .timeline-period{font-size:.7rem;color:var(--accent);letter-spacing:.12em;margin-bottom:.4rem;display:block}
-  .timeline-item h4{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+  .timeline-item h4, .timeline-item h3{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
   .timeline-item .inst{font-size:.78rem;color:var(--text2);margin-bottom:.5rem}
   .timeline-item p{font-size:.76rem;color:var(--text3);line-height:1.7}
 
@@ -691,8 +691,14 @@
   .terminal-dot{width:10px;height:10px;border-radius:50%}
   .td-r{background:#ff5f57}.td-y{background:#febc2e}.td-g{background:#28c840}
   .terminal-title{font-size:.72rem;color:#556677;letter-spacing:.1em}
-  .terminal-close-btn{background:none;border:none;color:#556677;cursor:pointer;font-size:.9rem;padding:0;transition:color .2s}
+  .terminal-close-btn{background:none;border:none;color:#556677;cursor:pointer;font-size:.9rem;padding:0;transition:color .2s;position:relative}
   .terminal-close-btn:hover{color:#ff4d6d}
+  /* Touch target. The glyph is ~14px; Apple HIG and WCAG 2.5.5 both want 44px.
+     An absolutely-positioned ::after is used rather than padding or a negative
+     margin because it is OUT OF FLOW - it cannot resize the button, shift the
+     terminal header, or push anything around. A negative-margin attempt here
+     previously moved the whole page layout. */
+  .terminal-close-btn::after{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
   .terminal-body{padding:1rem 1.2rem;height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:.2rem}
   .terminal-body::-webkit-scrollbar{width:4px}
   .terminal-body::-webkit-scrollbar-track{background:transparent}
@@ -1052,15 +1058,15 @@
     </div>
     <div class="about-highlights reveal reveal-delay-2">
       <div class="highlight-card">
-        <h4>&#x1F50D; Offensive Mindset from Enterprise Ops</h4>
+        <h3>&#x1F50D; Offensive Mindset from Enterprise Ops</h3>
         <p>Years managing LAN/WAN, Active Directory, and middleware gave me direct insight into the misconfigurations attackers exploit first.</p>
       </div>
       <div class="highlight-card">
-        <h4>&#x1F393; Research-Led Security Thinking</h4>
+        <h3>&#x1F393; Research-Led Security Thinking</h3>
         <p>MSc dissertation on Machine Learning Attacks on Physical Unclonable Functions &mdash; demonstrating threat research capability at hardware and cryptographic levels.</p>
       </div>
       <div class="highlight-card">
-        <h4>&#x26A1; Hands-On Lab Practice</h4>
+        <h3>&#x26A1; Hands-On Lab Practice</h3>
         <p>Actively practising manual exploit identification, network reconnaissance, and vulnerability assessment through TryHackMe Junior Pentest Path and HackTheBox.</p>
       </div>
     </div>
@@ -1424,13 +1430,13 @@
     <div class="timeline">
       <div class="timeline-item">
         <span class="timeline-period">2022 &mdash; 2023</span>
-        <h4>MSc Applied Cyber Security</h4>
+        <h3>MSc Applied Cyber Security</h3>
         <p class="inst">Queen's University Belfast</p>
         <p>GCHQ-accredited. Modules: Network Security &amp; Monitoring, Malware Analysis, Software Assurance, Computer Forensics, Applied Cryptography. Dissertation: ML Attacks on PUFs.</p>
       </div>
       <div class="timeline-item">
         <span class="timeline-period">2019 &mdash; 2022</span>
-        <h4>BSc Computer Science</h4>
+        <h3>BSc Computer Science</h3>
         <p class="inst">Pillai College of Arts, Commerce &amp; Sciences</p>
         <p>Core modules in network technologies, routing protocols, Cisco infrastructure, and network security. Python specialisation.</p>
       </div>
@@ -1563,12 +1569,24 @@
       <span class="badge-tag">epic: 0.5%</span>
       <span class="badge-desc">Platinum League 1st place</span>
     </a>
+      <a class="badge-card t-epic epic reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/authentication-striker?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Authentication Striker &mdash; view badge on TryHackMe">
+        <img src="assets/badges/thm/authentication-striker.png" alt="Authentication Striker badge" loading="lazy">
+        <span class="badge-name">Authentication Striker</span>
+        <span class="badge-tag">epic: 0.8%</span>
+        <span class="badge-desc">Used the Hammer to bypass authentication</span>
+      </a>
     <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/ice?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Ice badge on TryHackMe">
       <img src="assets/badges/thm/ice.png" alt="Ice badge" loading="lazy">
       <span class="badge-name">Ice</span>
       <span class="badge-tag">rare: 3.1%</span>
       <span class="badge-desc">Exploiting Windows via a media server</span>
     </a>
+      <a class="badge-card t-rare reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/shieldapprentice?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Shield Apprentice &mdash; view badge on TryHackMe">
+        <img src="assets/badges/thm/shield-apprentice.png" alt="Shield Apprentice badge" loading="lazy">
+        <span class="badge-name">Shield Apprentice</span>
+        <span class="badge-tag">rare: 3.1%</span>
+        <span class="badge-desc">Completing the FlareVM room</span>
+      </a>
     <a class="badge-card t-rare reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/90-day-streak?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="90 Day Streak badge on TryHackMe">
       <img src="assets/badges/thm/streak-90.png" alt="90 Day Streak badge" loading="lazy">
       <span class="badge-name">90 Day Streak</span>
@@ -1876,7 +1894,9 @@ SITE.badges = [
   { id:'ruby',       tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.png', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
   { id:'sapphire',   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.png', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
   { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.png', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
+  { id:'authstriker', tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.png', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker' },
   { id:'ice',        tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.png', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice' },
+  { id:'shield',     tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.png', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice' },
   { id:'streak90',   tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.png', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak' },
   { id:'sword',      tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.png', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge' },
   { id:'metasploit', tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.png', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable' },
