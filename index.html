@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://atharvaxsecurity.com">
 <meta property="og:title" content="Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12">
 <meta property="og:description" content="CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into offensive security and penetration testing. Portfolio of security projects and experience.">
-<meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.png">
+<meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 
@@ -23,7 +23,7 @@
 <meta name="twitter:url" content="https://atharvaxsecurity.com">
 <meta name="twitter:title" content="Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12">
 <meta name="twitter:description" content="CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into penetration testing and red team operations.">
-<meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.png">
+<meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
 
 <link rel="canonical" href="https://atharvaxsecurity.com">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23080b10'/><text y='50' x='50' dominant-baseline='central' text-anchor='middle' font-size='54' font-family='monospace' font-weight='bold' fill='%2300d4ff'>AK</text><rect x='10' y='68' width='80' height='2' fill='%2300ff9d' rx='1'/></svg>">
@@ -37,7 +37,7 @@
     --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
     --border: #1e2d3d; --accent: #00d4ff; --accent-rgb: 0,212,255; --accent2: #00ff9d; --accent2-rgb: 0,255,157;
     --accent3: #ff4d6d; --accent3-rgb: 255,77,109; --accent4: #f5a623; --accent4-rgb: 245,166,35;
-    --text: #e8edf2; --text2: #8899aa; --text3: #556677;
+    --text: #e8edf2; --text2: #8899aa; --text3: #758697; --surface-2: #141a24;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
   }
@@ -45,7 +45,7 @@
     --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
     --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00875a; --accent2-rgb: 0,135,90;
     --accent3: #e03050; --accent3-rgb: 224,48,80; --accent4: #b8730f; --accent4-rgb: 184,115,15;
-    --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+    --text: #0f172a; --text2: #475569; --text3: #5b6b7f; --surface-2: #ffffff;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -238,7 +238,7 @@
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
   @keyframes pulseGlow { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7} }
-  .hero-content { max-width: 800px; position: relative; z-index: 2; }
+  .hero-content { max-width: 800px; min-width: 0; position: relative; z-index: 2; }
   /* ── HERO BADGES (right column stack — holds Credly + any future badges) ── */
   .hero-badges { position: relative; z-index: 2; flex-shrink: 0; align-self: flex-start; margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; animation: fadeSlideUp .7s .6s ease both; }
   .hero-badge-card { padding: .85rem; display: flex; align-items: center; justify-content: center; transition: transform .25s; }
@@ -279,8 +279,8 @@
   /* TryHackMe anchor — unboxed: no surface, no border, no padding, no hover box */
   .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all .25s; }
   .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
-  .thm-link img.thm-banner { width: 360px; max-width: 100%; height: auto; border-radius: 8px; display: block; }
-  .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+  .thm-link img.thm-banner { width: 100%; max-width: 360px; max-width: 100%; height: auto; border-radius: 8px; display: block; }
+  .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 100%; max-width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
   .thm-card:hover { border-color: #a2ea2a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .thm-card-head { display: flex; align-items: center; gap: .75rem; }
   .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border); transition: border-color .25s; }
@@ -298,7 +298,7 @@
   .thm-pts-icon { width: 14px; height: 14px; vertical-align: -1px; margin-right: .4rem; color: #a2ea2a; }
   .thm-card-pts small { margin-left: .35rem; }
   /* GitHub card — self-contained, matches the boxed-card look */
-  .gh-card { display: flex; align-items: center; gap: .75rem; width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+  .gh-card { display: flex; align-items: center; gap: .75rem; width: 100%; max-width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
   .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .gh-card svg { width: 28px; height: 28px; color: var(--text); flex-shrink: 0; transition: color .25s; }
   .gh-card:hover svg { color: var(--accent); }
@@ -479,7 +479,7 @@
   @media (max-width: 900px) { .cv-frame-wrap iframe { height: 500px; } }
   /* ── TESTIMONIALS ───────────────────────────────────────── */
   #testimonials { border-top: 1px solid var(--border); }
-  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.5rem; }
   .testi-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 4px; padding: 2rem; display: flex;
@@ -676,15 +676,15 @@
   #backToTop:hover{border-color:var(--accent);color:var(--accent)}
 
   /* ── MOBILE MENU ─────────────────────────────────────────── */
-  .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,11,16,.97);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s}
-  .mobile-menu.open{opacity:1;pointer-events:auto}
+  .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,11,16,.97);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s;overflow-y:auto;visibility:hidden}
+  .mobile-menu.open{opacity:1;visibility:visible;pointer-events:auto;z-index:1001}
   .mobile-menu a{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--text2);text-decoration:none;transition:color .2s}
   .mobile-menu a:hover{color:var(--accent)}
   .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;font-family:var(--font-mono)}
 
   /* ── TERMINAL EASTER EGG ─────────────────────────────────── */
-  #terminal-overlay{position:fixed;inset:0;background:rgba(2,4,8,.92);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
-  #terminal-overlay.open{opacity:1;pointer-events:auto}
+  #terminal-overlay{position:fixed;inset:0;background:rgba(2,4,8,.92);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);visibility:hidden}
+  #terminal-overlay.open{opacity:1;visibility:visible;pointer-events:auto}
   .terminal-window{width:min(720px,92vw);background:#0a0f15;border:1px solid #00d4ff44;border-radius:4px;font-family:var(--font-mono);overflow:hidden;box-shadow:0 0 60px rgba(0,212,255,.15)}
   .terminal-titlebar{background:#111820;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2d3d}
   .terminal-dots{display:flex;gap:.4rem}
@@ -712,9 +712,17 @@
   #terminal-input{flex:1;background:none;border:none;outline:none;color:#e8edf2;font-family:var(--font-mono);font-size:.8rem;caret-color:#00d4ff}
 
   /* ── SCROLL ANIMATIONS ───────────────────────────────────── */
+  .skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100002;background:var(--accent);color:#04121a;padding:.6rem 1rem;border-radius:0 0 4px 0;font-weight:700;text-decoration:none}
+  .skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .form-group input:focus-visible,.form-group textarea:focus-visible,#terminal-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+  }
   .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
   .reveal.visible{opacity:1;transform:translateY(0)}
-  .reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+  .reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}.reveal-delay-4{transition-delay:.4s}.reveal-delay-5{transition-delay:.5s}
 
   /* ── LINKEDIN BADGE ─────────────────────────────────────── */
   .li-badge{display:flex;flex-direction:column;width:220px;border-radius:8px;overflow:hidden;text-decoration:none;flex-shrink:0;align-self:flex-start;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1d2226;box-shadow:0 0 0 1px #38434f;transition:transform .2s,box-shadow .2s}
@@ -748,6 +756,13 @@
   .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
+  @media(min-width:901px) and (max-width:1129px){
+    /* The nav's content is a constant 1129px wide. Below that the desktop nav
+       silently overflows - Resume, Contact and the theme toggle end up off
+       screen with no way to scroll to them, because nav is position:fixed.
+       Reuse the hamburger that already works rather than shrinking anything. */
+    .nav-links{display:none}.hamburger{display:flex}
+  }
   @media(max-width:900px){
     nav{padding:1rem 1.5rem}.nav-links{display:none}.hamburger{display:flex}
     #hero{padding:7rem 1.5rem 3rem;flex-direction:column}
@@ -777,7 +792,7 @@
   "jobTitle": "Security Analyst | Offensive Security",
   "description": "CEH V12 Certified and GCHQ-accredited MSc Applied Cyber Security graduate, transitioning into offensive security and penetration testing. Based in London, UK.",
   "url": "https://atharvaxsecurity.com",
-  "image": "https://atharvaxsecurity.com/thumbnail.png",
+  "image": "https://atharvaxsecurity.com/thumbnail.jpg",
   "email": "atharvak161@gmail.com",
   "address": {
     "@type": "PostalAddress",
@@ -848,6 +863,7 @@
 <script src="assets/vendor/ScrambleTextPlugin.min.js"></script>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to content</a>
 
 <!-- ── LOADING SCREEN ──────────────────────────────────────── -->
 <div id="loader">
@@ -932,6 +948,7 @@
 </div>
 
 <!-- ── HERO ───────────────────────────────────────────────── -->
+<main id="main" tabindex="-1">
 <section id="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
@@ -965,7 +982,7 @@
           </div>
         </div>
         <div class="li-badge-bd">
-          <div class="li-badge-av"><img src="assets/img/atharva.jpg" alt="Atharva Kulkarni" loading="lazy"></div>
+          <div class="li-badge-av"><img src="assets/img/atharva.webp" alt="Atharva Kulkarni" loading="lazy"></div>
           <div class="li-badge-nm">Atharva Kulkarni</div>
           <div class="li-badge-hl">Junior Penetration Tester | MSc Applied Cyber Security | Certified Ethical Hacker (CEH) | Fortinet NSE | Targeting Red Teaming and Offensive Security | TryHackMe | HackTheBox</div>
           <div class="li-badge-items">
@@ -1032,12 +1049,12 @@
   <aside class="hero-badges" aria-label="Credentials">
     <div class="hero-badge-card">
       <a href="https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url" target="_blank" rel="noopener" aria-label="Cyber Security 101 (SEC1) — verify on Credly">
-        <img src="assets/badges/thm/cyber-security-101-sec1.png" alt="TryHackMe Cyber Security 101 (SEC1) badge" width="130" height="130" loading="lazy">
+        <img src="assets/badges/thm/cyber-security-101-sec1.webp" alt="TryHackMe Cyber Security 101 (SEC1) badge" width="130" height="130" loading="lazy">
       </a>
     </div>
     <div class="hero-badge-card">
       <a href="https://tryhackme.com/AtharvaK911/badges/ruby-league?utm_campaign=social_share&utm_medium=social&utm_content=badge&utm_source=copy&sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="TryHackMe Ruby League — 1st place (view on TryHackMe)">
-        <img src="assets/badges/thm/ruby-league.png" alt="TryHackMe Ruby League — 1st place badge" width="130" height="130" loading="lazy">
+        <img src="assets/badges/thm/ruby-league.webp" alt="TryHackMe Ruby League — 1st place badge" width="130" height="130" loading="lazy">
       </a>
     </div>
   </aside>
@@ -1540,79 +1557,79 @@
        ORDER: exam badge first, then League 1st-place wins, then by rarity. -->
   <div class="badges-grid">
     <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url" target="_blank" rel="noopener" aria-label="Cyber Security 101 (SEC1) &mdash; verify on Credly">
-      <img src="assets/badges/thm/cyber-security-101-sec1.png" alt="Cyber Security 101 (SEC1) badge" loading="lazy">
+      <img src="assets/badges/thm/cyber-security-101-sec1.webp" alt="Cyber Security 101 (SEC1) badge" loading="lazy">
       <span class="badge-name">Cyber Security 101 (SEC1)</span>
       <span class="badge-tag">Exam</span>
       <span class="badge-desc">TryHackMe Cyber Security 101 certification</span>
     </a>
     <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url" target="_blank" rel="noopener" aria-label="Pre Security (SEC0) &mdash; verify on Credly">
-      <img src="assets/badges/thm/pre-security-sec0.png" alt="Pre Security (SEC0) badge" loading="lazy">
+      <img src="assets/badges/thm/pre-security-sec0.webp" alt="Pre Security (SEC0) badge" loading="lazy">
       <span class="badge-name">Pre Security (SEC0)</span>
       <span class="badge-tag">Exam</span>
       <span class="badge-desc">TryHackMe Pre Security certification</span>
     </a>
     <a class="badge-card t-epic epic reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/ruby-league?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Ruby League &mdash; 1st place on TryHackMe">
-      <img src="assets/badges/thm/ruby-league.png" alt="Ruby League badge" loading="lazy">
+      <img src="assets/badges/thm/ruby-league.webp" alt="Ruby League badge" loading="lazy">
       <span class="badge-name">Ruby League</span>
       <span class="badge-tag">epic: 0.2%</span>
       <span class="badge-desc">Ruby League 1st place</span>
     </a>
     <a class="badge-card t-epic epic reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/sapphire-league?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Sapphire League &mdash; 1st place on TryHackMe">
-      <img src="assets/badges/thm/sapphire-league.png" alt="Sapphire League badge" loading="lazy">
+      <img src="assets/badges/thm/sapphire-league.webp" alt="Sapphire League badge" loading="lazy">
       <span class="badge-name">Sapphire League</span>
       <span class="badge-tag">epic: 0.4%</span>
       <span class="badge-desc">Sapphire League 1st place</span>
     </a>
     <a class="badge-card t-epic epic reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/platinum-league?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Platinum League &mdash; 1st place on TryHackMe">
-      <img src="assets/badges/thm/platinum-league.png" alt="Platinum League badge" loading="lazy">
+      <img src="assets/badges/thm/platinum-league.webp" alt="Platinum League badge" loading="lazy">
       <span class="badge-name">Platinum League</span>
       <span class="badge-tag">epic: 0.5%</span>
       <span class="badge-desc">Platinum League 1st place</span>
     </a>
       <a class="badge-card t-epic epic reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/authentication-striker?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Authentication Striker &mdash; view badge on TryHackMe">
-        <img src="assets/badges/thm/authentication-striker.png" alt="Authentication Striker badge" loading="lazy">
+        <img src="assets/badges/thm/authentication-striker.webp" alt="Authentication Striker badge" loading="lazy">
         <span class="badge-name">Authentication Striker</span>
         <span class="badge-tag">epic: 0.8%</span>
         <span class="badge-desc">Used the Hammer to bypass authentication</span>
       </a>
     <a class="badge-card t-rare reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/ice?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Ice badge on TryHackMe">
-      <img src="assets/badges/thm/ice.png" alt="Ice badge" loading="lazy">
+      <img src="assets/badges/thm/ice.webp" alt="Ice badge" loading="lazy">
       <span class="badge-name">Ice</span>
       <span class="badge-tag">rare: 3.1%</span>
       <span class="badge-desc">Exploiting Windows via a media server</span>
     </a>
       <a class="badge-card t-rare reveal reveal-delay-1" href="https://tryhackme.com/AtharvaK911/badges/shieldapprentice?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Shield Apprentice &mdash; view badge on TryHackMe">
-        <img src="assets/badges/thm/shield-apprentice.png" alt="Shield Apprentice badge" loading="lazy">
+        <img src="assets/badges/thm/shield-apprentice.webp" alt="Shield Apprentice badge" loading="lazy">
         <span class="badge-name">Shield Apprentice</span>
         <span class="badge-tag">rare: 3.1%</span>
         <span class="badge-desc">Completing the FlareVM room</span>
       </a>
     <a class="badge-card t-rare reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/90-day-streak?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="90 Day Streak badge on TryHackMe">
-      <img src="assets/badges/thm/streak-90.png" alt="90 Day Streak badge" loading="lazy">
+      <img src="assets/badges/thm/streak-90.webp" alt="90 Day Streak badge" loading="lazy">
       <span class="badge-name">90 Day Streak</span>
       <span class="badge-tag">rare: 3%</span>
       <span class="badge-desc">Hacking for 90 days in a row</span>
     </a>
     <a class="badge-card t-rare reveal reveal-delay-3" href="https://tryhackme.com/AtharvaK911/badges/swordapprenticebadge?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Sword Apprentice badge on TryHackMe">
-      <img src="assets/badges/thm/sword-apprentice.png" alt="Sword Apprentice badge" loading="lazy">
+      <img src="assets/badges/thm/sword-apprentice.webp" alt="Sword Apprentice badge" loading="lazy">
       <span class="badge-name">Sword Apprentice</span>
       <span class="badge-tag">rare: 3.7%</span>
       <span class="badge-desc">Completing the SQLMap room</span>
     </a>
     <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/AtharvaK911/badges/metasploitable?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Metasploitable badge on TryHackMe">
-      <img src="assets/badges/thm/metasploitable.png" alt="Metasploitable badge" loading="lazy">
+      <img src="assets/badges/thm/metasploitable.webp" alt="Metasploitable badge" loading="lazy">
       <span class="badge-name">Metasploitable</span>
       <span class="badge-tag">common: 12.2%</span>
       <span class="badge-desc">Contains the knowledge to use Metasploit</span>
     </a>
     <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/AtharvaK911/badges/blue?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="Blue badge on TryHackMe">
-      <img src="assets/badges/thm/blue.png" alt="Blue badge" loading="lazy">
+      <img src="assets/badges/thm/blue.webp" alt="Blue badge" loading="lazy">
       <span class="badge-name">Blue</span>
       <span class="badge-tag">common: 12.8%</span>
       <span class="badge-desc">Hacking into Windows via EternalBlue</span>
     </a>
       <a class="badge-card t-common reveal reveal-delay-4" href="https://tryhackme.com/AtharvaK911/badges/owasp-10?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener" aria-label="OWASP Top 10 &mdash; view badge on TryHackMe">
-        <img src="assets/badges/thm/owasp-top-10.png" alt="OWASP Top 10 badge" loading="lazy">
+        <img src="assets/badges/thm/owasp-top-10.webp" alt="OWASP Top 10 badge" loading="lazy">
         <span class="badge-name">OWASP Top 10</span>
         <span class="badge-tag">common: 13%</span>
         <span class="badge-desc">Understanding every OWASP vulnerability</span>
@@ -1832,6 +1849,7 @@
   </div>
 </section>
 
+</main>
 <footer>
   <p>Built with intention &middot; <span>Atharva Kulkarni</span> &copy; 2026 &middot; London, UK &middot; <span style="color:var(--text3);font-size:.65rem">Press Ctrl+Alt+T (or &#x2318;+Option+T) for terminal</span></p>
 </footer>
@@ -1889,19 +1907,19 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    module badges and low-signal ones are deliberately omitted.
    tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
 SITE.badges = [
-  { id:'sec1',       tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.png', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
-  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.png', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
-  { id:'ruby',       tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.png', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
-  { id:'sapphire',   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.png', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
-  { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.png', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
-  { id:'authstriker', tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.png', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker' },
-  { id:'ice',        tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.png', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice' },
-  { id:'shield',     tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.png', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice' },
-  { id:'streak90',   tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.png', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak' },
-  { id:'sword',      tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.png', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge' },
-  { id:'metasploit', tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.png', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable' },
-  { id:'blue',       tier:'t-common',   cls2:'',     name:'Blue', img:'assets/badges/thm/blue.png', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue' },
-  { id:'owasp10',    tier:'t-common', cls2:'',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.png', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10' }
+  { id:'sec1',       tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
+  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
+  { id:'ruby',       tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.webp', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
+  { id:'sapphire',   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.webp', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
+  { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.webp', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
+  { id:'authstriker', tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.webp', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker', aria:'Authentication Striker — view badge on TryHackMe' },
+  { id:'ice',        tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.webp', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice', aria:'Ice badge on TryHackMe' },
+  { id:'shield',     tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.webp', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice', aria:'Shield Apprentice — view badge on TryHackMe' },
+  { id:'streak90',   tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.webp', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak', aria:'90 Day Streak badge on TryHackMe' },
+  { id:'sword',      tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.webp', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge', aria:'Sword Apprentice badge on TryHackMe' },
+  { id:'metasploit', tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.webp', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable', aria:'Metasploitable badge on TryHackMe' },
+  { id:'blue',       tier:'t-common',   cls2:'',     name:'Blue', img:'assets/badges/thm/blue.webp', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue', aria:'Blue badge on TryHackMe' },
+  { id:'owasp10',    tier:'t-common', cls2:'',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.webp', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10', aria:'OWASP Top 10 — view badge on TryHackMe' }
 ];
 
 function ssotEsc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
