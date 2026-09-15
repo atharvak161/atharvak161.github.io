@@ -26,6 +26,11 @@
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
+      [data-theme="light"] {
+        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
+        --border: #cbd5e1; --accent: #0077aa; --accent2: #00704a;
+        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
+      }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
@@ -72,6 +77,7 @@
       .wr-summary-key { min-width: 0; }
     }
   </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <div class="wr-header">
@@ -101,7 +107,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">1. The "Fix" That Broke Things</h2>
       <p class="wr-p">In the sequel, the developer <strong>removed the buffer overflow</strong> from the original Flag Vault &mdash; bounded reads now protect both buffers. But in the process they introduced a new and equally serious bug: user input is passed <strong>directly</strong> to <span class="wr-inline-code">printf()</span> as the format string.</p>
-      <div class="wr-code">char username[100];
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">char username[100];
 char flag[100];
 
 read_flag_into_memory(flag);   // flag loaded but never printed
@@ -128,7 +134,7 @@ printf(username);              // VULNERABLE: input as format string
     <div class="wr-phase">
       <h2 class="wr-phase-title">3. Locating the Flag on the Stack</h2>
       <p class="wr-p">First, fingerprint the stack by submitting a series of <span class="wr-inline-code">%p</span> reads. Walking the positions reveals where the pointer to the flag buffer sits. Positional specifiers (<span class="wr-inline-code">%N$</span>) let us jump straight to a chosen slot rather than padding our way there.</p>
-      <div class="wr-code">from pwn import *
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">from pwn import *
 
 p = process('./vault2')
 
@@ -140,7 +146,7 @@ print(p.recvline())          # inspect leaked addresses</div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">4. Leaking the Flag</h2>
-      <div class="wr-code">from pwn import *
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">from pwn import *
 
 p = process('./vault2')
 
@@ -153,7 +159,7 @@ print(p.recvall().decode())</div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">5. Flag</h2>
-      <div class="wr-code">$ python3 exploit.py
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ python3 exploit.py
 [+] Starting local process './vault2'
 [+] Receiving all data: Done
 THM{format_issues}</div>

