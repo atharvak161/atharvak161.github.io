@@ -136,9 +136,82 @@ for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"
   if (!p || p === '/') continue;
   // The SSOT renderers build markup by string concatenation, so the regex also
   // matches template fragments like `'+ssotEsc(b.img)+'`. Those are code, not
-  // paths — the real values are checked via SITE.badges/SITE.certs above.
+  // paths — the real values are checked by the SSOT block below.
   if (p.includes("'+") || p.includes("+'") || p.includes('${')) continue;
   if (!existsSync(join(root, p))) warn.push(`Referenced asset not found on disk: ${p}`);
+}
+
+
+/* ── SSOT vs static fallback ──────────────────────────────────────────────────
+   The section above treats the STATIC certifications markup as the source of
+   truth. That markup is overwritten at runtime by renderCerts()/renderBadges()
+   from SITE.certs and SITE.badges, so comparing static against static can never
+   catch the failure this file exists to prevent: the SSOT and its hand-mirrored
+   no-JS fallback drifting apart.
+
+   This block reads the two arrays out of index.html and diffs every field that
+   appears in both surfaces. Added after an audit found 14 such disagreements
+   that had all shipped through a green run of this script.  */
+
+function readArray(name) {
+  const re = new RegExp('SITE\\.' + name + '\\s*=\\s*(\\[[\\s\\S]*?\\n\\s*\\];)');
+  const m = html.match(re);
+  if (!m) { fail.push(`SITE.${name} not found — the SSOT check could not run`); return null; }
+  try {
+    return Function('"use strict"; return (' + m[1].replace(/;\s*$/, '') + ');')();
+  } catch (e) {
+    fail.push(`SITE.${name} could not be parsed: ${e.message}`);
+    return null;
+  }
+}
+
+const norm = s => (s || '').replace(/&mdash;/g, '—').replace(/&amp;/g, '&').trim();
+
+const siteBadges = readArray('badges');
+if (siteBadges) {
+  const sec = section('badges') || '';
+  const cards = sec.match(/<a class="badge-card[\s\S]*?<\/a>/g) || [];
+  if (cards.length !== siteBadges.length) {
+    fail.push(`SITE.badges has ${siteBadges.length} entries but the static fallback has ${cards.length} cards`);
+  }
+  siteBadges.forEach((b, i) => {
+    const card = cards[i];
+    const label = b.name || `badge ${i}`;
+    if (b.img && !existsSync(join(root, b.img))) fail.push(`badge "${label}": img not on disk: ${b.img}`);
+    if (!card) return;
+    const got = {
+      img:  (card.match(/src="([^"]+)"/) || [])[1],
+      name: (card.match(/class="badge-name">([\s\S]*?)</) || [])[1],
+      tag:  (card.match(/class="badge-tag">([\s\S]*?)</) || [])[1],
+      desc: (card.match(/class="badge-desc">([\s\S]*?)</) || [])[1],
+      aria: (card.match(/aria-label="([^"]*)"/) || [])[1],
+      cls:  (card.match(/class="badge-card ([^"]*)"/) || [])[1],
+    };
+    const wantAria = b.aria || `${b.name} badge on TryHackMe`;
+    if (got.img !== b.img)                fail.push(`badge "${label}": SITE img "${b.img}" vs fallback "${got.img}"`);
+    if (norm(got.name) !== norm(b.name))  fail.push(`badge "${label}": SITE name "${b.name}" vs fallback "${got.name}"`);
+    if (norm(got.tag)  !== norm(b.tag))   fail.push(`badge "${label}": SITE tag "${b.tag}" vs fallback "${got.tag}"`);
+    if (norm(got.desc) !== norm(b.desc))  fail.push(`badge "${label}": SITE desc "${b.desc}" vs fallback "${got.desc}"`);
+    if (norm(got.aria) !== norm(wantAria)) fail.push(`badge "${label}": rendered aria "${wantAria}" vs fallback "${got.aria}"`);
+    if (got.cls && b.tier && !got.cls.includes(b.tier))
+      fail.push(`badge "${label}": SITE tier "${b.tier}" missing from fallback class "${got.cls}"`);
+  });
+}
+
+const siteCerts = readArray('certs');
+if (siteCerts) {
+  siteCerts.forEach(c => {
+    if (c.certUrl && !existsSync(join(root, c.certUrl)))
+      fail.push(`cert "${c.name}": certUrl not on disk: ${c.certUrl}`);
+    if (c.pill && c.pill.href && !/^https?:/.test(c.pill.href) && !existsSync(join(root, c.pill.href)))
+      fail.push(`cert "${c.name}": pill href not on disk: ${c.pill.href}`);
+  });
+  const earnedCerts = siteCerts.filter(c => c.earned).length;
+  if (ld) {
+    const ldCount = (ld.match(/"EducationalOccupationalCredential"/g) || []).length;
+    if (ldCount !== earnedCerts)
+      fail.push(`SITE.certs has ${earnedCerts} earned but JSON-LD lists ${ldCount} credentials`);
+  }
 }
 
 /* ── Report ─────────────────────────────────────────────────────────────── */
