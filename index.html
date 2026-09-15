@@ -314,6 +314,9 @@
   .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
   .section-num { font-size: .72rem; color: var(--accent); letter-spacing: .2em; font-weight: 700; }
   h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
+  /* The scramble uses glyphs wider than the real text, so the longest title wrapped
+     mid-animation and snapped back. The flexible .section-line absorbs the extra. */
+  @media (min-width: 620px) { #writeups h2.section-title { white-space: nowrap; } }
   .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
 
   /* ── ABOUT ───────────────────────────────────────────────── */
@@ -509,7 +512,7 @@
   .exp-list{display:flex;flex-direction:column;gap:2rem}
   .exp-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem 2.5rem;display:grid;grid-template-columns:200px 1fr;gap:2rem;transition:all .25s;position:relative;overflow:hidden}
   .exp-card::after{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--border);transition:background .25s}
-  .exp-card:hover{border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.02)}
+  .exp-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
   .exp-card:hover::after{background:var(--accent)}
   .exp-meta{padding-top:.2rem}
   .exp-period{font-size:.72rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.5rem;display:block}
@@ -715,7 +718,11 @@
   .skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100002;background:var(--accent);color:#04121a;padding:.6rem 1rem;border-radius:0 0 4px 0;font-weight:700;text-decoration:none}
   .skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  .form-group input:focus-visible,.form-group textarea:focus-visible,#terminal-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* Form fields signal focus with their own border colour, matching the
+     contact tiles. Without this the global ring above stacks on top and
+     draws a second outline 3px outside the border. */
+  .form-group input:focus-visible,.form-group textarea:focus-visible{outline:none}
+  #terminal-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media (prefers-reduced-motion: reduce){
     .reveal{opacity:1 !important;transform:none !important;transition:none !important}
     *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -1379,11 +1386,11 @@
 
 <!-- ── OFFENSIVE SECURITY WRITEUPS ──────────────────────────── -->
 <section id="writeups">
-    <div class="section-header reveal">
-      <span class="section-num">05 //</span>
-      <h2 class="section-title glitch-title" data-text="Offensive Security Writeups">Offensive Security Writeups</h2>
-      <div class="section-line"></div>
-    </div>
+  <div class="section-header reveal">
+    <span class="section-num">05 //</span>
+    <h2 class="section-title glitch-title" data-text="Offensive Security Writeups">Offensive Security Writeups</h2>
+    <div class="section-line"></div>
+  </div>
   <p class="reveal" style="font-size:.82rem;color:var(--text2);margin-bottom:2rem;max-width:680px;">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. <a href="writeups/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,212,255,.3)">View all writeups &rarr;</a></p>
   <div class="projects-grid">
     <a href="writeups/domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
@@ -2063,7 +2070,13 @@ window.addEventListener('scroll', function(){
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
-  var sections = ['about','skills','experience','projects','education','certifications','badges','learning','testimonials','cv','contact'];
+  // Derived from the nav itself rather than hardcoded. A hardcoded list
+  // silently stopped highlighting when the Writeups section was added, so a
+  // new section with a nav link is now picked up automatically.
+  var sections = Array.prototype.map.call(
+    document.querySelectorAll('.nav-links a[href^="#"]'),
+    function(a){ return a.getAttribute('href').slice(1); }
+  ).filter(function(id){ return id && document.getElementById(id); });
   var scrollY = window.scrollY + 120;
   var current = '';
   sections.forEach(function(id){
