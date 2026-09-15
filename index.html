@@ -316,7 +316,7 @@
   h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
   /* The scramble uses glyphs wider than the real text, so the longest title wrapped
      mid-animation and snapped back. The flexible .section-line absorbs the extra. */
-  @media (min-width: 620px) { #writeups h2.section-title { white-space: nowrap; } }
+  @media (min-width: 620px) { h2.section-title.glitch-title { white-space: nowrap; } }
   .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
 
   /* ── ABOUT ───────────────────────────────────────────────── */
@@ -659,7 +659,11 @@
   .contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text2);padding:.9rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s;font-size:.82rem}
   .contact-link:hover{border-color:var(--accent);color:var(--text);transform:translateX(4px)}
   .contact-link-icon{width:32px;height:32px;border-radius:4px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
-  .contact-form{display:flex;flex-direction:column;gap:1rem}
+  /* The form is a sibling of .contact-info, not of .contact-links, so it has
+     no structural way to align with the email tile. This offset is the
+     heading-plus-paragraph block above those links (76+16+98+32), Revisit if that
+     paragraph's length changes. */
+  .contact-form{display:flex;flex-direction:column;gap:1rem;padding-top:222px}
   .form-group{display:flex;flex-direction:column;gap:.4rem}
   .form-group label{font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase}
   .form-group input,.form-group textarea{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.8rem 1rem;color:var(--text);font-family:var(--font-mono);font-size:.82rem;outline:none;transition:border-color .2s;resize:none}
@@ -778,7 +782,7 @@
     section{padding:4rem 1.5rem}
     .about-grid{grid-template-columns:1fr;gap:2rem}
     .exp-card{grid-template-columns:1fr;gap:.5rem}
-    .contact-grid{grid-template-columns:1fr;gap:2.5rem}
+    .contact-grid{grid-template-columns:1fr;gap:2.5rem}.contact-form{padding-top:0}
     .hero-stats{gap:1.5rem}.stat-num{font-size:1.5rem}
     #contact{padding:4rem 1.5rem}
     #progress-track{display:none}
