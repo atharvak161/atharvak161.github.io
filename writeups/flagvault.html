@@ -26,6 +26,11 @@
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
+      [data-theme="light"] {
+        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
+        --border: #cbd5e1; --accent: #0077aa; --accent2: #00704a;
+        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
+      }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
@@ -72,6 +77,7 @@
       .wr-summary-key { min-width: 0; }
     }
   </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <div class="wr-header">
@@ -102,7 +108,7 @@
     <div class="wr-phase">
       <h2 class="wr-phase-title">1. The Binary</h2>
       <p class="wr-p">The challenge ships a small C login program. It declares two adjacent character buffers and reads input into the first using the unbounded <span class="wr-inline-code">gets()</span> function. Crucially, the line that would read the user's password is <strong>commented out</strong> &mdash; meaning the password buffer is never populated through legitimate input, and a normal login can never succeed.</p>
-      <div class="wr-code">char password[100];          // declared FIRST
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">char password[100];          // declared FIRST
 char username[100];          // declared SECOND
 
 gets(username);              // unbounded read into username
@@ -129,7 +135,7 @@ if (strcmp(username, password) == 0) {
     <div class="wr-phase">
       <h2 class="wr-phase-title">3. Crafting the Overflow</h2>
       <p class="wr-p">The goal is to make <span class="wr-inline-code">username</span> and <span class="wr-inline-code">password</span> compare equal. Fill the 100-byte username buffer with padding, then continue with a known marker that lands in the password buffer. Both buffers end up holding the same trailing bytes &mdash; but the cleaner approach is to fill the entire combined region with a single repeated value so the comparison region matches on both sides.</p>
-      <div class="wr-code">from pwn import *
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">from pwn import *
 
 p = process('./vault')          # or remote(host, port)
 
@@ -144,7 +150,7 @@ print(p.recvall().decode())</div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">4. Flag</h2>
-      <div class="wr-code">$ python3 exploit.py
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ python3 exploit.py
 [+] Starting local process './vault'
 [+] Receiving all data: Done
 Access granted.

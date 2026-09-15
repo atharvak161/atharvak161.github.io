@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTF Writeups &mdash; Atharva Kulkarni</title>
+  <meta name="description" content="Six detailed TryHackMe walkthroughs covering chained web exploitation, format string vulnerabilities, SQL injection, CAPTCHA bypass and privilege escalation. Every command explained.">
+  <link rel="canonical" href="https://atharvaxsecurity.com/writeups/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://atharvaxsecurity.com/writeups/">
+  <meta property="og:title" content="CTF Writeups &mdash; Atharva Kulkarni">
+  <meta property="og:description" content="Six detailed TryHackMe walkthroughs covering chained web exploitation, format string vulnerabilities, SQL injection, CAPTCHA bypass and privilege escalation.">
+  <meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="627">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CTF Writeups &mdash; Atharva Kulkarni">
+  <meta name="twitter:description" content="Six detailed TryHackMe walkthroughs. Every command explained.">
+  <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage",
+   "name":"CTF Writeups","url":"https://atharvaxsecurity.com/writeups/",
+   "description":"Six detailed TryHackMe walkthroughs by Atharva Kulkarni.",
+   "author":{"@type":"Person","name":"Atharva Kulkarni","url":"https://atharvaxsecurity.com/"},
+   "hasPart":[
+     {"@type":"TechArticle","name":"Domino","url":"https://atharvaxsecurity.com/writeups/domino.html"},
+     {"@type":"TechArticle","name":"Flag Vault 2","url":"https://atharvaxsecurity.com/writeups/flagvault2.html"},
+     {"@type":"TechArticle","name":"Flag Vault","url":"https://atharvaxsecurity.com/writeups/flagvault.html"},
+     {"@type":"TechArticle","name":"Capture!","url":"https://atharvaxsecurity.com/writeups/capture.html"},
+     {"@type":"TechArticle","name":"Simple CTF","url":"https://atharvaxsecurity.com/writeups/simplectf.html"},
+     {"@type":"TechArticle","name":"Pickle Rick","url":"https://atharvaxsecurity.com/writeups/picklerick.html"}
+   ]}
+  </script>
+  <style>
+    :root{--bg:#080b10;--bg2:#0d1117;--surface:#141c26;--border:#1e2d3d;--accent:#00d4ff;--accent2:#00ff9d;--text:#e8edf2;--text2:#8899aa;--text3:#758697;
+      --font-display:'Barlow Condensed',sans-serif;--font-mono:'Share Tech Mono',monospace}
+    [data-theme="light"]{--bg:#f0f4f8;--bg2:#e2e8f0;--surface:#ffffff;--border:#cbd5e1;--accent:#0077aa;--accent2:#00704a;--text:#0f172a;--text2:#475569;--text3:#5b6b7f}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-mono);line-height:1.8}
+    .skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100;background:var(--accent);color:#04121a;padding:.6rem 1rem;font-weight:700;text-decoration:none}
+    .skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .wr-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+    .wr-back{color:var(--accent);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+    .wr-back:hover{color:var(--text)}
+    .wr-header-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text2)}
+    .hub{max-width:1200px;margin:0 auto;padding:3rem 2rem 4rem}
+    .hub-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+    .hub-sub{font-size:.85rem;color:var(--text2);max-width:680px;margin-bottom:.6rem}
+    .hub-count{font-size:.72rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2.2rem}
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:1.5rem}
+    .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:all .3s;position:relative;overflow:hidden}
+    .project-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+    .project-icon{width:44px;height:44px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(0,212,255,.06)}
+    .project-card h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text)}
+    .project-org{font-size:.7rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+    .project-card p{font-size:.8rem;color:var(--text2);line-height:1.8;flex:1}
+    .wr-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text3)}
+    .wr-footer a{color:var(--accent);text-decoration:none}
+    @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.project-card{padding:1.4rem}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+  </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="wr-header">
+    <a href="../index.html" class="wr-back">&larr; Back to Portfolio</a>
+    <span class="wr-header-title">CTF Writeups</span>
+  </div>
+  <main id="main" tabindex="-1" class="hub">
+    <h1 class="hub-title">CTF Writeups</h1>
+    <p class="hub-sub">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. Every command is explained, not just listed.</p>
+    <div class="hub-count">6 writeups &middot; TryHackMe</div>
+    <div class="projects-grid">
+      <a href="domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F3B4;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Domino</h3></div>
+      <p>Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-732 &middot; A01:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+      <a href="flagvault2.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F9F5;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Flag Vault 2</h3></div>
+      <p>Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-134 &middot; CWE-787 &middot; A03:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+      <a href="flagvault.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F4BE;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Flag Vault</h3></div>
+      <p>Exploited a stack buffer overflow (CWE-121) via gets() to overwrite an adjacent stack variable and bypass authentication.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-121 &middot; CWE-676 &middot; A04:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+      <a href="capture.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F510;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Capture!</h3></div>
+      <p>Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-307 &middot; CWE-200 &middot; A07:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+      <a href="simplectf.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F3F3;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Simple CTF</h3></div>
+      <p>Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3 9.8) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2019-9053 &middot; CWE-89 &middot; A01:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+      <a href="picklerick.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">&#x1F952;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>Pickle Rick</h3></div>
+      <p>Retrieved credentials via information disclosure in HTML comments and robots.txt, then achieved RCE and root escalation through a misconfigured sudo policy.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-540 &middot; CWE-284 &middot; A01:2021</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    </div>
+  </main>
+  <div class="wr-footer"><a href="../index.html">&larr; atharvaxsecurity.com</a></div>
+</body>
+</html>

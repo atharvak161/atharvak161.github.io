@@ -756,8 +756,9 @@
   .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
-  @media(min-width:901px) and (max-width:1129px){
-    /* The nav's content is a constant 1129px wide. Below that the desktop nav
+  @media(min-width:901px) and (max-width:1299px){
+    /* With 12 links the nav needs ~1300px to fit the theme toggle and keep a
+       gap after the logo. Below that the desktop nav
        silently overflows - Resume, Contact and the theme toggle end up off
        screen with no way to scroll to them, because nav is position:fixed.
        Reuse the hamburger that already works rather than shrinking anything. */
@@ -859,8 +860,8 @@
 <!-- GoatCounter Analytics -->
 <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
-<script src="assets/vendor/gsap.min.js"></script>
-<script src="assets/vendor/ScrambleTextPlugin.min.js"></script>
+<script defer src="assets/vendor/gsap.min.js"></script>
+<script defer src="assets/vendor/ScrambleTextPlugin.min.js"></script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -890,6 +891,7 @@
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#writeups">Writeups</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#certifications">Certs</a></li>
     <li><a href="#badges">Badges</a></li>
@@ -918,6 +920,7 @@
   <a href="#skills" class="mm-link">Skills</a>
   <a href="#experience" class="mm-link">Experience</a>
   <a href="#projects" class="mm-link">Projects</a>
+  <a href="#writeups" class="mm-link">Writeups</a>
   <a href="#education" class="mm-link">Education</a>
   <a href="#certifications" class="mm-link">Certifications</a>
   <a href="#badges" class="mm-link">Badges</a>
@@ -1372,12 +1375,16 @@
     </a>
   </div>
 
-  <!-- Offensive Security Writeups -->
-  <div class="reveal" style="margin-top:3.5rem;margin-bottom:.8rem;display:flex;align-items:center;gap:1.5rem;">
-    <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:.06em;text-transform:uppercase;">&#x1F4DD; Offensive Security Writeups</h3>
-    <div class="section-line"></div>
-  </div>
-  <p class="reveal" style="font-size:.82rem;color:var(--text2);margin-bottom:2rem;max-width:680px;">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation.</p>
+</section>
+
+<!-- ── OFFENSIVE SECURITY WRITEUPS ──────────────────────────── -->
+<section id="writeups">
+    <div class="section-header reveal">
+      <span class="section-num">05 //</span>
+      <h2 class="section-title glitch-title" data-text="Offensive Security Writeups">Offensive Security Writeups</h2>
+      <div class="section-line"></div>
+    </div>
+  <p class="reveal" style="font-size:.82rem;color:var(--text2);margin-bottom:2rem;max-width:680px;">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. <a href="writeups/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,212,255,.3)">View all writeups &rarr;</a></p>
   <div class="projects-grid">
     <a href="writeups/domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
@@ -1439,7 +1446,7 @@
 <!-- ── EDUCATION ───────────────────────────────────────────── -->
 <section id="education">
   <div class="section-header reveal">
-    <span class="section-num">05 //</span>
+    <span class="section-num">06 //</span>
     <h2 class="section-title glitch-title" data-text="Education">Education</h2>
     <div class="section-line"></div>
   </div>
@@ -1464,7 +1471,7 @@
 <!-- ── CERTIFICATIONS ─────────────────────────────────────── -->
 <section id="certifications">
   <div class="section-header reveal">
-    <span class="section-num">06 //</span>
+    <span class="section-num">07 //</span>
     <h2 class="section-title glitch-title" data-text="Certifications">Certifications</h2>
     <div class="section-line"></div>
   </div>
@@ -1547,7 +1554,7 @@
 <!-- ── BADGES ─────────────────────────────────────────────── -->
 <section id="badges">
   <div class="section-header reveal">
-    <span class="section-num">07 //</span>
+    <span class="section-num">08 //</span>
     <h2 class="section-title glitch-title" data-text="Badges">Badges</h2>
     <div class="section-line"></div>
   </div>
@@ -1640,7 +1647,7 @@
 <!-- ── CURRENTLY LEARNING ─────────────────────────────────── -->
 <section id="learning">
   <div class="section-header reveal">
-    <span class="section-num">08 //</span>
+    <span class="section-num">09 //</span>
     <h2 class="section-title glitch-title" data-text="Currently Learning">Currently Learning</h2>
     <div class="section-line"></div>
   </div>
@@ -1742,7 +1749,7 @@
 
 <section id="testimonials">
   <div class="section-header reveal">
-    <span class="section-num">09 //</span>
+    <span class="section-num">10 //</span>
     <h2 class="section-title glitch-title" data-text="Testimonials">Testimonials</h2>
     <div class="section-line"></div>
   </div>
@@ -1778,7 +1785,7 @@
 
 <section id="cv">
   <div class="section-header reveal">
-    <span class="section-num">10 //</span>
+    <span class="section-num">11 //</span>
     <h2 class="section-title glitch-title" data-text="Resume">Resume</h2>
     <div class="section-line"></div>
   </div>
@@ -1813,7 +1820,7 @@
 <section id="contact">
   <div class="contact-inner">
     <div class="section-header reveal">
-      <span class="section-num">11 //</span>
+      <span class="section-num">12 //</span>
       <h2 class="section-title glitch-title" data-text="Contact">Contact</h2>
       <div class="section-line"></div>
     </div>
@@ -2019,7 +2026,19 @@ renderAll();
     loader.classList.add('fade-out');
     setTimeout(function(){ loader.style.display = 'none'; }, 700);
   }
-  setTimeout(dismissLoader, 2400);
+  // The loading screen is a real loading window, not just decoration: the
+  // deferred GSAP bundle, the fonts and the images all arrive behind it. So
+  // dismiss when the page is genuinely ready rather than on a fixed timer -
+  // 2400ms becomes a MINIMUM so the animation is never cut off mid-beat, and
+  // the wait is only longer than that if something is actually still loading.
+  var loaderShownAt = Date.now(), MIN_SHOW = 2400;
+  function dismissWhenReady(){
+    var waited = Date.now() - loaderShownAt;
+    if(waited < MIN_SHOW){ setTimeout(dismissWhenReady, MIN_SHOW - waited); return; }
+    dismissLoader();
+  }
+  if(document.readyState === 'complete'){ dismissWhenReady(); }
+  else { window.addEventListener('load', dismissWhenReady); }
   // Safety fallback — force dismiss after 5s no matter what
   setTimeout(function(){ if(loader && loader.style.display !== 'none'){ dismissLoader(); } }, 5000);
 })();
@@ -2333,8 +2352,11 @@ function buildBadgesTxt(){
   return lines;
 }
 
+var termReturnFocus = null;
 function openTerminal(){
   terminalOpen = true;
+  // Remember what had focus so Escape returns the user there.
+  termReturnFocus = document.activeElement;
   termOverlay.classList.add('open');
   if(termBody.children.length === 0){
     termPrint([
@@ -2349,6 +2371,9 @@ function openTerminal(){
 function closeTerminal(){
   terminalOpen = false;
   termOverlay.classList.remove('open');
+  if(termReturnFocus && typeof termReturnFocus.focus === "function"){
+    termReturnFocus.focus(); termReturnFocus = null;
+  }
 }
 
 termInput.addEventListener('keydown', function(e){
@@ -2599,7 +2624,7 @@ function printCV() {
 // then the blue/white flicker follows a beat later (~320ms) so both effects
 // are clearly perceptible instead of competing for the same instant. Both
 // re-arm each time a title fully leaves and re-enters the viewport.
-(function(){
+  document.addEventListener('DOMContentLoaded', function(){   // deferred gsap is ready by now
   // Both effects run regardless of prefers-reduced-motion: the site owner
   // explicitly wants the scramble + flicker to fire on scroll on his machine.
   if(window.gsap && window.ScrambleTextPlugin) gsap.registerPlugin(ScrambleTextPlugin);
@@ -2631,7 +2656,7 @@ function printCV() {
     el.dataset.fxArmed = 'true';
     obs.observe(el);
   });
-})();
+  });
 </script>
 </body>
 </html>
