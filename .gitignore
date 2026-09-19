@@ -1,3 +1,16 @@
 CTF writeups/
 .DS_Store
 **/.DS_Store
+
+# Agent instruction files must never be published from this repo.
+# This repo is served by GitHub Pages, so anything committed is world-readable.
+# The working copy lives in _local/, which .git/info/exclude keeps out of git.
+CLAUDE.md
+**/CLAUDE.md
+claude.md
+**/claude.md
+AGENTS.md
+**/AGENTS.md
+GEMINI.md
+**/GEMINI.md
+.cursorrules

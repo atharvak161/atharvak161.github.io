@@ -1,4 +1,17 @@
 #!/bin/sh
+
+# No agent-instruction file may ever be committed to this repo - it is served
+# publicly by GitHub Pages. Atharva's rule, 2026-09-19. Catches `git add -f`,
+# which .gitignore alone cannot stop.
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep -iE '(^|/)(claude|agents|gemini)\.md$|(^|/)\.cursorrules$' || true)
+if [ -n "$staged" ]; then
+  echo "" >&2
+  echo "pre-commit BLOCKED: agent-instruction file staged for a PUBLIC repo:" >&2
+  echo "$staged" | sed 's/^/    /' >&2
+  echo "  This repo is served by GitHub Pages. Keep it in _local/ instead." >&2
+  echo "" >&2
+  exit 1
+fi
 # Portfolio consistency invariants — see tools/check-consistency.mjs
 # Bypass only with a deliberate --no-verify and a good reason.
 if command -v node >/dev/null 2>&1; then
