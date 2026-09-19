@@ -12,6 +12,15 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import {
+  GENERATED_NOTICE,
+  loadSite,
+  badgesGridInner,
+  certsGridInner,
+  hasCredentialArrayText,
+  getRegion,
+  getHasCredentialText,
+} from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -153,16 +162,21 @@ for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"
    appears in both surfaces. Added after an audit found 14 such disagreements
    that had all shipped through a green run of this script.  */
 
+// Parsing delegates to tools/ssot.mjs — the same bracket-balanced extractor
+// build-fallbacks.mjs uses to generate the fallback markup. One parser, so a
+// change to SITE's shape can't make the generator and this check disagree
+// about what SITE.badges/SITE.certs even are.
+let SITE = null;
+try {
+  SITE = loadSite(html);
+} catch (e) {
+  fail.push(`Could not parse SITE.* out of index.html: ${e.message}`);
+}
 function readArray(name) {
-  const re = new RegExp('SITE\\.' + name + '\\s*=\\s*(\\[[\\s\\S]*?\\n\\s*\\];)');
-  const m = html.match(re);
-  if (!m) { fail.push(`SITE.${name} not found — the SSOT check could not run`); return null; }
-  try {
-    return Function('"use strict"; return (' + m[1].replace(/;\s*$/, '') + ');')();
-  } catch (e) {
-    fail.push(`SITE.${name} could not be parsed: ${e.message}`);
-    return null;
-  }
+  if (!SITE) return null;
+  const arr = SITE[name];
+  if (!arr) { fail.push(`SITE.${name} not found — the SSOT check could not run`); return null; }
+  return arr;
 }
 
 const norm = s => (s || '').replace(/&mdash;/g, '—').replace(/&amp;/g, '&').trim();
@@ -211,6 +225,43 @@ if (siteCerts) {
     const ldCount = (ld.match(/"EducationalOccupationalCredential"/g) || []).length;
     if (ldCount !== earnedCerts)
       fail.push(`SITE.certs has ${earnedCerts} earned but JSON-LD lists ${ldCount} credentials`);
+  }
+}
+
+/* ── GENERATED regions must match what build-fallbacks.mjs would produce ──
+   The blocks above check the static fallback's *content* agrees with the
+   SSOT. This checks the fallback is actually the GENERATOR's output byte
+   for byte — so a hand-edit inside a <!-- GENERATED:... --> region (even
+   one that happens to still agree in content, e.g. reordered attributes)
+   is caught, and the pre-commit hook blocks it until someone runs
+   `node tools/build-fallbacks.mjs`. This is what makes drift structurally
+   impossible rather than just detected-after-the-fact. */
+function checkGenerated(label, startMarker, endMarker, expected) {
+  if (expected === null) return; // SITE.<name> failed to parse — already reported above
+  const actual = getRegion(html, startMarker, endMarker);
+  if (actual === null) {
+    fail.push(`GENERATED:${label} markers not found in index.html — the fallback can no longer be verified or regenerated.`);
+    return;
+  }
+  if (actual.trim() !== expected.trim()) {
+    fail.push(`GENERATED:${label} region does not match what "node tools/build-fallbacks.mjs" would produce from SITE.${label} — it was hand-edited or is stale. Run the generator and commit the result.`);
+  }
+}
+
+if (SITE) {
+  checkGenerated('badges', GENERATED_NOTICE.badges, GENERATED_NOTICE.badgesEnd,
+    siteBadges ? badgesGridInner(siteBadges, SITE.thmShare) : null);
+  checkGenerated('certs', GENERATED_NOTICE.certs, GENERATED_NOTICE.certsEnd,
+    siteCerts ? certsGridInner(siteCerts) : null);
+
+  const actualHasCred = getHasCredentialText(html, GENERATED_NOTICE.jsonld, GENERATED_NOTICE.jsonldEnd);
+  if (actualHasCred === null) {
+    fail.push('GENERATED:jsonld markers (or "hasCredential" inside them) not found in index.html.');
+  } else if (siteCerts) {
+    const expectedHasCred = hasCredentialArrayText(siteCerts);
+    if (actualHasCred.trim() !== expectedHasCred.trim()) {
+      fail.push('GENERATED:jsonld "hasCredential" array does not match what "node tools/build-fallbacks.mjs" would produce from SITE.certs — it was hand-edited or is stale. Run the generator and commit the result.');
+    }
   }
 }
 
