@@ -20,6 +20,13 @@
  */
 import { readFileSync } from 'node:fs';
 
+function markers(name, srcArray) {
+  return [
+    `<!-- GENERATED:${name} start — produced by tools/build-fallbacks.mjs from SITE.${srcArray}. Do not hand-edit; edit SITE.${srcArray} and run \`node tools/build-fallbacks.mjs\` instead. -->`,
+    `<!-- GENERATED:${name} end -->`,
+  ];
+}
+
 export const GENERATED_NOTICE = {
   badges: '<!-- GENERATED:badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->',
   badgesEnd: '<!-- GENERATED:badges end -->',
@@ -28,6 +35,31 @@ export const GENERATED_NOTICE = {
   jsonld: '<!-- GENERATED:jsonld start — the "hasCredential" array inside the JSON-LD block below is produced by tools/build-fallbacks.mjs from SITE.certs (earned only). Do not hand-edit hasCredential; the rest of this JSON-LD object is hand-maintained. Run `node tools/build-fallbacks.mjs` after changing SITE.certs. -->',
   jsonldEnd: '<!-- GENERATED:jsonld end -->',
 };
+[GENERATED_NOTICE.projects, GENERATED_NOTICE.projectsEnd] = markers('projects', 'projects');
+[GENERATED_NOTICE.writeups, GENERATED_NOTICE.writeupsEnd] = markers('writeups', 'writeups');
+[GENERATED_NOTICE.seeallBadges, GENERATED_NOTICE.seeallBadgesEnd] = markers('seeall-badges', 'badges');
+[GENERATED_NOTICE.seeallCerts, GENERATED_NOTICE.seeallCertsEnd] = markers('seeall-certs', 'certs');
+[GENERATED_NOTICE.seeallProjects, GENERATED_NOTICE.seeallProjectsEnd] = markers('seeall-projects', 'projects');
+[GENERATED_NOTICE.seeallWriteups, GENERATED_NOTICE.seeallWriteupsEnd] = markers('seeall-writeups', 'writeups');
+// Hub pages (badges/index.html, certifications/index.html, projects/index.html,
+// writeups/index.html) each carry one GENERATED region for their full grid —
+// same marker text as the home page's, since it's produced from the same
+// SITE array (just unfiltered), and check-consistency.mjs matches on this
+// exact string regardless of which file it appears in.
+GENERATED_NOTICE.hubBadges = GENERATED_NOTICE.badges;
+GENERATED_NOTICE.hubBadgesEnd = GENERATED_NOTICE.badgesEnd;
+GENERATED_NOTICE.hubCerts = GENERATED_NOTICE.certs;
+GENERATED_NOTICE.hubCertsEnd = GENERATED_NOTICE.certsEnd;
+GENERATED_NOTICE.hubProjects = GENERATED_NOTICE.projects;
+GENERATED_NOTICE.hubProjectsEnd = GENERATED_NOTICE.projectsEnd;
+GENERATED_NOTICE.hubWriteups = GENERATED_NOTICE.writeups;
+GENERATED_NOTICE.hubWriteupsEnd = GENERATED_NOTICE.writeupsEnd;
+// Each hub's ".hub-count" line ("13 badges · TryHackMe") so the number can
+// never drift from the array length it's counting.
+[GENERATED_NOTICE.countBadges, GENERATED_NOTICE.countBadgesEnd] = markers('count-badges', 'badges');
+[GENERATED_NOTICE.countCerts, GENERATED_NOTICE.countCertsEnd] = markers('count-certs', 'certs');
+[GENERATED_NOTICE.countProjects, GENERATED_NOTICE.countProjectsEnd] = markers('count-projects', 'projects');
+[GENERATED_NOTICE.countWriteups, GENERATED_NOTICE.countWriteupsEnd] = markers('count-writeups', 'writeups');
 
 export function readIndexHtml() {
   return readFileSync(new URL('../index.html', import.meta.url), 'utf8');
@@ -87,13 +119,16 @@ export function extractAssignment(src, path) {
   return { valueText, start: m.index, end: valueStart + valueText.length };
 }
 
-/** Parses SITE.certs / SITE.badges / SITE.thmShare out of index.html's raw
- *  source and returns a real { certs, badges, thmShare } object. */
+/** Parses SITE.certs / SITE.badges / SITE.projects / SITE.writeups /
+ *  SITE.thmShare out of index.html's raw source and returns a real
+ *  { certs, badges, projects, writeups, thmShare } object. */
 export function loadSite(html) {
   const certs = extractAssignment(html, 'SITE.certs').valueText;
   const badges = extractAssignment(html, 'SITE.badges').valueText;
+  const projects = extractAssignment(html, 'SITE.projects').valueText;
+  const writeups = extractAssignment(html, 'SITE.writeups').valueText;
   const thmShare = extractAssignment(html, 'SITE.thmShare').valueText;
-  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.thmShare = ${thmShare};\nreturn SITE;`;
+  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nreturn SITE;`;
   return Function(src)();
 }
 
@@ -112,27 +147,38 @@ export function revealDelay(i) {
   return i === 0 ? '' : ' reveal-delay-' + (((i - 1) % 5) + 1);
 }
 
-export function badgeCardHTML(b, i, thmShare) {
-  const href = b.href || thmShare(b.slug);
+/** Prefixes a same-origin relative path with basePath (e.g. '../' from a hub
+ *  page one directory deep back to the repo root). Absolute URLs (http(s):,
+ *  mailto:, data:) and already-anchored paths (#, /) pass through untouched —
+ *  only bare relative paths like "assets/..." or "domino.html" get prefixed. */
+export function withBase(path, basePath) {
+  if (!path || !basePath) return path;
+  if (/^(https?:|mailto:|data:|#|\/)/.test(path)) return path;
+  return basePath + path;
+}
+
+export function badgeCardHTML(b, i, thmShare, basePath) {
+  const rawHref = b.href || thmShare(b.slug);
+  const href = withBase(rawHref, basePath);
   const aria = b.aria || (b.name + ' badge on TryHackMe');
   const cls = 'badge-card ' + b.tier + (b.cls2 ? ' ' + b.cls2 : '') + ' reveal' + revealDelay(i);
   return `    <a class="${cls}" href="${ssotEsc(href)}" target="_blank" rel="noopener noreferrer" aria-label="${ssotEsc(aria)}">
-      <img src="${ssotEsc(b.img)}" alt="${ssotEsc(b.name)} badge" loading="lazy">
+      <img src="${ssotEsc(withBase(b.img, basePath))}" alt="${ssotEsc(b.name)} badge" loading="lazy">
       <span class="badge-name">${ssotEsc(b.name)}</span>
       <span class="badge-tag">${ssotEsc(b.tag)}</span>
       <span class="badge-desc">${ssotEsc(b.desc)}</span>
     </a>`;
 }
 
-export function certCardHTML(c, i) {
+export function certCardHTML(c, i, basePath) {
   let foot;
   if (c.credentialId) {
     const idInner = `<span class="lbl">Credential ID</span><span class="val">${ssotEsc(c.credentialId)}</span>`;
     foot = c.certUrl
-      ? `<a class="cert-card-id" href="${ssotEsc(c.certUrl)}" target="_blank" rel="noopener noreferrer">${idInner}</a>`
+      ? `<a class="cert-card-id" href="${ssotEsc(withBase(c.certUrl, basePath))}" target="_blank" rel="noopener noreferrer">${idInner}</a>`
       : `<div class="cert-card-id">${idInner}</div>`;
   } else if (c.pill && c.pill.href) {
-    foot = `<a class="cert-pill" href="${ssotEsc(c.pill.href)}" target="_blank" rel="noopener noreferrer">${ssotEsc(c.pill.text)}</a>`;
+    foot = `<a class="cert-pill" href="${ssotEsc(withBase(c.pill.href, basePath))}" target="_blank" rel="noopener noreferrer">${ssotEsc(c.pill.text)}</a>`;
   } else {
     foot = `<span class="cert-pill">${c.pill ? ssotEsc(c.pill.text) : ''}</span>`;
   }
@@ -148,12 +194,68 @@ export function certCardHTML(c, i) {
     </div>`;
 }
 
-export function badgesGridInner(badges, thmShare) {
-  return badges.map((b, i) => badgeCardHTML(b, i, thmShare)).join('\n');
+// Project/writeup fields (name/org/desc/outcomes/refs) are trusted
+// hand-authored HTML fragments — same trust model as c.badge above — and are
+// NOT re-escaped here. Only real URLs (href) go through ssotEsc.
+export function projectDelayClass(delay) {
+  return delay ? ' reveal-delay-' + delay : '';
 }
 
-export function certsGridInner(certs) {
-  return certs.map((c, i) => certCardHTML(c, i)).join('\n');
+export function projectCardHTML(p) {
+  const tech = p.techStack
+    ? `\n      <div class="tech-stack">${p.techStack.map(t => `<span class="tech-badge">${t}</span>`).join('')}</div>`
+    : '';
+  const outcomes = `\n      <ul class="project-outcomes">${p.outcomes.map(o => `<li>${o}</li>`).join('')}</ul>`;
+  const inner = `
+      <div class="project-icon">${p.icon}</div>
+      <div><div class="project-org">${p.org}</div><h3>${p.name}</h3></div>
+      <p>${p.desc}</p>${outcomes}${tech}
+    `;
+  const cls = `project-card reveal${projectDelayClass(p.delay)}`;
+  return p.href
+    ? `    <a href="${ssotEsc(p.href)}" target="_blank" rel="noopener noreferrer" class="${cls}" style="text-decoration:none;color:inherit;">${inner}</a>`
+    : `    <div class="${cls}">${inner}</div>`;
+}
+
+/** basePath is prepended to the writeup's own href ("<slug>.html"): '' on the
+ *  writeups hub itself (already inside /writeups/), 'writeups/' from the home
+ *  page one level up. */
+export function writeupCardHTML(w, basePath) {
+  const href = (basePath || '') + w.slug + '.html';
+  return `    <a href="${ssotEsc(href)}" class="project-card reveal${projectDelayClass(w.delay)}" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon">${w.icon}</div>
+      </div>
+      <div><div class="project-org">${w.org}</div><h3>${w.name}</h3></div>
+      <p>${w.desc}</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">${w.refs}</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>`;
+}
+
+export function badgesGridInner(badges, thmShare, basePath) {
+  return badges.map((b, i) => badgeCardHTML(b, i, thmShare, basePath)).join('\n');
+}
+
+export function certsGridInner(certs, basePath) {
+  return certs.map((c, i) => certCardHTML(c, i, basePath)).join('\n');
+}
+
+export function projectsGridInner(projects) {
+  return projects.map(p => projectCardHTML(p)).join('\n');
+}
+
+export function writeupsGridInner(writeups, basePath) {
+  return writeups.map(w => writeupCardHTML(w, basePath)).join('\n');
+}
+
+/** The home-page "See all N <label> »" link — empty string when every item
+ *  is already featured (the mechanism is conditional, not always-on). */
+export function seeAllHTML(items, hubHref, label) {
+  const total = items.length;
+  const featured = items.filter(x => x.featured).length;
+  if (featured >= total) return '';
+  return `    <a class="section-see-all" href="${ssotEsc(hubHref)}">See all ${total} ${label} <span aria-hidden="true">&raquo;</span></a>`;
 }
 
 /** Builds the JSON text for the `hasCredential` array value (the `[...]`
@@ -182,6 +284,19 @@ export function spliceBetweenMarkers(html, startMarker, endMarker, newInner) {
   const before = html.slice(0, startIdx + startMarker.length);
   const after = html.slice(endIdx);
   return `${before}\n${newInner}\n    ${after}`;
+}
+
+/** Like spliceBetweenMarkers but for a single-line/inline region (e.g. a
+ *  hub's ".hub-count" text) — no injected newlines or indentation. */
+export function spliceInline(html, startMarker, endMarker, newInner) {
+  const startIdx = html.indexOf(startMarker);
+  const endIdx = html.indexOf(endMarker);
+  if (startIdx === -1) throw new Error(`marker not found: ${startMarker}`);
+  if (endIdx === -1) throw new Error(`marker not found: ${endMarker}`);
+  if (endIdx < startIdx) throw new Error(`end marker precedes start marker: ${startMarker}`);
+  const before = html.slice(0, startIdx + startMarker.length);
+  const after = html.slice(endIdx);
+  return `${before}${newInner}${after}`;
 }
 
 export function getRegion(html, startMarker, endMarker) {

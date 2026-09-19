@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+<!-- Content Security Policy. GitHub Pages cannot send response headers, so this
+     is delivered as a meta tag. These pages load nothing external at all, so the policy is stricter:
+     no off-origin scripts, no outbound connections.
+     Note: frame-ancestors and report-uri are ignored in meta form. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<!-- Outbound links previously sent the full page URL to LinkedIn, GitHub,
+     Credly and every other destination. Origin only, cross-origin. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects &mdash; Atharva Kulkarni</title>
+  <meta name="description" content="All projects by Atharva Kulkarni &mdash; 2026 full-stack and security builds plus academic and CTF research from Queen's University Belfast.">
+  <link rel="canonical" href="https://atharvaxsecurity.com/projects/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://atharvaxsecurity.com/projects/">
+  <meta property="og:title" content="Projects &mdash; Atharva Kulkarni">
+  <meta property="og:description" content="All projects by Atharva Kulkarni.">
+  <meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="627">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Projects &mdash; Atharva Kulkarni">
+  <meta name="twitter:description" content="All projects by Atharva Kulkarni.">
+  <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <style>
+    /* Self-hosted: previously pulled from fonts.googleapis.com, a
+       render-blocking third-party request. Both families are OFL licensed
+       and now come from our own origin. */
+    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/barlow-condensed-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('../assets/fonts/barlow-condensed-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:800;font-display:swap;src:url('../assets/fonts/barlow-condensed-800.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/share-tech-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    :root{--bg:#080b10;--bg2:#0d1117;--surface:#141c26;--border:#1e2d3d;--accent:#00d4ff; --accent-strong: #00d4ff;--accent2:#00ff9d;--text:#e8edf2;--text2:#8899aa;--text3:#758697;
+      --font-display:'Barlow Condensed',sans-serif;--font-mono:'Share Tech Mono',monospace}
+    [data-theme="light"]{--bg:#f0f4f8;--bg2:#e2e8f0;--surface:#ffffff;--border:#cbd5e1;--accent:#0077aa; --accent-strong: #006699;--accent2:#00704a;--text:#0f172a;--text2:#475569;--text3:#5b6b7f}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-mono);line-height:1.8}
+    .skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100;background:var(--accent);color:#04121a;padding:.6rem 1rem;font-weight:700;text-decoration:none}
+    .skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .wr-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+    .wr-back{color:var(--accent-strong);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+    .wr-back:hover{color:var(--text)}
+    .wr-header-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text2)}
+    .hub{max-width:1200px;margin:0 auto;padding:3rem 2rem 4rem}
+    .hub-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+    .hub-sub{font-size:.85rem;color:var(--text2);max-width:680px;margin-bottom:.6rem}
+    .hub-count{font-size:.72rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2.2rem}
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:1.5rem}
+    .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:all .3s;position:relative;overflow:hidden}
+    .project-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+    .project-icon{width:44px;height:44px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(0,212,255,.06)}
+    .project-card h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text)}
+    .project-org{font-size:.7rem;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+    .project-card p{font-size:.8rem;color:var(--text2);line-height:1.8;flex:1}
+    .project-outcomes{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+    .project-outcomes li{font-size:.75rem;color:var(--text2);padding-left:1rem;position:relative}
+    .project-outcomes li::before{content:'\2192';position:absolute;left:0;color:var(--accent)}
+    .tech-stack{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+    .tech-badge{font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--text3);letter-spacing:.06em;background:rgba(255,255,255,.02);transition:all .2s;position:relative;z-index:2}
+    .tech-badge:hover{border-color:var(--accent);color:var(--accent)}
+    .wr-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text3)}
+    .wr-footer a{color:var(--accent);text-decoration:none}
+    @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.project-card{padding:1.4rem}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+  </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="wr-header">
+    <a href="../index.html" class="wr-back">&larr; Back to Portfolio</a>
+    <span class="wr-header-title">Projects</span>
+  </div>
+  <main id="main" tabindex="-1" class="hub">
+    <h1 class="hub-title">Projects</h1>
+    <p class="hub-sub">Full-stack and security builds, plus the academic and CTF research that came before them. The home page shows a curated selection; everything is here.</p>
+    <div class="hub-count"><!-- GENERATED:count-projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->11 projects<!-- GENERATED:count-projects end --></div>
+    <div class="projects-grid">
+      <!-- GENERATED:projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->
+    <div class="project-card reveal">
+      <div class="project-icon">&#x1F3AF;</div>
+      <div><div class="project-org">Ongoing &middot; TryHackMe &amp; HackTheBox</div><h3>CTF &amp; Penetration Testing Labs</h3></div>
+      <p>Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.</p>
+      <ul class="project-outcomes"><li>Active on Junior Penetration Testing path on TryHackMe</li><li>Practising manual exploit identification and vulnerability chaining</li><li>Developing recon, web app testing, and post-exploitation techniques</li></ul>
+      <div class="tech-stack"><span class="tech-badge">Nmap</span><span class="tech-badge">Burp Suite</span><span class="tech-badge">Metasploit</span><span class="tech-badge">Linux</span><span class="tech-badge">Web Exploitation</span></div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-icon">&#x1F916;</div>
+      <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>ML Attacks on Physical Unclonable Functions</h3></div>
+      <p>MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.</p>
+      <ul class="project-outcomes"><li>Demonstrated measurable PUF vulnerability through GAN-synthesised datasets</li><li>Evaluated attack success rates and proposed countermeasures</li><li>Advanced hardware-level threat research across ML and cryptography</li></ul>
+      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">GANs</span><span class="tech-badge">Machine Learning</span><span class="tech-badge">Cryptography</span><span class="tech-badge">PUFs</span></div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-icon">&#x1F510;</div>
+      <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>Honey Encryption: Brute-Force Resistant Security</h3></div>
+      <p>Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.</p>
+      <ul class="project-outcomes"><li>Designed a developer API for web and cloud application integration</li><li>Applied DTE encoding to passwords, PINs, and biometrics</li><li>Mapped use cases across internet banking and cloud security</li></ul>
+      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">Encryption</span><span class="tech-badge">DTE</span><span class="tech-badge">API Design</span><span class="tech-badge">Cloud Security</span></div>
+    </div>
+    <div class="project-card reveal reveal-delay-3">
+      <div class="project-icon">&#x1F50E;</div>
+      <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>NTFS Digital Forensics: File Recovery on Windows 10</h3></div>
+      <p>Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.</p>
+      <ul class="project-outcomes"><li>Analysed MFT entries, slack space, and disk imaging for artifact recovery</li><li>Compared CLI tools and recovery software for forensic soundness</li><li>Documented best practices for evidence preservation and breach analysis</li></ul>
+      <div class="tech-stack"><span class="tech-badge">NTFS</span><span class="tech-badge">Disk Imaging</span><span class="tech-badge">MFT Analysis</span><span class="tech-badge">Windows Forensics</span><span class="tech-badge">CLI Tools</span></div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-icon">&#x1F6E1;</div>
+      <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>Automated Network Intrusion Response System (AIRS)</h3></div>
+      <p>Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.</p>
+      <ul class="project-outcomes"><li>Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations</li><li>Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT</li><li>Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment</li></ul>
+      <div class="tech-stack"><span class="tech-badge">IDS/IPS</span><span class="tech-badge">IRS</span><span class="tech-badge">Network Security</span><span class="tech-badge">Threat Mitigation</span><span class="tech-badge">Anomaly Detection</span></div>
+    </div>
+    <a href="https://github.com/atharvak161/claude-org-framework" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F3DB;</div>
+      <div><div class="project-org">2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span></div><h3>Claude Org Framework &mdash; AI Agent Orchestration</h3></div>
+      <p>A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.</p>
+      <ul class="project-outcomes"><li>89 role-scoped agents with enforced separation between building, reviewing and shipping</li><li>Mandatory security and QA sign-off gates before anything reaches production</li><li>Git hooks and a consistency checker that block policy violations mechanically, not by convention</li></ul>
+      <div class="tech-stack"><span class="tech-badge">Claude Code</span><span class="tech-badge">Multi-Agent Systems</span><span class="tech-badge">Bash</span><span class="tech-badge">Git Hooks</span><span class="tech-badge">Process Design</span></div>
+    </a>
+    <a href="https://atharvaxsecurity.com/cybersec-toolkit/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F9F0;</div>
+      <div><div class="project-org">2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span></div><h3>Cybersec Toolkit</h3></div>
+      <p>A client-side cybersecurity utilities toolkit &mdash; encoding/decoding, hashing, JWT/AES/RSA tools, a CyberChef-style recipe chainer, and OSINT lookups. Nothing ever leaves the browser except a few clearly-disclosed public API calls.</p>
+      <ul class="project-outcomes"><li>Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer</li><li>OSINT lookup utilities alongside classic encode/decode and crypto tools</li><li>Fully client-side &mdash; no data leaves the browser except disclosed public API calls</li></ul>
+      <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Web Crypto API</span><span class="tech-badge">JWT</span><span class="tech-badge">OSINT</span><span class="tech-badge">Client-Side Security</span></div>
+    </a>
+    <a href="https://atharvaxsecurity.com/cybersec-vault/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F5C4;</div>
+      <div><div class="project-org">2026 &middot; Cybersecurity Knowledge Base &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-vault</span></div><h3>The Vault</h3></div>
+      <p>A fast, fully client-side knowledge base for 248 cybersecurity notes &mdash; cloud, GRC, OSCP, and red-team &mdash; with an Obsidian-style reader: instant full-text search, a command palette, wiki-style cross-links, an interactive link graph, and backlinks. No backend, nothing leaves the browser.</p>
+      <ul class="project-outcomes"><li>248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette</li><li>Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents</li><li>Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls</li></ul>
+      <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Markdown</span><span class="tech-badge">Full-Text Search</span><span class="tech-badge">Graph View</span><span class="tech-badge">Client-Side</span></div>
+    </a>
+    <a href="https://github.com/atharvak161/jobscope" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F50E;</div>
+      <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/jobscope</span></div><h3>JobScope &mdash; UK Job Aggregator</h3></div>
+      <p>UK job aggregator that filters listings by visa sponsorship status and security clearance requirements &mdash; built for candidates who need to know eligibility before they apply. Resume parsing powered by Claude AI.</p>
+      <ul class="project-outcomes"><li>Filters roles by visa sponsorship and security clearance eligibility</li><li>Claude AI resume parsing for automated candidate-to-role matching</li><li>IDOR, SSRF, and prompt-injection defences built in from the ground up</li></ul>
+      <div class="tech-stack"><span class="tech-badge">Next.js 16</span><span class="tech-badge">TypeScript</span><span class="tech-badge">PostgreSQL</span><span class="tech-badge">Prisma 7</span><span class="tech-badge">Claude AI</span></div>
+    </a>
+    <a href="https://atharvaxsecurity.com/Blueprint/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F4CB;</div>
+      <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/Blueprint</span></div><h3>Blueprint &mdash; Project Management Tool</h3></div>
+      <p>A project management dashboard for tracking tasks, milestones, and team progress. Built as a single-page app with a clean kanban-style interface.</p>
+      <ul class="project-outcomes"><li>Visual project and task tracking with status columns</li><li>Milestone management with progress indicators</li><li>Deployed via GitHub Actions to GitHub Pages</li></ul>
+    </a>
+    <a href="https://github.com/atharvak161/finance-dashboard" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-3" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F4B7;</div>
+      <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/finance-dashboard</span></div><h3>Finance Dashboard &mdash; Personal Finance Tracker</h3></div>
+      <p>Comprehensive personal finance tracker for NRI/UK professionals. Tracks income, expenses, investments, debts, and goals across GBP and INR. Includes ROAI analytics, envelope budgeting, bill calendar, SMS transaction parsing, and OLED dark mode.</p>
+      <ul class="project-outcomes"><li>Cross-currency portfolio tracking with real-time ROAI metrics</li><li>SMS and CSV bank import with auto-categorisation</li><li>Privacy mode, keyboard shortcuts, and OLED dark mode</li></ul>
+    </a>
+    <!-- GENERATED:projects end -->
+    </div>
+  </main>
+  <div class="wr-footer"><a href="../index.html">&larr; atharvaxsecurity.com</a></div>
+</body>
+</html>

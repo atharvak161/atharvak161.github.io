@@ -349,6 +349,16 @@
      mid-animation and snapped back. The flexible .section-line absorbs the extra. */
   @media (min-width: 620px) { h2.section-title.glitch-title { white-space: nowrap; } }
   .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+  /* "See all" — only present when a section has more items than the home
+     page shows (see tools/build-fallbacks.mjs). Quiet by design: same size
+     as .section-num, sits after the fade line so it never competes with the
+     title. Absent entirely (not just hidden) when every item already fits. */
+  .section-see-all { flex-shrink: 0; font-family: var(--font-mono); font-size: .72rem; color: var(--text2); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; padding: .3rem .15rem; border-radius: 2px; transition: color .2s; }
+  .section-see-all:hover { color: var(--accent); }
+  /* Below ~600px the num+title+line+link no longer fit one nowrap row (the
+     link's own text can't shrink) — wrap it onto its own line instead of
+     letting it push the page into horizontal scroll. */
+  @media (max-width: 600px) { .section-header { flex-wrap: wrap; } .section-see-all { flex-basis: 100%; margin-top: .2rem; } }
 
   /* ── ABOUT ───────────────────────────────────────────────── */
   #about { border-top: 1px solid var(--border); padding-top: 6rem; }
@@ -1328,127 +1338,58 @@
     <span class="section-num">04 //</span>
     <h2 class="section-title glitch-title" data-text="Projects">Projects</h2>
     <div class="section-line"></div>
+    <!-- GENERATED:seeall-projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->
+    <a class="section-see-all" href="projects/index.html">See all 11 projects <span aria-hidden="true">&raquo;</span></a>
+    <!-- GENERATED:seeall-projects end -->
   </div>
+  <!-- NO-JS FALLBACK. This markup is replaced at runtime by renderProjects()
+       from SITE.projects (featured only — the single source of truth). The
+       block below is GENERATED — do not hand-edit it. Edit SITE.projects,
+       then run: node tools/build-fallbacks.mjs
+       tools/check-consistency.mjs fails the commit if this drifts. -->
   <div class="projects-grid">
-    <div class="project-card reveal">
-      <div class="project-icon">&#x1F3AF;</div>
-      <div><div class="project-org">Ongoing &middot; TryHackMe &amp; HackTheBox</div><h3>CTF &amp; Penetration Testing Labs</h3></div>
-      <p>Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.</p>
-      <ul class="project-outcomes">
-        <li>Active on Junior Penetration Testing path on TryHackMe</li>
-        <li>Practising manual exploit identification and vulnerability chaining</li>
-        <li>Developing recon, web app testing, and post-exploitation techniques</li>
-      </ul>
-      <div class="tech-stack"><span class="tech-badge">Nmap</span><span class="tech-badge">Burp Suite</span><span class="tech-badge">Metasploit</span><span class="tech-badge">Linux</span><span class="tech-badge">Web Exploitation</span></div>
-    </div>
-    <div class="project-card reveal reveal-delay-1">
-      <div class="project-icon">&#x1F916;</div>
-      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>ML Attacks on Physical Unclonable Functions</h3></div>
-      <p>MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.</p>
-      <ul class="project-outcomes">
-        <li>Demonstrated measurable PUF vulnerability through GAN-synthesised datasets</li>
-        <li>Evaluated attack success rates and proposed countermeasures</li>
-        <li>Advanced hardware-level threat research across ML and cryptography</li>
-      </ul>
-      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">GANs</span><span class="tech-badge">Machine Learning</span><span class="tech-badge">Cryptography</span><span class="tech-badge">PUFs</span></div>
-    </div>
-    <div class="project-card reveal reveal-delay-2">
-      <div class="project-icon">&#x1F510;</div>
-      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>Honey Encryption: Brute-Force Resistant Security</h3></div>
-      <p>Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.</p>
-      <ul class="project-outcomes">
-        <li>Designed a developer API for web and cloud application integration</li>
-        <li>Applied DTE encoding to passwords, PINs, and biometrics</li>
-        <li>Mapped use cases across internet banking and cloud security</li>
-      </ul>
-      <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">Encryption</span><span class="tech-badge">DTE</span><span class="tech-badge">API Design</span><span class="tech-badge">Cloud Security</span></div>
-    </div>
-    <div class="project-card reveal reveal-delay-3">
-      <div class="project-icon">&#x1F50E;</div>
-      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>NTFS Digital Forensics: File Recovery on Windows 10</h3></div>
-      <p>Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.</p>
-      <ul class="project-outcomes">
-        <li>Analysed MFT entries, slack space, and disk imaging for artifact recovery</li>
-        <li>Compared CLI tools and recovery software for forensic soundness</li>
-        <li>Documented best practices for evidence preservation and breach analysis</li>
-      </ul>
-      <div class="tech-stack"><span class="tech-badge">NTFS</span><span class="tech-badge">Disk Imaging</span><span class="tech-badge">MFT Analysis</span><span class="tech-badge">Windows Forensics</span><span class="tech-badge">CLI Tools</span></div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-icon">&#x1F6E1;</div>
-      <div><div class="project-org">Queen's University Belfast &middot; 2023</div><h3>Automated Network Intrusion Response System (AIRS)</h3></div>
-      <p>Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.</p>
-      <ul class="project-outcomes">
-        <li>Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations</li>
-        <li>Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT</li>
-        <li>Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment</li>
-      </ul>
-      <div class="tech-stack"><span class="tech-badge">IDS/IPS</span><span class="tech-badge">IRS</span><span class="tech-badge">Network Security</span><span class="tech-badge">Threat Mitigation</span><span class="tech-badge">Anomaly Detection</span></div>
-    </div>
+    <!-- GENERATED:projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->
     <a href="https://github.com/atharvak161/claude-org-framework" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F3DB;</div>
       <div><div class="project-org">2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span></div><h3>Claude Org Framework &mdash; AI Agent Orchestration</h3></div>
       <p>A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.</p>
-      <ul class="project-outcomes">
-        <li>89 role-scoped agents with enforced separation between building, reviewing and shipping</li>
-        <li>Mandatory security and QA sign-off gates before anything reaches production</li>
-        <li>Git hooks and a consistency checker that block policy violations mechanically, not by convention</li>
-      </ul>
+      <ul class="project-outcomes"><li>89 role-scoped agents with enforced separation between building, reviewing and shipping</li><li>Mandatory security and QA sign-off gates before anything reaches production</li><li>Git hooks and a consistency checker that block policy violations mechanically, not by convention</li></ul>
       <div class="tech-stack"><span class="tech-badge">Claude Code</span><span class="tech-badge">Multi-Agent Systems</span><span class="tech-badge">Bash</span><span class="tech-badge">Git Hooks</span><span class="tech-badge">Process Design</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/cybersec-toolkit/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F9F0;</div>
       <div><div class="project-org">2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span></div><h3>Cybersec Toolkit</h3></div>
       <p>A client-side cybersecurity utilities toolkit &mdash; encoding/decoding, hashing, JWT/AES/RSA tools, a CyberChef-style recipe chainer, and OSINT lookups. Nothing ever leaves the browser except a few clearly-disclosed public API calls.</p>
-      <ul class="project-outcomes">
-        <li>Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer</li>
-        <li>OSINT lookup utilities alongside classic encode/decode and crypto tools</li>
-        <li>Fully client-side &mdash; no data leaves the browser except disclosed public API calls</li>
-      </ul>
+      <ul class="project-outcomes"><li>Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer</li><li>OSINT lookup utilities alongside classic encode/decode and crypto tools</li><li>Fully client-side &mdash; no data leaves the browser except disclosed public API calls</li></ul>
       <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Web Crypto API</span><span class="tech-badge">JWT</span><span class="tech-badge">OSINT</span><span class="tech-badge">Client-Side Security</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/cybersec-vault/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F5C4;</div>
       <div><div class="project-org">2026 &middot; Cybersecurity Knowledge Base &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-vault</span></div><h3>The Vault</h3></div>
       <p>A fast, fully client-side knowledge base for 248 cybersecurity notes &mdash; cloud, GRC, OSCP, and red-team &mdash; with an Obsidian-style reader: instant full-text search, a command palette, wiki-style cross-links, an interactive link graph, and backlinks. No backend, nothing leaves the browser.</p>
-      <ul class="project-outcomes">
-        <li>248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette</li>
-        <li>Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents</li>
-        <li>Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls</li>
-      </ul>
+      <ul class="project-outcomes"><li>248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette</li><li>Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents</li><li>Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls</li></ul>
       <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Markdown</span><span class="tech-badge">Full-Text Search</span><span class="tech-badge">Graph View</span><span class="tech-badge">Client-Side</span></div>
     </a>
     <a href="https://github.com/atharvak161/jobscope" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F50E;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/jobscope</span></div><h3>JobScope &mdash; UK Job Aggregator</h3></div>
       <p>UK job aggregator that filters listings by visa sponsorship status and security clearance requirements &mdash; built for candidates who need to know eligibility before they apply. Resume parsing powered by Claude AI.</p>
-      <ul class="project-outcomes">
-        <li>Filters roles by visa sponsorship and security clearance eligibility</li>
-        <li>Claude AI resume parsing for automated candidate-to-role matching</li>
-        <li>IDOR, SSRF, and prompt-injection defences built in from the ground up</li>
-      </ul>
+      <ul class="project-outcomes"><li>Filters roles by visa sponsorship and security clearance eligibility</li><li>Claude AI resume parsing for automated candidate-to-role matching</li><li>IDOR, SSRF, and prompt-injection defences built in from the ground up</li></ul>
       <div class="tech-stack"><span class="tech-badge">Next.js 16</span><span class="tech-badge">TypeScript</span><span class="tech-badge">PostgreSQL</span><span class="tech-badge">Prisma 7</span><span class="tech-badge">Claude AI</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/Blueprint/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F4CB;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/Blueprint</span></div><h3>Blueprint &mdash; Project Management Tool</h3></div>
       <p>A project management dashboard for tracking tasks, milestones, and team progress. Built as a single-page app with a clean kanban-style interface.</p>
-      <ul class="project-outcomes">
-        <li>Visual project and task tracking with status columns</li>
-        <li>Milestone management with progress indicators</li>
-        <li>Deployed via GitHub Actions to GitHub Pages</li>
-      </ul>
+      <ul class="project-outcomes"><li>Visual project and task tracking with status columns</li><li>Milestone management with progress indicators</li><li>Deployed via GitHub Actions to GitHub Pages</li></ul>
     </a>
     <a href="https://github.com/atharvak161/finance-dashboard" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-3" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F4B7;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/finance-dashboard</span></div><h3>Finance Dashboard &mdash; Personal Finance Tracker</h3></div>
       <p>Comprehensive personal finance tracker for NRI/UK professionals. Tracks income, expenses, investments, debts, and goals across GBP and INR. Includes ROAI analytics, envelope budgeting, bill calendar, SMS transaction parsing, and OLED dark mode.</p>
-      <ul class="project-outcomes">
-        <li>Cross-currency portfolio tracking with real-time ROAI metrics</li>
-        <li>SMS and CSV bank import with auto-categorisation</li>
-        <li>Privacy mode, keyboard shortcuts, and OLED dark mode</li>
-      </ul>
+      <ul class="project-outcomes"><li>Cross-currency portfolio tracking with real-time ROAI metrics</li><li>SMS and CSV bank import with auto-categorisation</li><li>Privacy mode, keyboard shortcuts, and OLED dark mode</li></ul>
     </a>
+    <!-- GENERATED:projects end -->
   </div>
 
 </section>
@@ -1459,9 +1400,18 @@
     <span class="section-num">05 //</span>
     <h2 class="section-title glitch-title" data-text="Offensive Security Writeups">Offensive Security Writeups</h2>
     <div class="section-line"></div>
+    <!-- GENERATED:seeall-writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
+
+    <!-- GENERATED:seeall-writeups end -->
   </div>
   <p class="reveal" style="font-size:.82rem;color:var(--text2);margin-bottom:2rem;max-width:680px;">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. <a href="writeups/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,212,255,.3)">View all writeups &rarr;</a></p>
+  <!-- NO-JS FALLBACK. This markup is replaced at runtime by renderWriteups()
+       from SITE.writeups (featured only — the single source of truth). The
+       block below is GENERATED — do not hand-edit it. Edit SITE.writeups,
+       then run: node tools/build-fallbacks.mjs
+       tools/check-consistency.mjs fails the commit if this drifts. -->
   <div class="projects-grid">
+    <!-- GENERATED:writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
     <a href="writeups/domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon">&#x1F3B4;</div>
@@ -1477,7 +1427,7 @@
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Flag Vault 2</h3></div>
       <p>Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.</p>
-      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-134 &middot; CWE-787 &middot; A03:2021</div>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-134 &middot; CWE-125 &middot; A03:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
     <a href="writeups/flagvault.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
@@ -1495,7 +1445,7 @@
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Capture!</h3></div>
       <p>Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.</p>
-      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-307 &middot; CWE-200 &middot; A07:2021</div>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-307 &middot; CWE-204 &middot; A07:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
     <a href="writeups/simplectf.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
@@ -1503,8 +1453,8 @@
         <div class="project-icon">&#x1F3F3;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Simple CTF</h3></div>
-      <p>Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3 9.8) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.</p>
-      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2019-9053 &middot; CWE-89 &middot; A01:2021</div>
+      <p>Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3.0 8.1) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2019-9053 &middot; CWE-89 &middot; A03:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
     <a href="writeups/picklerick.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
@@ -1516,6 +1466,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-540 &middot; CWE-284 &middot; A01:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
+    <!-- GENERATED:writeups end -->
   </div>
 </section>
 
@@ -1550,6 +1501,9 @@
     <span class="section-num">07 //</span>
     <h2 class="section-title glitch-title" data-text="Certifications">Certifications</h2>
     <div class="section-line"></div>
+    <!-- GENERATED:seeall-certs start — produced by tools/build-fallbacks.mjs from SITE.certs. Do not hand-edit; edit SITE.certs and run `node tools/build-fallbacks.mjs` instead. -->
+
+    <!-- GENERATED:seeall-certs end -->
   </div>
   <!-- NO-JS FALLBACK. This markup is replaced at runtime by renderCerts()
        from SITE.certs (the single source of truth). The block below is
@@ -1628,6 +1582,9 @@
     <span class="section-num">08 //</span>
     <h2 class="section-title glitch-title" data-text="Badges">Badges</h2>
     <div class="section-line"></div>
+    <!-- GENERATED:seeall-badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->
+    <a class="section-see-all" href="badges/index.html">See all 13 badges <span aria-hidden="true">&raquo;</span></a>
+    <!-- GENERATED:seeall-badges end -->
   </div>
   <!-- NO-JS FALLBACK. This markup is replaced at runtime by renderBadges()
        from SITE.badges (the single source of truth). The block below is
@@ -1709,12 +1666,6 @@
       <span class="badge-name">Blue</span>
       <span class="badge-tag">common: 12.8%</span>
       <span class="badge-desc">Hacking into Windows via EternalBlue</span>
-    </a>
-    <a class="badge-card t-common reveal reveal-delay-2" href="https://tryhackme.com/AtharvaK911/badges/owasp-10?utm_campaign=social_share&amp;utm_medium=social&amp;utm_content=badge&amp;utm_source=copy&amp;sharerId=63879addf6080c0048a27b26" target="_blank" rel="noopener noreferrer" aria-label="OWASP Top 10 — view badge on TryHackMe">
-      <img src="assets/badges/thm/owasp-top-10.webp" alt="OWASP Top 10 badge" loading="lazy">
-      <span class="badge-name">OWASP Top 10</span>
-      <span class="badge-tag">common: 13%</span>
-      <span class="badge-desc">Understanding every OWASP vulnerability</span>
     </a>
     <!-- GENERATED:badges end -->
   </div>
@@ -1969,12 +1920,12 @@ SITE.identity = {
    name=full (card), jsonLdName=formal (structured data), badge=emoji, cls=accent,
    credentialId OR pill{text,href?} for the card foot, earned gates JSON-LD. */
 SITE.certs = [
-  { id:'ceh',  earned:true,  cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853', certUrl:'assets/certs/CEH-V12-Certificate.pdf' },
-  { id:'nse1', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 1', jsonLdName:'Fortinet NSE Level 1', badge:'\u{1F512}', credentialId:'PggZRhVh2p' },
-  { id:'nse2', earned:true,  cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 2', jsonLdName:'Fortinet NSE Level 2', badge:'\u{1F512}', credentialId:'uTMYfCWHCd' },
-  { id:'sec1', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Cyber Security 101 (SEC1)', jsonLdName:'Cyber Security 101 (SEC1)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC1-Certificate.pdf' } },
-  { id:'sec0', earned:true,  cls:'thm', issuer:'TryHackMe',  name:'Pre Security (SEC0)', jsonLdName:'Pre Security (SEC0)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC0-Certificate.pdf' } },
-  { id:'jrpt', earned:false, cls:'thm', issuer:'TryHackMe',  name:'Junior Penetration Testing Path', badge:'\u{1F3AF}', pill:{ text:'In Progress · Active' } }
+  { id:'ceh',  earned:true,  featured:true, cls:'ceh', issuer:'EC-Council', name:'Certified Ethical Hacker (CEH V12)', jsonLdName:'Certified Ethical Hacker (CEH V12)', badge:'\u{1F6E1}',        credentialId:'ECC9421760853', certUrl:'assets/certs/CEH-V12-Certificate.pdf' },
+  { id:'nse1', earned:true,  featured:true, cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 1', jsonLdName:'Fortinet NSE Level 1', badge:'\u{1F512}', credentialId:'PggZRhVh2p' },
+  { id:'nse2', earned:true,  featured:true, cls:'nse', issuer:'Fortinet',   name:'Network Security Expert (NSE) Level 2', jsonLdName:'Fortinet NSE Level 2', badge:'\u{1F512}', credentialId:'uTMYfCWHCd' },
+  { id:'sec1', earned:true,  featured:true, cls:'thm', issuer:'TryHackMe',  name:'Cyber Security 101 (SEC1)', jsonLdName:'Cyber Security 101 (SEC1)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC1-Certificate.pdf' } },
+  { id:'sec0', earned:true,  featured:true, cls:'thm', issuer:'TryHackMe',  name:'Pre Security (SEC0)', jsonLdName:'Pre Security (SEC0)', badge:'\u{1F6E1}️', pill:{ text:'Completed', href:'assets/certs/TryHackMe-SEC0-Certificate.pdf' } },
+  { id:'jrpt', earned:false, featured:true, cls:'thm', issuer:'TryHackMe',  name:'Junior Penetration Testing Path', badge:'\u{1F3AF}', pill:{ text:'In Progress · Active' } }
 ];
 
 /* THM per-badge share link from a slug (sharerId is constant for this account). */
@@ -1990,19 +1941,118 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    module badges and low-signal ones are deliberately omitted.
    tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
 SITE.badges = [
-  { id:'sec1',       tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
-  { id:'sec0',       tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
-  { id:'ruby',       tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.webp', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
-  { id:'sapphire',   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.webp', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
-  { id:'platinum',   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.webp', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
-  { id:'authstriker', tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.webp', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker', aria:'Authentication Striker — view badge on TryHackMe' },
-  { id:'ice',        tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.webp', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice', aria:'Ice badge on TryHackMe' },
-  { id:'shield',     tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.webp', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice', aria:'Shield Apprentice — view badge on TryHackMe' },
-  { id:'streak90',   tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.webp', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak', aria:'90 Day Streak badge on TryHackMe' },
-  { id:'sword',      tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.webp', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge', aria:'Sword Apprentice badge on TryHackMe' },
-  { id:'metasploit', tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.webp', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable', aria:'Metasploitable badge on TryHackMe' },
-  { id:'blue',       tier:'t-common',   cls2:'',     name:'Blue', img:'assets/badges/thm/blue.webp', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue', aria:'Blue badge on TryHackMe' },
-  { id:'owasp10',    tier:'t-common', cls2:'',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.webp', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10', aria:'OWASP Top 10 — view badge on TryHackMe' }
+  { id:'sec1',       featured:true,  tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
+  { id:'sec0',       featured:true,  tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
+  { id:'ruby',       featured:true,  tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.webp', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
+  { id:'sapphire',   featured:true,  tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.webp', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
+  { id:'platinum',   featured:true,  tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.webp', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
+  { id:'authstriker', featured:true, tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.webp', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker', aria:'Authentication Striker — view badge on TryHackMe' },
+  { id:'ice',        featured:true,  tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.webp', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice', aria:'Ice badge on TryHackMe' },
+  { id:'shield',     featured:true,  tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.webp', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice', aria:'Shield Apprentice — view badge on TryHackMe' },
+  { id:'streak90',   featured:true,  tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.webp', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak', aria:'90 Day Streak badge on TryHackMe' },
+  { id:'sword',      featured:true,  tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.webp', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge', aria:'Sword Apprentice badge on TryHackMe' },
+  { id:'metasploit', featured:true,  tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.webp', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable', aria:'Metasploitable badge on TryHackMe' },
+  { id:'blue',       featured:true,  tier:'t-common',   cls2:'',     name:'Blue', img:'assets/badges/thm/blue.webp', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue', aria:'Blue badge on TryHackMe' },
+  { id:'owasp10',    featured:false, tier:'t-common', cls2:'',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.webp', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10', aria:'OWASP Top 10 — view badge on TryHackMe' }
+];
+
+/* projects: one entry → #projects card (home, featured only) + projects/index.html
+   hub (all). "delay" is the reveal-stagger digit already baked into the hand-authored
+   markup this array was lifted from (0 = plain "reveal", 1-3 = "reveal reveal-delay-N")
+   — kept explicit per item, like featured, rather than derived, because the original
+   stagger pattern is irregular (grouped by row, not a clean cycle) and this is the only
+   way to reproduce it byte-for-byte. New entries can pick any delay 0-3.
+   href is null for the five academic/CTF write-ups that render as a plain (non-link)
+   card; the six 2026 builds link out. techStack is null for the two cards that never
+   had a tech-stack strip (Blueprint, Finance Dashboard). name/org/desc/outcomes carry
+   trusted hand-authored HTML entities (&mdash;, &amp;, embedded <span>) and are NOT
+   re-escaped by the renderer — same trust model ssot.mjs already documents for
+   index.html itself. */
+SITE.projects = [
+  { id:'ctf-labs', featured:false, delay:0, href:null, icon:'&#x1F3AF;',
+    org:'Ongoing &middot; TryHackMe &amp; HackTheBox', name:'CTF &amp; Penetration Testing Labs',
+    desc:'Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.',
+    outcomes:['Active on Junior Penetration Testing path on TryHackMe','Practising manual exploit identification and vulnerability chaining','Developing recon, web app testing, and post-exploitation techniques'],
+    techStack:['Nmap','Burp Suite','Metasploit','Linux','Web Exploitation'] },
+  { id:'puf-ml', featured:false, delay:1, href:null, icon:'&#x1F916;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'ML Attacks on Physical Unclonable Functions',
+    desc:'MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.',
+    outcomes:['Demonstrated measurable PUF vulnerability through GAN-synthesised datasets','Evaluated attack success rates and proposed countermeasures','Advanced hardware-level threat research across ML and cryptography'],
+    techStack:['Python','GANs','Machine Learning','Cryptography','PUFs'] },
+  { id:'honey-encryption', featured:false, delay:2, href:null, icon:'&#x1F510;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'Honey Encryption: Brute-Force Resistant Security',
+    desc:'Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.',
+    outcomes:['Designed a developer API for web and cloud application integration','Applied DTE encoding to passwords, PINs, and biometrics','Mapped use cases across internet banking and cloud security'],
+    techStack:['Python','Encryption','DTE','API Design','Cloud Security'] },
+  { id:'ntfs-forensics', featured:false, delay:3, href:null, icon:'&#x1F50E;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'NTFS Digital Forensics: File Recovery on Windows 10',
+    desc:'Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.',
+    outcomes:['Analysed MFT entries, slack space, and disk imaging for artifact recovery','Compared CLI tools and recovery software for forensic soundness','Documented best practices for evidence preservation and breach analysis'],
+    techStack:['NTFS','Disk Imaging','MFT Analysis','Windows Forensics','CLI Tools'] },
+  { id:'airs', featured:false, delay:0, href:null, icon:'&#x1F6E1;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'Automated Network Intrusion Response System (AIRS)',
+    desc:'Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.',
+    outcomes:['Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations','Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT','Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment'],
+    techStack:['IDS/IPS','IRS','Network Security','Threat Mitigation','Anomaly Detection'] },
+  { id:'claude-org-framework', featured:true, delay:0, href:'https://github.com/atharvak161/claude-org-framework', icon:'&#x1F3DB;',
+    org:'2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span>', name:'Claude Org Framework &mdash; AI Agent Orchestration',
+    desc:'A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.',
+    outcomes:['89 role-scoped agents with enforced separation between building, reviewing and shipping','Mandatory security and QA sign-off gates before anything reaches production','Git hooks and a consistency checker that block policy violations mechanically, not by convention'],
+    techStack:['Claude Code','Multi-Agent Systems','Bash','Git Hooks','Process Design'] },
+  { id:'cybersec-toolkit', featured:true, delay:1, href:'https://atharvaxsecurity.com/cybersec-toolkit/', icon:'&#x1F9F0;',
+    org:'2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span>', name:'Cybersec Toolkit',
+    desc:'A client-side cybersecurity utilities toolkit &mdash; encoding/decoding, hashing, JWT/AES/RSA tools, a CyberChef-style recipe chainer, and OSINT lookups. Nothing ever leaves the browser except a few clearly-disclosed public API calls.',
+    outcomes:['Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer','OSINT lookup utilities alongside classic encode/decode and crypto tools','Fully client-side &mdash; no data leaves the browser except disclosed public API calls'],
+    techStack:['JavaScript','Web Crypto API','JWT','OSINT','Client-Side Security'] },
+  { id:'cybersec-vault', featured:true, delay:2, href:'https://atharvaxsecurity.com/cybersec-vault/', icon:'&#x1F5C4;',
+    org:'2026 &middot; Cybersecurity Knowledge Base &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-vault</span>', name:'The Vault',
+    desc:'A fast, fully client-side knowledge base for 248 cybersecurity notes &mdash; cloud, GRC, OSCP, and red-team &mdash; with an Obsidian-style reader: instant full-text search, a command palette, wiki-style cross-links, an interactive link graph, and backlinks. No backend, nothing leaves the browser.',
+    outcomes:['248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette','Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents','Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls'],
+    techStack:['JavaScript','Markdown','Full-Text Search','Graph View','Client-Side'] },
+  { id:'jobscope', featured:true, delay:1, href:'https://github.com/atharvak161/jobscope', icon:'&#x1F50E;',
+    org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/jobscope</span>', name:'JobScope &mdash; UK Job Aggregator',
+    desc:'UK job aggregator that filters listings by visa sponsorship status and security clearance requirements &mdash; built for candidates who need to know eligibility before they apply. Resume parsing powered by Claude AI.',
+    outcomes:['Filters roles by visa sponsorship and security clearance eligibility','Claude AI resume parsing for automated candidate-to-role matching','IDOR, SSRF, and prompt-injection defences built in from the ground up'],
+    techStack:['Next.js 16','TypeScript','PostgreSQL','Prisma 7','Claude AI'] },
+  { id:'blueprint', featured:true, delay:2, href:'https://atharvaxsecurity.com/Blueprint/', icon:'&#x1F4CB;',
+    org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/Blueprint</span>', name:'Blueprint &mdash; Project Management Tool',
+    desc:'A project management dashboard for tracking tasks, milestones, and team progress. Built as a single-page app with a clean kanban-style interface.',
+    outcomes:['Visual project and task tracking with status columns','Milestone management with progress indicators','Deployed via GitHub Actions to GitHub Pages'],
+    techStack:null },
+  { id:'finance-dashboard', featured:true, delay:3, href:'https://github.com/atharvak161/finance-dashboard', icon:'&#x1F4B7;',
+    org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/finance-dashboard</span>', name:'Finance Dashboard &mdash; Personal Finance Tracker',
+    desc:'Comprehensive personal finance tracker for NRI/UK professionals. Tracks income, expenses, investments, debts, and goals across GBP and INR. Includes ROAI analytics, envelope budgeting, bill calendar, SMS transaction parsing, and OLED dark mode.',
+    outcomes:['Cross-currency portfolio tracking with real-time ROAI metrics','SMS and CSV bank import with auto-categorisation','Privacy mode, keyboard shortcuts, and OLED dark mode'],
+    techStack:null }
+];
+
+/* writeups: one entry → #writeups card (home, featured only) + writeups/index.html
+   hub (all). href is the bare "<slug>.html" — the renderer prefixes "writeups/" for
+   the home page and nothing for the hub, which already lives at /writeups/.
+   "refs" is the CWE/CVE/OWASP reference line, plain trusted HTML like the other
+   fields here. Canonical text is the writeups hub's (corrected in #20 — flagvault2
+   CWE-125 not CWE-787, capture CWE-204 not CWE-200, simplectf CVSSv3.0 8.1/A03 not
+   9.8/A01); the home page previously hand-duplicated the pre-correction numbers,
+   which is exactly the drift this SSOT exists to make impossible. */
+SITE.writeups = [
+  { id:'domino', featured:true, delay:0, slug:'domino', icon:'&#x1F3B4;', org:'TryHackMe', name:'Domino',
+    desc:'Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.',
+    refs:'CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-732 &middot; A01:2021' },
+  { id:'flagvault2', featured:true, delay:1, slug:'flagvault2', icon:'&#x1F9F5;', org:'TryHackMe', name:'Flag Vault 2',
+    desc:'Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.',
+    refs:'CWE-134 &middot; CWE-125 &middot; A03:2021' },
+  { id:'flagvault', featured:true, delay:2, slug:'flagvault', icon:'&#x1F4BE;', org:'TryHackMe', name:'Flag Vault',
+    desc:'Exploited a stack buffer overflow (CWE-121) via gets() to overwrite an adjacent stack variable and bypass authentication.',
+    refs:'CWE-121 &middot; CWE-676 &middot; A04:2021' },
+  { id:'capture', featured:true, delay:0, slug:'capture', icon:'&#x1F510;', org:'TryHackMe', name:'Capture!',
+    desc:'Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.',
+    refs:'CWE-307 &middot; CWE-204 &middot; A07:2021' },
+  { id:'simplectf', featured:true, delay:1, slug:'simplectf', icon:'&#x1F3F3;', org:'TryHackMe', name:'Simple CTF',
+    desc:'Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3.0 8.1) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.',
+    refs:'CVE-2019-9053 &middot; CWE-89 &middot; A03:2021' },
+  { id:'picklerick', featured:true, delay:2, slug:'picklerick', icon:'&#x1F952;', org:'TryHackMe', name:'Pickle Rick',
+    desc:'Retrieved credentials via information disclosure in HTML comments and robots.txt, then achieved RCE and root escalation through a misconfigured sudo policy.',
+    refs:'CWE-540 &middot; CWE-284 &middot; A01:2021' }
 ];
 
 function ssotEsc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -2018,7 +2068,7 @@ function revealDelay(i){ return i === 0 ? '' : ' reveal-delay-' + (((i - 1) % 5)
 function renderCerts(){
   var grid = document.querySelector('#certifications .certs-grid');
   if(!grid) return;
-  grid.innerHTML = SITE.certs.map(function(c, i){
+  grid.innerHTML = SITE.certs.filter(function(c){ return c.featured; }).map(function(c, i){
     var foot;
     if(c.credentialId){
       var idInner = '<span class="lbl">Credential ID</span><span class="val">'+ssotEsc(c.credentialId)+'</span>';
@@ -2041,7 +2091,7 @@ function renderCerts(){
 function renderBadges(){
   var grid = document.querySelector('#badges .badges-grid');
   if(!grid) return;
-  grid.innerHTML = SITE.badges.map(function(b, i){
+  grid.innerHTML = SITE.badges.filter(function(b){ return b.featured; }).map(function(b, i){
     var href = b.href || SITE.thmShare(b.slug);
     var aria = b.aria || (b.name + ' badge on TryHackMe');
     var cls = 'badge-card ' + b.tier + (b.cls2 ? ' ' + b.cls2 : '') + ' reveal' + revealDelay(i);
@@ -2051,6 +2101,43 @@ function renderBadges(){
       + '<span class="badge-tag">'+ssotEsc(b.tag)+'</span>'
       + '<span class="badge-desc">'+ssotEsc(b.desc)+'</span></a>';
   }).join('');
+}
+
+// project/writeup fields are trusted hand-authored HTML fragments (may contain
+// &mdash;/&amp;/embedded <span>), not user input — rendered raw, not ssotEsc'd.
+// Same trust model as c.badge above and the module comment in tools/ssot.mjs.
+function projectCardHTML(p, i){
+  var delayCls = p.delay ? ' reveal-delay-' + p.delay : '';
+  var tech = p.techStack ? '<div class="tech-stack">' + p.techStack.map(function(t){ return '<span class="tech-badge">'+t+'</span>'; }).join('') + '</div>' : '';
+  var outcomes = '<ul class="project-outcomes">' + p.outcomes.map(function(o){ return '<li>'+o+'</li>'; }).join('') + '</ul>';
+  var inner = '<div class="project-icon">'+p.icon+'</div>'
+    + '<div><div class="project-org">'+p.org+'</div><h3>'+p.name+'</h3></div>'
+    + '<p>'+p.desc+'</p>' + outcomes + tech;
+  return p.href
+    ? '<a href="'+ssotEsc(p.href)+'" target="_blank" rel="noopener noreferrer" class="project-card reveal'+delayCls+'" style="text-decoration:none;color:inherit;">'+inner+'</a>'
+    : '<div class="project-card reveal'+delayCls+'">'+inner+'</div>';
+}
+
+function renderProjects(){
+  var grid = document.querySelector('#projects .projects-grid');
+  if(!grid || !SITE.projects) return;
+  grid.innerHTML = SITE.projects.filter(function(p){ return p.featured; }).map(projectCardHTML).join('');
+}
+
+function writeupCardHTML(w, i, basePath){
+  var href = (basePath || '') + w.slug + '.html';
+  return '<a href="'+ssotEsc(href)+'" class="project-card reveal'+(w.delay ? ' reveal-delay-'+w.delay : '')+'" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;"><div class="project-icon">'+w.icon+'</div></div>'
+    + '<div><div class="project-org">'+w.org+'</div><h3>'+w.name+'</h3></div>'
+    + '<p>'+w.desc+'</p>'
+    + '<div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">'+w.refs+'</div>'
+    + '<span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span></a>';
+}
+
+function renderWriteups(){
+  var grid = document.querySelector('#writeups .projects-grid');
+  if(!grid || !SITE.writeups) return;
+  grid.innerHTML = SITE.writeups.filter(function(w){ return w.featured; }).map(function(w, i){ return writeupCardHTML(w, i, 'writeups/'); }).join('');
 }
 
 function renderJsonLd(){
@@ -2078,7 +2165,7 @@ function renderIdentity(){
 }
 
 function renderAll(){
-  try { renderCerts(); renderBadges(); renderIdentity(); renderJsonLd(); }
+  try { renderCerts(); renderBadges(); renderProjects(); renderWriteups(); renderIdentity(); renderJsonLd(); }
   catch(e){ console.error('[SSOT] render failed:', e); }
 }
 renderAll();
@@ -2451,6 +2538,16 @@ function buildLsProjects(){
 }
 
 function buildProjectsTxt(){
+  // Full set from the SSOT - see buildCertsTxt above for why.
+  if(window.SITE && SITE.projects && SITE.projects.length){
+    var out = [];
+    SITE.projects.forEach(function(p){
+      var org = (p.org || '').replace(/<[^>]*>/g, '').replace(/&middot;/g, '\u00b7').trim();
+      out.push({ t:'t-green', v:'[*] ' + p.name.replace(/&mdash;/g, '\u2014') + (org ? '  (' + org + ')' : '') });
+      if(p.href){ out.push({ t:'t-out', v:'   ', url: p.href, linkText: projectLinkLabel(p.href) }); }
+    });
+    return out;
+  }
   var cards = document.querySelectorAll('#projects .project-card');
   if(!cards.length) return [{ t:'t-out', v:'none found' }];
   var lines = [];
@@ -2480,6 +2577,16 @@ function buildSkillsTxt(){
 }
 
 function buildCertsTxt(){
+  // Reads the SSOT, not the home-page DOM. The home page now shows only the
+  // featured subset, but `cat certs.txt` should list the whole file - a
+  // filtered listing under that name would be a lie. Still no baked-in copy:
+  // SITE.certs is the same source the cards are generated from.
+  if(window.SITE && SITE.certs && SITE.certs.length){
+    return SITE.certs.map(function(c){
+      var label = c.credentialId || (c.pill && c.pill.text) || 'Verified';
+      return { t:'t-green', v:'[+] ' + c.name + '  :: ' + label };
+    });
+  }
   var cards = document.querySelectorAll('#certifications .cert-card');
   if(!cards.length) return [{ t:'t-out', v:'none found' }];
   var lines = [];
@@ -2495,6 +2602,19 @@ function buildCertsTxt(){
 }
 
 function buildBadgesTxt(){
+  // Full set from the SSOT - see buildCertsTxt above for why.
+  if(window.SITE && SITE.badges && SITE.badges.length){
+    var out = [];
+    SITE.badges.forEach(function(b){
+      out.push({ t:'t-green', v:'[*] ' + b.name + (b.tag ? '  [' + b.tag + ']' : '') });
+      if(b.href || b.slug){
+        out.push({ t:'t-out', v:'   ',
+          url: b.href || ('https://tryhackme.com/AtharvaK911/badges/' + b.slug),
+          linkText: '\u2192 view badge \u2197' });
+      }
+    });
+    return out;
+  }
   var cards = document.querySelectorAll('#badges .badge-card');
   if(!cards.length) return [{ t:'t-out', v:'none found' }];
   var lines = [];
