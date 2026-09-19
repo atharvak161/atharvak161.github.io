@@ -20,7 +20,6 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 │   │   ├── CEH-V12-Certificate.pdf
 │   │   ├── TryHackMe-SEC0-Certificate.pdf
 │   │   └── TryHackMe-SEC1-Certificate.pdf
-│   ├── img/atharva.jpg
 │   └── vendor/                    GSAP + ScrambleTextPlugin, vendored
 │                                  deliberately — no CDN dependency
 ├── writeups/                      6 standalone CTF writeups

@@ -240,7 +240,7 @@
   .nav-links a.active::after { width: 100%; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after { width: 100%; }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
   /* ── HERO ────────────────────────────────────────────────── */
@@ -293,7 +293,7 @@
   .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 100%; max-width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
   .thm-card:hover { border-color: #a2ea2a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .thm-card-head { display: flex; align-items: center; gap: .75rem; }
-  .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; border: 2px solid var(--border); transition: border-color .25s; }
+  .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center 20%; border: 2px solid var(--border); transition: border-color .25s; }
   .thm-card:hover .thm-card-avatar { border-color: #a2ea2a; }
   .thm-card-info { display: flex; flex-direction: column; min-width: 0; }
   .thm-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
@@ -662,7 +662,7 @@
   /* ── CONTACT ─────────────────────────────────────────────── */
   #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(var(--accent-rgb),.03))}
   .contact-inner{max-width:1200px;margin:0 auto}
-  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;column-gap:4rem;row-gap:0;align-items:start}
   .contact-info h3{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:1rem;letter-spacing:.08em;text-transform:uppercase}
   .contact-info h3 span{color:var(--accent)}
   .contact-info p{font-size:.85rem;color:var(--text2);line-height:1.8;margin-bottom:2rem;max-width:380px}
@@ -674,7 +674,26 @@
      no structural way to align with the email tile. This offset is the
      heading-plus-paragraph block above those links (76+16+98+32), Revisit if that
      paragraph's length changes. */
-  .contact-form{display:flex;flex-direction:column;gap:1rem;padding-top:197px}
+  /* The first input lines up with the first contact link because both columns
+     share the same two grid rows (subgrid): row 1 is the intro block, row 2 is
+     the list. No measured offset, so changing the paragraph copy can never
+     break the alignment again. */
+  .contact-info,.contact-form-col{display:grid;grid-row:1 / span 2;grid-template-rows:subgrid;row-gap:0}
+  .contact-form-col > .contact-form{grid-row:2}
+  /* The first tile in the info column has no label above it, so pull the first
+     form label into the empty row above. -1lh is the label's OWN line box and
+     .4rem is .form-group's gap, so this tracks any future type change instead
+     of being a measured pixel value. */
+  .contact-form-col .form-group:first-child > label{margin-top:calc(-1lh - .4rem)}
+  @supports not (margin-top: calc(-1lh)){
+    .contact-form-col .form-group:first-child > label{margin-top:-25px}
+  }
+  .contact-form{display:flex;flex-direction:column;gap:1rem}
+  /* Browsers without subgrid keep the old approximation rather than collapsing. */
+  @supports not (grid-template-rows: subgrid){
+    .contact-info,.contact-form-col{display:block}
+    .contact-form{padding-top:197px}
+  }
   .form-group{display:flex;flex-direction:column;gap:.4rem}
   .form-group label{font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase}
   .form-group input,.form-group textarea{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.8rem 1rem;color:var(--text);font-family:var(--font-mono);font-size:.82rem;outline:none;transition:border-color .2s;resize:none}
@@ -698,7 +717,7 @@
   .mobile-menu.open{opacity:1;visibility:visible;pointer-events:auto;z-index:1001}
   .mobile-menu a{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--text2);text-decoration:none;transition:color .2s}
   .mobile-menu a:hover{color:var(--accent)}
-  .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;font-family:var(--font-mono)}
+  .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-8px -15px 0 0}
 
   /* ── TERMINAL EASTER EGG ─────────────────────────────────── */
   #terminal-overlay{position:fixed;inset:0;background:rgba(2,4,8,.92);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);visibility:hidden}
@@ -793,7 +812,7 @@
     section{padding:4rem 1.5rem}
     .about-grid{grid-template-columns:1fr;gap:2rem}
     .exp-card{grid-template-columns:1fr;gap:.5rem}
-    .contact-grid{grid-template-columns:1fr;gap:2.5rem}.contact-form{padding-top:0}
+    .contact-grid{grid-template-columns:1fr;grid-template-rows:none;gap:2.5rem}.contact-info,.contact-form-col{display:block;grid-row:auto}.contact-form{padding-top:0}
     .hero-stats{gap:1.5rem}.stat-num{font-size:1.5rem}
     #contact{padding:4rem 1.5rem}
     #progress-track{display:none}
@@ -1029,7 +1048,7 @@
         <div class="thm-link">
           <a class="thm-card" href="https://tryhackme.com/p/AtharvaK911" target="_blank" rel="noopener" aria-label="Atharva on TryHackMe">
             <div class="thm-card-head">
-              <img class="thm-card-avatar" src="https://tryhackme-images.s3.amazonaws.com/user-avatars/63879addf6080c0048a27b26-1775127277617" alt="" onerror="this.style.display='none'">
+              <img class="thm-card-avatar" src="assets/img/atharva.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'">
               <div class="thm-card-info">
                 <span class="thm-card-name">TryHackMe &middot; Top 1%</span>
                 <span class="thm-card-handle">@AtharvaK911</span>
@@ -1534,7 +1553,7 @@
         <div class="cert-card-id"><span class="lbl">Credential ID</span><span class="val">uTMYfCWHCd</span></div>
       </div>
     </div>
-    <div class="cert-card thm reveal reveal-delay-2">
+    <div class="cert-card thm reveal reveal-delay-3">
       <div class="cert-card-top">
         <div class="cert-card-badge">&#x1F6E1;&#xFE0F;</div>
         <div class="cert-card-head">
@@ -1546,7 +1565,7 @@
         <a class="cert-pill" href="assets/certs/TryHackMe-SEC1-Certificate.pdf" target="_blank" rel="noopener">Completed</a>
       </div>
     </div>
-    <div class="cert-card thm reveal reveal-delay-2">
+    <div class="cert-card thm reveal reveal-delay-4">
       <div class="cert-card-top">
         <div class="cert-card-badge">&#x1F6E1;&#xFE0F;</div>
         <div class="cert-card-head">
@@ -1558,7 +1577,7 @@
         <a class="cert-pill" href="assets/certs/TryHackMe-SEC0-Certificate.pdf" target="_blank" rel="noopener">Completed</a>
       </div>
     </div>
-    <div class="cert-card thm reveal reveal-delay-3">
+    <div class="cert-card thm reveal reveal-delay-5">
       <div class="cert-card-top">
         <div class="cert-card-badge">&#x1F3AF;</div>
         <div class="cert-card-head">
@@ -1848,8 +1867,8 @@
     </div>
     <div class="contact-grid">
       <div class="contact-info reveal">
-        <h3>Let's <span>connect</span></h3>
-        <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p>
+        <div class="contact-intro"><h3>Let's <span>connect</span></h3>
+        <p>Open to Junior Penetration Tester roles and security engineering opportunities in the UK. Always happy to discuss offensive security, CTF challenges, or potential collaborations.</p></div>
         <div class="contact-links">
           <a href="mailto:atharvak161&#64;gmail.com" class="contact-link">
             <div class="contact-link-icon">&#x2709;</div>atharvak161&#64;gmail.com
@@ -1865,7 +1884,7 @@
           </a>
         </div>
       </div>
-      <div class="reveal reveal-delay-2">
+      <div class="contact-form-col reveal reveal-delay-2">
         <div class="contact-form">
           <div class="form-group"><label for="fname">Name</label><input type="text" id="fname" placeholder="Your name"></div>
           <div class="form-group"><label for="femail">Email</label><input type="email" id="femail" placeholder="your@email.com"></div>
@@ -1956,7 +1975,11 @@ function ssotEsc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'
 function renderCerts(){
   var grid = document.querySelector('#certifications .certs-grid');
   if(!grid) return;
-  var delays = ['', ' reveal-delay-1', ' reveal-delay-2', ' reveal-delay-2', ' reveal-delay-3'];
+  // Derived, not hand-listed: a fixed array silently stopped staggering once
+  // the list outgrew it (6 certs, 5 entries), and three cards shared one
+  // delay so they faded in together. Cycles 1-5 so any number of certs
+  // keeps a clean cascade.
+  function certDelay(i){ return i === 0 ? '' : ' reveal-delay-' + (((i - 1) % 5) + 1); }
   grid.innerHTML = SITE.certs.map(function(c, i){
     var foot;
     if(c.credentialId){
@@ -1969,7 +1992,7 @@ function renderCerts(){
     } else {
       foot = '<span class="cert-pill">'+(c.pill ? ssotEsc(c.pill.text) : '')+'</span>';
     }
-    return '<div class="cert-card '+ssotEsc(c.cls)+' reveal'+(delays[i]||'')+'">'
+    return '<div class="cert-card '+ssotEsc(c.cls)+' reveal'+certDelay(i)+'">'
       + '<div class="cert-card-top"><div class="cert-card-badge">'+c.badge+'</div>'
       + '<div class="cert-card-head"><span class="cert-card-issuer">'+ssotEsc(c.issuer)+'</span>'
       + '<div class="cert-card-name">'+ssotEsc(c.name)+'</div></div></div>'
@@ -2727,15 +2750,31 @@ function printCV() {
   // explicitly wants the scramble + flicker to fire on scroll on his machine.
   if(window.gsap && window.ScrambleTextPlugin) gsap.registerPlugin(ScrambleTextPlugin);
 
-  function runScramble(el){
-    if(!window.gsap) return; // harmless safety net; flicker still runs below
-    gsap.killTweensOf(el); // guard against overlapping tweens on the same title
-    gsap.to(el, { duration:1.1, scrambleText:{ text: el.getAttribute('data-text'), chars:'01<>/[]{}#$%&', speed:0.55, revealDelay:0.2 } });
+  // Duration scales with title length so a 6-character title and a
+  // 27-character one decrypt at the same visual rate, clamped at both ends
+  // so neither flashes past nor drags.
+  function scrambleDuration(text){
+    return Math.min(1.25, Math.max(0.6, text.length * 0.05));
   }
 
+  function runScramble(el, done){
+    if(!window.gsap){ done(); return; }        // no gsap: go straight to the flicker
+    gsap.killTweensOf(el);                     // guard against overlapping tweens
+    var text = el.getAttribute('data-text') || el.textContent;
+    var d = scrambleDuration(text);
+    gsap.to(el, {
+      duration: d,
+      scrambleText: { text: text, chars:'01<>/[]{}#$%&', speed:0.55, revealDelay: d * 0.18 },
+      onComplete: done
+    });
+  }
+
+  // The flicker's ::before/::after layers render attr(data-text) — the FINAL
+  // text — so firing them mid-scramble showed the ghost layers and the real
+  // text as two different strings, and how wrong it looked depended on title
+  // length. Waiting for the scramble to finish makes all 12 titles identical.
   function fire(el){
-    runScramble(el);                                         // 1) decrypt scramble
-    setTimeout(function(){ triggerGlitch(el); }, 320);       // 2) flicker a beat later
+    runScramble(el, function(){ triggerGlitch(el); });
   }
 
   var obs = new IntersectionObserver(function(entries){
