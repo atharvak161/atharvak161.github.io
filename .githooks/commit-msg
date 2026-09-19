@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# commit-msg — strip nothing silently, block the one trailer that must never ship.
+#
+# Atharva's standing rule: no AI self-attribution reaches any remote, ever.
+# /ship emits a Co-Authored-By trailer, so this catches it mechanically rather
+# than relying on someone remembering to strip it after every gstack upgrade.
+
+set -uo pipefail
+[ "${ORG_GUARD:-on}" = "off" ] && exit 0
+
+MSG_FILE="$1"
+
+if grep -qiE '^[[:space:]]*Co-Authored-By:.*(Claude|Anthropic)' "$MSG_FILE"; then
+  echo "" >&2
+  echo "BLOCKED: the commit message carries a Claude Co-Authored-By trailer." >&2
+  echo "  No AI self-attribution reaches a remote. Strip the trailer and retry." >&2
+  echo "" >&2
+  exit 1
+fi
+
+if grep -qiE 'Generated with .*Claude Code|🤖 Generated with' "$MSG_FILE"; then
+  echo "" >&2
+  echo "BLOCKED: the commit message carries an AI generation footer." >&2
+  echo "" >&2
+  exit 1
+fi
+
+exit 0
