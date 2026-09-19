@@ -40,12 +40,22 @@
     --text: #e8edf2; --text2: #8899aa; --text3: #758697; --surface-2: #141a24;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
+    /* Badge rarity-tier tokens — dark values match the original hardcoded colours exactly. */
+    --tier-exam: #3ecf8e; --tier-exam-rgb: 62,207,142;
+    --tier-common: #8fd6a6; --tier-common-rgb: 143,214,166;
+    --tier-rare: #f5a623; --tier-rare-rgb: 245,166,35;
+    --tier-epic: #d7a1ff; --tier-epic-rgb: 215,161,255;
   }
   [data-theme="light"] {
     --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
     --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00875a; --accent2-rgb: 0,135,90;
     --accent3: #e03050; --accent3-rgb: 224,48,80; --accent4: #b8730f; --accent4-rgb: 184,115,15;
     --text: #0f172a; --text2: #475569; --text3: #5b6b7f; --surface-2: #ffffff;
+    /* Same hue/saturation as dark, lightness lowered to clear 4.5:1 on a white card. */
+    --tier-exam: #1d764f; --tier-exam-rgb: 29,118,79;
+    --tier-common: #2c7844; --tier-common-rgb: 44,120,68;
+    --tier-rare: #905d07; --tier-rare-rgb: 144,93,7;
+    --tier-epic: #8e00f8; --tier-epic-rgb: 142,0,248;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -597,11 +607,12 @@
   .badge-card.exam .badge-tag{color:var(--accent);border-color:rgba(0,212,255,.4)}
   .badge-card.epic{border-color:rgba(199,146,234,.4)}
   .badge-card.epic .badge-tag{color:#c792ea;border-color:rgba(199,146,234,.45)}
-  /* Rarity-tier tag colours — distinct, non-blue, readable on the dark card. */
-  .badge-card.t-exam .badge-tag{color:#3ecf8e;border-color:rgba(62,207,142,.45);background:rgba(62,207,142,.08)}
-  .badge-card.t-common .badge-tag{color:#8fd6a6;border-color:rgba(143,214,166,.35);background:rgba(143,214,166,.06)}
-  .badge-card.t-rare .badge-tag{color:#f5a623;border-color:rgba(245,166,35,.42);background:rgba(245,166,35,.08)}
-  .badge-card.t-epic .badge-tag{color:#d7a1ff;border-color:rgba(215,161,255,.5);background:rgba(215,161,255,.1)}
+  /* Rarity-tier tag colours — theme tokens (see :root / [data-theme="light"]) so light mode
+     meets 4.5:1 contrast instead of inheriting the dark-only literals. */
+  .badge-card.t-exam .badge-tag{color:var(--tier-exam);border-color:rgba(var(--tier-exam-rgb),.45);background:rgba(var(--tier-exam-rgb),.08)}
+  .badge-card.t-common .badge-tag{color:var(--tier-common);border-color:rgba(var(--tier-common-rgb),.35);background:rgba(var(--tier-common-rgb),.06)}
+  .badge-card.t-rare .badge-tag{color:var(--tier-rare);border-color:rgba(var(--tier-rare-rgb),.42);background:rgba(var(--tier-rare-rgb),.08)}
+  .badge-card.t-epic .badge-tag{color:var(--tier-epic);border-color:rgba(var(--tier-epic-rgb),.5);background:rgba(var(--tier-epic-rgb),.1)}
   /* Per-tier coloured border + glow on every badge (matches its tag colour). */
   .badge-card.t-exam{border-color:rgba(62,207,142,.42);box-shadow:0 0 15px -6px rgba(62,207,142,.55)}
   .badge-card.t-exam:hover{box-shadow:0 9px 24px -8px rgba(62,207,142,.72)}
@@ -925,7 +936,7 @@
 </nav>
 
 <!-- ── MOBILE MENU ─────────────────────────────────────────── -->
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile navigation menu">
   <button class="mobile-close" id="mobileClose" aria-label="Close menu">&#x2715;</button>
   <a href="#about" class="mm-link">About</a>
   <a href="#skills" class="mm-link">Skills</a>
@@ -942,7 +953,7 @@
 </div>
 
 <!-- ── TERMINAL OVERLAY ───────────────────────────────────── -->
-<div id="terminal-overlay">
+<div id="terminal-overlay" role="dialog" aria-modal="true" aria-label="Portfolio terminal">
   <div class="terminal-window">
     <div class="terminal-titlebar">
       <div class="terminal-dots">
@@ -2097,11 +2108,78 @@ function updateActiveNav(){
 }
 updateActiveNav();
 
+// ── OVERLAY / FOCUS-TRAP HELPERS (shared by mobile menu + terminal) ──────
+// `inert` removes the rest of the page from tab order, click, and the
+// accessibility tree while a modal overlay is open. Feature-detected so
+// browsers without it just fall back to the JS Tab trap below.
+var INERT_SUPPORTED = (function(){
+  try { return 'inert' in document.createElement('div'); } catch(e){ return false; }
+})();
+function inertTargets(){
+  return [
+    document.querySelector('.skip-link'),
+    document.getElementById('navbar'),
+    document.getElementById('main'),
+    document.querySelector('footer')
+  ].filter(Boolean);
+}
+var openOverlayCount = 0;
+function lockBackground(){
+  openOverlayCount++;
+  if(!INERT_SUPPORTED || openOverlayCount !== 1) return;
+  inertTargets().forEach(function(el){ el.setAttribute('inert', ''); });
+}
+function unlockBackground(){
+  openOverlayCount = Math.max(0, openOverlayCount - 1);
+  if(!INERT_SUPPORTED || openOverlayCount !== 0) return;
+  inertTargets().forEach(function(el){ el.removeAttribute('inert'); });
+}
+var FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function getFocusable(container){
+  return Array.prototype.slice.call(container.querySelectorAll(FOCUSABLE_SEL)).filter(function(el){
+    return el.offsetParent !== null;
+  });
+}
+// Wraps Tab / Shift+Tab within `container`. Call from a keydown listener
+// while the overlay owning `container` is open.
+function trapTabKey(container, e){
+  if(e.key !== 'Tab') return;
+  var focusable = getFocusable(container);
+  if(focusable.length === 0){ e.preventDefault(); return; }
+  var first = focusable[0], last = focusable[focusable.length - 1];
+  var active = document.activeElement;
+  if(e.shiftKey){
+    if(active === first || !container.contains(active)){ e.preventDefault(); last.focus(); }
+  } else {
+    if(active === last || !container.contains(active)){ e.preventDefault(); first.focus(); }
+  }
+}
+
 // ── MOBILE MENU ───────────────────────────────────────────
 var hamburger = document.getElementById('hamburger');
 var mobileMenu = document.getElementById('mobileMenu');
-function openMobileMenu(){ mobileMenu.classList.add('open'); hamburger.setAttribute('aria-expanded','true'); }
-function closeMobileMenu(){ mobileMenu.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); }
+var mmReturnFocus = null;
+function mobileMenuKeydown(e){
+  if(e.key === 'Escape'){ e.preventDefault(); closeMobileMenu(); return; }
+  trapTabKey(mobileMenu, e);
+}
+function openMobileMenu(){
+  mmReturnFocus = document.activeElement;
+  mobileMenu.classList.add('open');
+  hamburger.setAttribute('aria-expanded','true');
+  lockBackground();
+  document.addEventListener('keydown', mobileMenuKeydown);
+  setTimeout(function(){ var f = getFocusable(mobileMenu); (f[0] || mobileMenu).focus(); }, 50);
+}
+function closeMobileMenu(){
+  if(!mobileMenu.classList.contains('open')) return;
+  mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded','false');
+  document.removeEventListener('keydown', mobileMenuKeydown);
+  unlockBackground();
+  if(mmReturnFocus && typeof mmReturnFocus.focus === 'function'){ mmReturnFocus.focus(); }
+  mmReturnFocus = null;
+}
 hamburger.addEventListener('click', openMobileMenu);
 document.getElementById('mobileClose').addEventListener('click', closeMobileMenu);
 document.querySelectorAll('.mm-link').forEach(function(l){ l.addEventListener('click', closeMobileMenu); });
@@ -2375,6 +2453,7 @@ function openTerminal(){
   // Remember what had focus so Escape returns the user there.
   termReturnFocus = document.activeElement;
   termOverlay.classList.add('open');
+  lockBackground();
   if(termBody.children.length === 0){
     termPrint([
       { t:'t-green', v:'AK Security Terminal v1.0' },
@@ -2388,6 +2467,7 @@ function openTerminal(){
 function closeTerminal(){
   terminalOpen = false;
   termOverlay.classList.remove('open');
+  unlockBackground();
   if(termReturnFocus && typeof termReturnFocus.focus === "function"){
     termReturnFocus.focus(); termReturnFocus = null;
   }
@@ -2440,7 +2520,8 @@ termInput.addEventListener('keydown', function(e){
 document.addEventListener('keydown', function(e){
   if(e.ctrlKey && e.altKey && e.key.toLowerCase() === 't'){ e.preventDefault(); terminalOpen ? closeTerminal() : openTerminal(); }
   if(e.metaKey && e.altKey && e.code === 'KeyT'){ e.preventDefault(); terminalOpen ? closeTerminal() : openTerminal(); }
-  if(e.key === 'Escape' && terminalOpen) closeTerminal();
+  if(e.key === 'Escape' && terminalOpen){ closeTerminal(); return; }
+  if(terminalOpen) trapTabKey(termOverlay, e);
 });
 
 
