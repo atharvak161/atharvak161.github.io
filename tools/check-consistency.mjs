@@ -17,13 +17,27 @@ import {
   loadSite,
   badgesGridInner,
   certsGridInner,
+  projectsGridInner,
+  writeupsGridInner,
   hasCredentialArrayText,
+  seeAllHTML,
   getRegion,
   getHasCredentialText,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(join(root, 'index.html'), 'utf8');
+const hubPaths = {
+  badges: join(root, 'badges/index.html'),
+  certs: join(root, 'certifications/index.html'),
+  projects: join(root, 'projects/index.html'),
+  writeups: join(root, 'writeups/index.html'),
+};
+const hubHtml = {};
+for (const [key, p] of Object.entries(hubPaths)) {
+  try { hubHtml[key] = readFileSync(p, 'utf8'); }
+  catch (e) { hubHtml[key] = null; }
+}
 
 const fail = [];
 const warn = [];
@@ -181,17 +195,39 @@ function readArray(name) {
 
 const norm = s => (s || '').replace(/&mdash;/g, '—').replace(/&amp;/g, '&').trim();
 
+// "featured" must be an explicit boolean on every item in every SSOT array —
+// it is decided per-item, never inferred from a count. Missing it silently
+// breaks the home/hub split (an item with no featured field is falsy, so it
+// would vanish from the home page without anyone deciding that).
+function checkFeaturedField(name, arr) {
+  if (!arr) return;
+  arr.forEach((item, i) => {
+    if (typeof item.featured !== 'boolean') {
+      fail.push(`SITE.${name}[${i}] ("${item.name || item.id || i}") is missing an explicit boolean "featured" field`);
+    }
+  });
+}
+
 const siteBadges = readArray('badges');
+checkFeaturedField('badges', siteBadges);
 if (siteBadges) {
-  const sec = section('badges') || '';
-  const cards = sec.match(/<a class="badge-card[\s\S]*?<\/a>/g) || [];
-  if (cards.length !== siteBadges.length) {
-    fail.push(`SITE.badges has ${siteBadges.length} entries but the static fallback has ${cards.length} cards`);
-  }
   siteBadges.forEach((b, i) => {
-    const card = cards[i];
     const label = b.name || `badge ${i}`;
     if (b.img && !existsSync(join(root, b.img))) fail.push(`badge "${label}": img not on disk: ${b.img}`);
+  });
+  // The home page's #badges fallback is FEATURED-only (see-all lives on
+  // badges/index.html); the SSOT-vs-fallback field diff below has to compare
+  // against that same subset, in the same order, or every non-featured badge
+  // reads as "missing" here.
+  const featuredBadges = siteBadges.filter(b => b.featured);
+  const sec = section('badges') || '';
+  const cards = sec.match(/<a class="badge-card[\s\S]*?<\/a>/g) || [];
+  if (cards.length !== featuredBadges.length) {
+    fail.push(`SITE.badges has ${featuredBadges.length} featured entries but the home-page fallback has ${cards.length} cards`);
+  }
+  featuredBadges.forEach((b, i) => {
+    const card = cards[i];
+    const label = b.name || `badge ${i}`;
     if (!card) return;
     const got = {
       img:  (card.match(/src="([^"]+)"/) || [])[1],
@@ -213,6 +249,7 @@ if (siteBadges) {
 }
 
 const siteCerts = readArray('certs');
+checkFeaturedField('certs', siteCerts);
 if (siteCerts) {
   siteCerts.forEach(c => {
     if (c.certUrl && !existsSync(join(root, c.certUrl)))
@@ -228,6 +265,28 @@ if (siteCerts) {
   }
 }
 
+const siteProjects = readArray('projects');
+checkFeaturedField('projects', siteProjects);
+if (siteProjects) {
+  siteProjects.forEach((p, i) => {
+    const label = p.name || `project ${i}`;
+    if (typeof p.delay !== 'number') fail.push(`project "${label}": missing numeric "delay" field (reveal-stagger digit)`);
+    if (!Array.isArray(p.outcomes) || !p.outcomes.length) fail.push(`project "${label}": "outcomes" must be a non-empty array`);
+  });
+}
+
+const siteWriteups = readArray('writeups');
+checkFeaturedField('writeups', siteWriteups);
+if (siteWriteups) {
+  siteWriteups.forEach((w, i) => {
+    const label = w.name || `writeup ${i}`;
+    if (!w.slug) fail.push(`writeup "${label}": missing "slug"`);
+    else if (!existsSync(join(root, 'writeups', `${w.slug}.html`)))
+      fail.push(`writeup "${label}": writeups/${w.slug}.html not on disk`);
+    if (typeof w.delay !== 'number') fail.push(`writeup "${label}": missing numeric "delay" field (reveal-stagger digit)`);
+  });
+}
+
 /* ── GENERATED regions must match what build-fallbacks.mjs would produce ──
    The blocks above check the static fallback's *content* agrees with the
    SSOT. This checks the fallback is actually the GENERATOR's output byte
@@ -236,23 +295,46 @@ if (siteCerts) {
    is caught, and the pre-commit hook blocks it until someone runs
    `node tools/build-fallbacks.mjs`. This is what makes drift structurally
    impossible rather than just detected-after-the-fact. */
-function checkGenerated(label, startMarker, endMarker, expected) {
+function checkGenerated(label, startMarker, endMarker, expected, fileHtml, fileLabel) {
   if (expected === null) return; // SITE.<name> failed to parse — already reported above
-  const actual = getRegion(html, startMarker, endMarker);
+  if (fileHtml === null) {
+    fail.push(`${fileLabel} does not exist — GENERATED:${label} could not be verified.`);
+    return;
+  }
+  const actual = getRegion(fileHtml, startMarker, endMarker);
   if (actual === null) {
-    fail.push(`GENERATED:${label} markers not found in index.html — the fallback can no longer be verified or regenerated.`);
+    fail.push(`GENERATED:${label} markers not found in ${fileLabel} — the fallback can no longer be verified or regenerated.`);
     return;
   }
   if (actual.trim() !== expected.trim()) {
-    fail.push(`GENERATED:${label} region does not match what "node tools/build-fallbacks.mjs" would produce from SITE.${label} — it was hand-edited or is stale. Run the generator and commit the result.`);
+    fail.push(`GENERATED:${label} region in ${fileLabel} does not match what "node tools/build-fallbacks.mjs" would produce — it was hand-edited or is stale. Run the generator and commit the result.`);
   }
 }
 
 if (SITE) {
+  const featuredBadges = siteBadges ? siteBadges.filter(b => b.featured) : null;
+  const featuredCerts = siteCerts ? siteCerts.filter(c => c.featured) : null;
+  const featuredProjects = siteProjects ? siteProjects.filter(p => p.featured) : null;
+  const featuredWriteups = siteWriteups ? siteWriteups.filter(w => w.featured) : null;
+
+  // Home page — featured-only regions, plus the conditional "see all" links.
   checkGenerated('badges', GENERATED_NOTICE.badges, GENERATED_NOTICE.badgesEnd,
-    siteBadges ? badgesGridInner(siteBadges, SITE.thmShare) : null);
+    featuredBadges ? badgesGridInner(featuredBadges, SITE.thmShare) : null, html, 'index.html');
   checkGenerated('certs', GENERATED_NOTICE.certs, GENERATED_NOTICE.certsEnd,
-    siteCerts ? certsGridInner(siteCerts) : null);
+    featuredCerts ? certsGridInner(featuredCerts) : null, html, 'index.html');
+  checkGenerated('projects', GENERATED_NOTICE.projects, GENERATED_NOTICE.projectsEnd,
+    featuredProjects ? projectsGridInner(featuredProjects) : null, html, 'index.html');
+  checkGenerated('writeups', GENERATED_NOTICE.writeups, GENERATED_NOTICE.writeupsEnd,
+    featuredWriteups ? writeupsGridInner(featuredWriteups, 'writeups/') : null, html, 'index.html');
+
+  checkGenerated('seeall-badges', GENERATED_NOTICE.seeallBadges, GENERATED_NOTICE.seeallBadgesEnd,
+    siteBadges ? seeAllHTML(siteBadges, 'badges/index.html', 'badges') : null, html, 'index.html');
+  checkGenerated('seeall-certs', GENERATED_NOTICE.seeallCerts, GENERATED_NOTICE.seeallCertsEnd,
+    siteCerts ? seeAllHTML(siteCerts, 'certifications/index.html', 'certifications') : null, html, 'index.html');
+  checkGenerated('seeall-projects', GENERATED_NOTICE.seeallProjects, GENERATED_NOTICE.seeallProjectsEnd,
+    siteProjects ? seeAllHTML(siteProjects, 'projects/index.html', 'projects') : null, html, 'index.html');
+  checkGenerated('seeall-writeups', GENERATED_NOTICE.seeallWriteups, GENERATED_NOTICE.seeallWriteupsEnd,
+    siteWriteups ? seeAllHTML(siteWriteups, 'writeups/index.html', 'writeups') : null, html, 'index.html');
 
   const actualHasCred = getHasCredentialText(html, GENERATED_NOTICE.jsonld, GENERATED_NOTICE.jsonldEnd);
   if (actualHasCred === null) {
@@ -263,6 +345,27 @@ if (SITE) {
       fail.push('GENERATED:jsonld "hasCredential" array does not match what "node tools/build-fallbacks.mjs" would produce from SITE.certs — it was hand-edited or is stale. Run the generator and commit the result.');
     }
   }
+
+  // Hub pages — the same GENERATED:<type> marker text, but the FULL array
+  // (no featured filter) and, for badges/certs, asset paths prefixed '../'.
+  checkGenerated('badges', GENERATED_NOTICE.hubBadges, GENERATED_NOTICE.hubBadgesEnd,
+    siteBadges ? badgesGridInner(siteBadges, SITE.thmShare, '../') : null, hubHtml.badges, 'badges/index.html');
+  checkGenerated('certs', GENERATED_NOTICE.hubCerts, GENERATED_NOTICE.hubCertsEnd,
+    siteCerts ? certsGridInner(siteCerts, '../') : null, hubHtml.certs, 'certifications/index.html');
+  checkGenerated('projects', GENERATED_NOTICE.hubProjects, GENERATED_NOTICE.hubProjectsEnd,
+    siteProjects ? projectsGridInner(siteProjects) : null, hubHtml.projects, 'projects/index.html');
+  checkGenerated('writeups', GENERATED_NOTICE.hubWriteups, GENERATED_NOTICE.hubWriteupsEnd,
+    siteWriteups ? writeupsGridInner(siteWriteups, '') : null, hubHtml.writeups, 'writeups/index.html');
+
+  // Hub ".hub-count" lines — tied to the same array length.
+  checkGenerated('count-badges', GENERATED_NOTICE.countBadges, GENERATED_NOTICE.countBadgesEnd,
+    siteBadges ? `${siteBadges.length} badges &middot; TryHackMe` : null, hubHtml.badges, 'badges/index.html');
+  checkGenerated('count-certs', GENERATED_NOTICE.countCerts, GENERATED_NOTICE.countCertsEnd,
+    siteCerts ? `${siteCerts.length} certifications` : null, hubHtml.certs, 'certifications/index.html');
+  checkGenerated('count-projects', GENERATED_NOTICE.countProjects, GENERATED_NOTICE.countProjectsEnd,
+    siteProjects ? `${siteProjects.length} projects` : null, hubHtml.projects, 'projects/index.html');
+  checkGenerated('count-writeups', GENERATED_NOTICE.countWriteups, GENERATED_NOTICE.countWriteupsEnd,
+    siteWriteups ? `${siteWriteups.length} writeups &middot; TryHackMe` : null, hubHtml.writeups, 'writeups/index.html');
 }
 
 /* ── Report ─────────────────────────────────────────────────────────────── */
