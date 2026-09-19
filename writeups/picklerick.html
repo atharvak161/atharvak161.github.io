@@ -99,8 +99,8 @@
       <div class="wr-summary-row"><span class="wr-summary-key">Objective</span><span class="wr-summary-val">Recover three secret ingredients</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Severity</span><span class="wr-summary-val"><span style="display:inline-block;font-size:.7rem;letter-spacing:.08em;padding:.1rem .55rem;border-radius:3px;color:#00ff9d;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.2);">LOW</span></span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CWE-540 &middot; CWE-284 &middot; OWASP A01:2021</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Ingredient 1</span><span class="wr-summary-val wr-flag">mr. meeseek hair</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Ingredient 2</span><span class="wr-summary-val wr-flag">1 jerry tear</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Ingredient 1</span><span class="wr-summary-val wr-flag">redacted</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Ingredient 2</span><span class="wr-summary-val wr-flag">redacted</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Ingredient 3</span><span class="wr-summary-val wr-flag">root flag (via sudo)</span></div>
     </div>
   </div>
@@ -112,23 +112,23 @@
       <h3 class="wr-h3">Username in the HTML source</h3>
       <p class="wr-p">Viewing the page source reveals a developer note left in an <strong>HTML comment</strong> &mdash; the username.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block">&lt;!-- Note to self, remember username! --&gt;
-&lt;!-- Username: R1ckRul3s --&gt;</div>
+&lt;!-- Username: redacted --&gt;</div>
       <h3 class="wr-h3">Password in robots.txt</h3>
       <p class="wr-p">Checking <span class="wr-inline-code">/robots.txt</span> surfaces a single suspicious string &mdash; the password.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block">$ curl http://TARGET/robots.txt
-Wubbalubbadubdub</div>
+redacted</div>
       <table class="wr-table">
         <thead><tr><th>Source</th><th>Value Found</th><th>Role</th></tr></thead>
         <tbody>
-          <tr><td>HTML comment</td><td>R1ckRul3s</td><td>Username</td></tr>
-          <tr><td>/robots.txt</td><td>Wubbalubbadubdub</td><td>Password</td></tr>
+          <tr><td>HTML comment</td><td>redacted</td><td>Username</td></tr>
+          <tr><td>/robots.txt</td><td>redacted</td><td>Password</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="wr-phase">
       <h2 class="wr-phase-title">2. Foothold &mdash; The Command Panel</h2>
-      <p class="wr-p">Logging in with <span class="wr-inline-code">R1ckRul3s</span> / <span class="wr-inline-code">Wubbalubbadubdub</span> lands on <span class="wr-inline-code">/portal.php</span>, which exposes a <strong>command execution panel</strong>. This is effectively a web shell running as the web service user &mdash; arbitrary Linux commands can be run against the host.</p>
+      <p class="wr-p">Logging in with <span class="wr-inline-code">redacted</span> / <span class="wr-inline-code">redacted</span> lands on <span class="wr-inline-code">/portal.php</span>, which exposes a <strong>command execution panel</strong>. This is effectively a web shell running as the web service user &mdash; arbitrary Linux commands can be run against the host.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block"># Confirm execution and identity
 $ whoami
 www-data
@@ -143,13 +143,13 @@ clue.txt
       <p class="wr-p">The first ingredient sits in a file in the web directory. <span class="wr-inline-code">cat</span> on some commands is filtered, so a substitute such as <span class="wr-inline-code">less</span> or <span class="wr-inline-code">grep</span> reads it. The second ingredient is elsewhere on the filesystem &mdash; <span class="wr-inline-code">find</span> locates it, and a read returns it.</p>
       <div class="wr-code" tabindex="0" role="region" aria-label="Code block"># Ingredient 1
 $ less Sup3rS3cretPickl3Ingred.txt
-mr. meeseek hair
+redacted
 
 # Ingredient 2 (Rick's home directory)
 $ find / -name "second*" 2&gt;/dev/null
 /home/rick/second ingredients
 $ cat /home/rick/'second ingredients'
-1 jerry tear</div>
+redacted</div>
     </div>
 
     <div class="wr-phase">
