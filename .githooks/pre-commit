@@ -23,3 +23,9 @@ if command -v node >/dev/null 2>&1; then
 else
   echo "pre-commit: node not found — skipping consistency check." >&2
 fi
+
+# Keep sitemap.xml lastmod honest. A hand-set date silently goes stale, which is
+# what happened to 7 of 8 URLs.
+if command -v node >/dev/null 2>&1 && [ -f tools/build-sitemap.mjs ]; then
+  node tools/build-sitemap.mjs >/dev/null 2>&1 && git add sitemap.xml
+fi

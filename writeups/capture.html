@@ -48,6 +48,11 @@
     body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
     .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
     .wr-back { color: var(--accent-strong); text-decoration: none; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+    .wr-pager{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:3rem auto 0;max-width:900px;padding:1.2rem 2rem;border-top:1px solid var(--border)}
+    .wr-pager a{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.06em;text-decoration:none;color:var(--accent-strong)}
+    .wr-pager a:hover{color:var(--text)}
+    .wr-pager-hub{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
+    @media (max-width:600px){.wr-pager{padding:1.2rem}.wr-pager a{font-size:.72rem}}
     .wr-back:hover { color: var(--text); }
     .wr-header-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text2); }
     .wr-hero { padding: 3rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
@@ -94,7 +99,8 @@
 </head>
 <body>
   <div class="wr-header">
-    <a href="../index.html" class="wr-back">&larr; Back to Portfolio</a>
+    <a href="../index.html" class="wr-back">&larr; Portfolio</a>
+    <a href="index.html" class="wr-back wr-hub">&larr; All Writeups</a>
     <span class="wr-header-title">CTF Writeup</span>
   </div>
 
@@ -191,6 +197,12 @@ FLAG: THM{flag for question #1}</div>
       </div>
     </div>
   </div>
+    <nav class="wr-pager" aria-label="More writeups">
+      <a class="wr-pager-link" href="flagvault.html" rel="prev">&larr; Flag Vault</a>
+      <a class="wr-pager-hub" href="index.html">All writeups</a>
+      <a class="wr-pager-link" href="simplectf.html" rel="next">Simple CTF &rarr;</a>
+    </nav>
+
 
   <div class="wr-footer"><a href="../index.html">&larr; atharvaxsecurity.com</a></div>
 </body>

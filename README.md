@@ -9,12 +9,12 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── index.html                     the whole site — markup, CSS, JS, SSOT
 ├── CNAME                          custom domain for GitHub Pages
 ├── robots.txt                     → sitemap.xml
-├── sitemap.xml                    7 URLs: home + 6 writeups
+├── sitemap.xml                    8 URLs: home + the writeups hub + 6 writeups
 ├── thumbnail.png                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
 ├── assets/
-│   ├── badges/thm/                all TryHackMe badge art (10 PNGs)
+│   ├── badges/thm/                all TryHackMe badge art (13 WebP badge images)
 │   │                              exam badges + league and room badges
 │   ├── certs/                     every certificate PDF, self-hosted
 │   │   ├── CEH-V12-Certificate.pdf
@@ -71,7 +71,7 @@ index.html
 │                     └── everything else static, never re-rendered
 │
 ├── <script> SSOT     window.SITE = { identity, certs, badges }
-│                     renderAll() on DOMContentLoaded:
+│                     renderAll() inline at parse time:
 │                       renderCerts()    → #certifications .certs-grid
 │                       renderBadges()   → #badges .badges-grid
 │                       renderIdentity() → <title>, meta, OG, Twitter
