@@ -855,7 +855,7 @@
   "jobTitle": "Security Analyst | Offensive Security",
   "description": "CEH V12 Certified and GCHQ-accredited MSc Applied Cyber Security graduate, transitioning into offensive security and penetration testing. Based in London, UK.",
   "url": "https://atharvaxsecurity.com",
-  "image": "https://atharvaxsecurity.com/thumbnail.jpg",
+  "image": "https://atharvaxsecurity.com/assets/img/atharva.webp",
   "email": "atharvak161@gmail.com",
   "address": {
     "@type": "PostalAddress",
@@ -914,7 +914,8 @@
   ],
   "sameAs": [
     "https://www.linkedin.com/in/atharva1",
-    "https://tryhackme.com/p/AtharvaK911"
+    "https://tryhackme.com/p/AtharvaK911",
+    "https://github.com/atharvak161"
   ]
 }
 </script>
@@ -1382,6 +1383,17 @@
       </ul>
       <div class="tech-stack"><span class="tech-badge">IDS/IPS</span><span class="tech-badge">IRS</span><span class="tech-badge">Network Security</span><span class="tech-badge">Threat Mitigation</span><span class="tech-badge">Anomaly Detection</span></div>
     </div>
+    <a href="https://github.com/atharvak161/claude-org-framework" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="text-decoration:none;color:inherit;">
+      <div class="project-icon">&#x1F3DB;</div>
+      <div><div class="project-org">2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span></div><h3>Claude Org Framework &mdash; AI Agent Orchestration</h3></div>
+      <p>A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.</p>
+      <ul class="project-outcomes">
+        <li>89 role-scoped agents with enforced separation between building, reviewing and shipping</li>
+        <li>Mandatory security and QA sign-off gates before anything reaches production</li>
+        <li>Git hooks and a consistency checker that block policy violations mechanically, not by convention</li>
+      </ul>
+      <div class="tech-stack"><span class="tech-badge">Claude Code</span><span class="tech-badge">Multi-Agent Systems</span><span class="tech-badge">Bash</span><span class="tech-badge">Git Hooks</span><span class="tech-badge">Process Design</span></div>
+    </a>
     <a href="https://atharvaxsecurity.com/cybersec-toolkit/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
       <div class="project-icon">&#x1F9F0;</div>
       <div><div class="project-org">2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span></div><h3>Cybersec Toolkit</h3></div>
@@ -2045,6 +2057,8 @@ function renderJsonLd(){
     return { '@type':'EducationalOccupationalCredential', name: c.jsonLdName || c.name, credentialCategory:'certification', recognizedBy: { '@type':'Organization', name: c.issuer } };
   });
   data.knowsAbout = SITE.knowsAbout;
+  // Keep the graph's self-description in step with the visible one.
+  if(SITE.identity && SITE.identity.metaDescription) data.description = SITE.identity.metaDescription;
   el.textContent = JSON.stringify(data, null, 2);
 }
 
