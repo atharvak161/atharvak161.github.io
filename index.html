@@ -27,11 +27,24 @@
 
 <link rel="canonical" href="https://atharvaxsecurity.com">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23080b10'/><text y='50' x='50' dominant-baseline='central' text-anchor='middle' font-size='54' font-family='monospace' font-weight='bold' fill='%2300d4ff'>AK</text><rect x='10' y='68' width='80' height='2' fill='%2300ff9d' rx='1'/></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://gc.zgo.at">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/barlow-condensed-800.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/share-tech-mono-400.woff2">
 <style>
+  /* Self-hosted fonts. Previously three faces came from fonts.googleapis.com,
+     which was the last render-blocking request on the page and a third-party
+     dependency the whole visual identity relied on. All three are OFL licensed,
+     so they are served from our own origin now. Nothing external to fail. */
+  @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/barlow-condensed-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/barlow-condensed-500.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/barlow-condensed-600.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/barlow-condensed-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:800;font-display:swap;src:url('assets/fonts/barlow-condensed-800.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Rajdhani';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/rajdhani-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Rajdhani';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/rajdhani-500.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Rajdhani';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/rajdhani-600.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Rajdhani';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/rajdhani-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+  @font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/share-tech-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
   /* ── THEME VARIABLES ─────────────────────────────────────── */
   :root {
     --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
