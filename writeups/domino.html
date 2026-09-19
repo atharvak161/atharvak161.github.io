@@ -53,6 +53,8 @@
     .wr-pager a:hover{color:var(--text)}
     .wr-pager-hub{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
     @media (max-width:600px){.wr-pager{padding:1.2rem}.wr-pager a{font-size:.72rem}}
+    .wr-ref{color:var(--accent-strong);text-decoration:none;border-bottom:1px dotted currentColor}
+    .wr-ref:hover{color:var(--text);border-bottom-style:solid}
     .wr-back:hover { color: var(--text); }
     .wr-header-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text2); }
     .wr-hero { padding: 3rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
@@ -119,7 +121,7 @@
       <div class="wr-summary-row"><span class="wr-summary-key">Room type</span><span class="wr-summary-val">Web application chained-vulnerability room</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Result</span><span class="wr-summary-val">Root shell &middot; 5/5 flags</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Chain</span><span class="wr-summary-val">User enum &rarr; Hydra &rarr; IDOR &rarr; Blind XSS &rarr; JWT forgery &rarr; RFI/RCE &rarr; password reuse &rarr; cron privesc</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val"><a href="https://cwe.mitre.org/data/definitions/203.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-203</a> &middot; <a href="https://cwe.mitre.org/data/definitions/639.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-639</a> &middot; <a href="https://cwe.mitre.org/data/definitions/79.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-79</a> &middot; <a href="https://cwe.mitre.org/data/definitions/347.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-347</a> &middot; <a href="https://cwe.mitre.org/data/definitions/98.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-98</a> &middot; <a href="https://cwe.mitre.org/data/definitions/522.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-522</a> &middot; <a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-732</a></span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Tools</span><span class="wr-summary-val">nmap &middot; gobuster &middot; hydra &middot; Python &middot; jwt_tool &middot; pspy &middot; netcat</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Flag 1 &mdash; IDOR</span><span class="wr-summary-val wr-flag">THM{flag for question #1}</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Flag 2 &mdash; Blind XSS</span><span class="wr-summary-val wr-flag">THM{flag for question #2}</span></div>

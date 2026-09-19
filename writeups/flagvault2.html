@@ -53,6 +53,8 @@
     .wr-pager a:hover{color:var(--text)}
     .wr-pager-hub{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
     @media (max-width:600px){.wr-pager{padding:1.2rem}.wr-pager a{font-size:.72rem}}
+    .wr-ref{color:var(--accent-strong);text-decoration:none;border-bottom:1px dotted currentColor}
+    .wr-ref:hover{color:var(--text);border-bottom-style:solid}
     .wr-back:hover { color: var(--text); }
     .wr-header-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text2); }
     .wr-hero { padding: 3rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
@@ -116,7 +118,7 @@
       <div class="wr-summary-row"><span class="wr-summary-key">Target</span><span class="wr-summary-val">"Patched" Flag Vault binary</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Vulnerability</span><span class="wr-summary-val">Format string bug via printf(username)</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Severity</span><span class="wr-summary-val"><span style="display:inline-block;font-size:.7rem;letter-spacing:.08em;padding:.1rem .55rem;border-radius:3px;color:#ff4d6d;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);">HIGH</span></span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CWE-134 &middot; CWE-787 &middot; OWASP A03:2021</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val"><a href="https://cwe.mitre.org/data/definitions/134.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-134</a> &middot; <a href="https://cwe.mitre.org/data/definitions/125.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-125</a> &middot; <a href="https://owasp.org/Top10/A03_2021-Injection/" target="_blank" rel="noopener noreferrer" class="wr-ref">OWASP A03:2021</a></span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Tools</span><span class="wr-summary-val">pwntools (Python)</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Flag</span><span class="wr-summary-val wr-flag">THM{flag for question #1}</span></div>
     </div>
