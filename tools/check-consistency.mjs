@@ -23,6 +23,7 @@ import {
   writeupsGridInner,
   hasCredentialArrayText,
   seeAllHTML,
+  thmDisplay,
   HUB_HREF,
   getRegion,
   getHasCredentialText,
@@ -220,6 +221,24 @@ if (SITE) {
     if (n > cap) {
       fail.push(`${n} ${key} are marked featured; the home page cap is ${cap}. Un-feature some - they stay visible on the hub page.`);
     }
+  }
+}
+
+/* The seven TryHackMe figures must match SITE.thm. They were previously typed
+   into the markup with no source and no check - streak and rank both drifted
+   within two days and a green run never noticed. */
+if (SITE && SITE.thm) {
+  const v = thmDisplay(SITE.thm);
+  for (const [key, expected] of Object.entries(v)) {
+    const m = html.match(new RegExp(`data-thm="${key}"[^>]*>([^<]*)<`));
+    if (!m) { fail.push(`No data-thm="${key}" node found — the TryHackMe card can no longer be verified.`); continue; }
+    if (m[1] !== expected) {
+      fail.push(`TryHackMe ${key}: markup says "${m[1]}" but SITE.thm says "${expected}". Run node tools/build-fallbacks.mjs`);
+    }
+  }
+  const age = Math.floor((Date.now() - Date.parse(SITE.thm.asOf)) / 86400000);
+  if (age > 45) {
+    warn.push(`SITE.thm was last refreshed ${age} days ago (${SITE.thm.asOf}). These figures move weekly — refresh from the TryHackMe profile API.`);
   }
 }
 function readArray(name) {

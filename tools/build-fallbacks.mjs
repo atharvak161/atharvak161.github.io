@@ -49,6 +49,7 @@ import {
   writeupsGridInner,
   hasCredentialArrayText,
   seeAllHTML,
+  thmDisplay,
   HUB_HREF,
   spliceBetweenMarkers,
   spliceInline,
@@ -62,11 +63,24 @@ const certsHubPath = join(root, 'certifications/index.html');
 const projectsHubPath = join(root, 'projects/index.html');
 const writeupsHubPath = join(root, 'writeups/index.html');
 
+/* Writes SITE.thm into every data-thm node. These seven figures used to be
+   typed straight into the markup with no source and no check; streak and rank
+   both drifted within two days and nothing noticed. */
+function applyThm(html, thm) {
+  const v = thmDisplay(thm);
+  let out = html;
+  for (const [key, value] of Object.entries(v)) {
+    const re = new RegExp(`(data-thm="${key}"[^>]*>)([^<]*)(<)`, 'g');
+    out = out.replace(re, `$1${value}$3`);
+  }
+  return out;
+}
+
 function buildIndex(html) {
   // SITE lives in assets/js/site.js since the split; index.html only carries
   // the GENERATED markup regions this function writes into.
   const SITE = loadSite(readSiteJs());
-  let out = html;
+  let out = applyThm(html, SITE.thm);
 
   const featuredBadges = SITE.badges.filter(b => b.featured);
   const featuredCerts = SITE.certs.filter(c => c.featured);

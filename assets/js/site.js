@@ -47,6 +47,41 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    1st-place wins, offensive-box + tooling badges, and the top streak. Beginner
    module badges and low-signal ones are deliberately omitted.
    tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
+/* thm: the seven TryHackMe figures, in ONE place. They were previously typed
+   directly into the card markup with no array, no generator and no check, so
+   nothing noticed when they went stale - streak and rank both drifted within
+   two days. Refresh from
+   https://tryhackme.com/api/v2/public-profile?username=AtharvaK911
+   (the API blocks curl; read it in a browser), update here, run
+   `node tools/build-fallbacks.mjs`, and every surface follows. */
+SITE.thm = {
+  asOf:       '2026-09-20',
+  rooms:      152,
+  points:     24633,
+  streak:     126,
+  badges:     26,
+  rank:       22993,
+  percentile: 1,          // topPercentage from the API
+  level:      13          // rendered as hex, 13 -> 0xD
+};
+
+/* Formatting lives with the data so the Node generator and the browser
+   renderer can never disagree about how a figure is displayed. */
+SITE.thmDisplay = function (t) {
+  var group = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+  var LEVEL_NAMES = { 13: 'Legend' };
+  return {
+    rooms:      group(t.rooms),
+    points:     group(t.points),
+    streak:     String(t.streak),
+    badges:     String(t.badges),
+    rank:       group(t.rank),
+    percentile: 'Top ' + t.percentile + '%',
+    level:      '0x' + t.level.toString(16).toUpperCase(),
+    levelName:  LEVEL_NAMES[t.level] || ''
+  };
+};
+
 SITE.badges = [
   { id:'sec1',       featured:true ,   tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
   { id:'sec0',       featured:true ,   tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
@@ -275,7 +310,21 @@ function renderIdentity(){
   m('meta[name="twitter:description"]', id.twDescription);
 }
 
+
+/* Writes SITE.thm into every [data-thm] node. The Node generator writes the
+   same values into the same nodes, so the static markup a crawler sees and the
+   runtime DOM cannot disagree. */
+function renderThm(){
+  if(!window.SITE || !SITE.thm) return;
+  var v = SITE.thmDisplay(SITE.thm);
+  document.querySelectorAll('[data-thm]').forEach(function(el){
+    var k = el.getAttribute('data-thm');
+    if(v[k] !== undefined) el.textContent = v[k];
+  });
+}
+
 function renderAll(){
+  renderThm();
   try { renderCerts(); renderBadges(); renderProjects(); renderWriteups(); renderIdentity(); renderJsonLd(); }
   catch(e){ console.error('[SSOT] render failed:', e); }
 }
