@@ -11,10 +11,12 @@
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import {
   GENERATED_NOTICE,
   loadSite,
+  readSiteJs,
+  readSiteCss,
   badgesGridInner,
   certsGridInner,
   projectsGridInner,
@@ -27,6 +29,7 @@ import {
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(join(root, 'index.html'), 'utf8');
+const css = readSiteCss();
 const hubPaths = {
   badges: join(root, 'badges/index.html'),
   certs: join(root, 'certifications/index.html'),
@@ -136,13 +139,13 @@ for (const [, attrs, rawName] of cats) {
 }
 
 /* ── 4. No positional colour binding may creep back in ──────────────────── */
-if (/\.skill-category:nth-child\(\d\)/.test(html)) {
+if (/\.skill-category:nth-child\(\d\)/.test(css)) {
   fail.push('.skill-category:nth-child(n) colour rules are back — colour must bind to data-team, not DOM position.');
 }
 
 /* ── 5. Every theme accent needs its -rgb twin in BOTH themes ───────────── */
 for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
-  const m = html.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
+  const m = css.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
   if (!m) { fail.push(`Theme block ${block} not found.`); continue; }
   const body = m[1];
   for (const v of ['--accent', '--accent2', '--accent3', '--accent4']) {
@@ -154,6 +157,16 @@ for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
 
 /* ── 6. Local assets referenced must exist (no silent 404s) ─────────────── */
 import { existsSync } from 'node:fs';
+// Resolve url() RELATIVE TO THE STYLESHEET, not the repo root. Resolving from
+// root is what let `url('assets/fonts/x.woff2')` look valid after the CSS moved
+// to assets/css/ — the browser resolved it to assets/css/assets/fonts/ and every
+// font 404'd.
+const cssDir = join(root, 'assets/css');
+for (const m of css.matchAll(/url\(['"]?((?!https?:|data:)[^'")]+)['"]?\)/g)) {
+  if (!existsSync(resolve(cssDir, m[1]))) {
+    fail.push(`assets/css/site.css url() does not resolve from the stylesheet: ${m[1]}`);
+  }
+}
 for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"/g)) {
   const p = m[1].split(/[?#]/)[0];
   if (!p || p === '/') continue;
@@ -182,7 +195,7 @@ for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"
 // about what SITE.badges/SITE.certs even are.
 let SITE = null;
 try {
-  SITE = loadSite(html);
+  SITE = loadSite(readSiteJs());
 } catch (e) {
   fail.push(`Could not parse SITE.* out of index.html: ${e.message}`);
 }
