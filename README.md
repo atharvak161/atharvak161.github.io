@@ -6,10 +6,13 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 
 ```
 .
-├── index.html                     the whole site — markup, CSS, JS, SSOT
+├── index.html                     the markup and the SSOT arrays; CSS and JS live in assets/
 ├── CNAME                          custom domain for GitHub Pages
 ├── robots.txt                     → sitemap.xml
-├── sitemap.xml                    8 URLs: home + the writeups hub + 6 writeups
+├── assets/css/site.css           all styles for the home page
+├── assets/js/site.js             all behaviour + the SITE.* arrays
+├── badges/ certifications/ projects/   hub pages, generated from the SSOT
+├── sitemap.xml                    11 URLs: home + 4 hub pages + 6 writeups
 ├── thumbnail.png                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
@@ -54,9 +57,11 @@ locally as a pre-commit gate, never in the cloud.
 
 ### Runtime
 
-One HTML document. All CSS in one `<style>`, all JavaScript in two inline
-`<script>` blocks, GSAP vendored locally. Nothing is fetched at runtime except
-Google Fonts and a single analytics beacon.
+Eleven HTML documents. The home page links `assets/css/site.css` and
+`assets/js/site.js`; the four hub pages and six writeups still carry their own
+inline `<style>`. GSAP and the fonts are vendored locally. The only thing
+fetched from a third party at runtime is the analytics beacon, and only on the
+home page.
 
 ```
 index.html
@@ -101,16 +106,19 @@ the page down or inject into it. Certificates are self-hosted in
 `assets/certs/` for the same reason — a credential should not disappear because
 an issuer reorganised their asset paths.
 
-**The single-file constraint is deliberate.** At roughly 170 KB it is past the
-point most people would split into modules. Splitting would mean a build step,
-and a build step means the deployed output is no longer the reviewed source.
-The trade is made knowingly: harder to navigate, impossible to mis-deploy.
+**Split into three files, not bundled.** `index.html` carries the markup and
+the SSOT arrays; CSS and JS live under `assets/`. There is still no bundler and
+no transpiler, so what is committed is what is served. `tools/build-fallbacks.mjs`
+generates markup into the files, but it is run locally and its output is
+committed and reviewable.
 
 ### Known limits of this stack
 
-GitHub Pages serves the site with no configurable response headers, so there is
-no Content-Security-Policy, HSTS or X-Frame-Options, and no way to add them
-without putting a proxy in front. It also offers no redirects, so moving an
+GitHub Pages serves the site with no configurable response headers. CSP is
+delivered by `<meta>` instead, which works for `script-src` and friends but NOT
+for `frame-ancestors` or `report-uri` - those are ignored in meta form, so the
+site has no framing defence and no violation telemetry without a proxy. HSTS
+and X-Frame-Options cannot be set at all. It also offers no redirects, so moving an
 asset path breaks anyone holding cached HTML until `max-age=600` expires. Both
 are accepted trade-offs for zero-config hosting, not oversights.
 
@@ -123,7 +131,8 @@ Certifications, badges and identity strings are each declared **once**, in
 SITE.identity  →  <title>, meta description, OG/Twitter tags, hero roles
 SITE.certs     →  #certifications cards  +  JSON-LD hasCredential
                   +  terminal `cat certs.txt`
-SITE.badges    →  #badges grid  +  terminal `cat badges.txt`
+SITE.badges    →  #badges grid (featured only)  +  /badges/ hub (all)
+                  +  terminal `cat badges.txt` (all, read from the SSOT)
 ```
 
 The terminal builders read the **rendered DOM**, not the arrays, so they follow
@@ -194,7 +203,9 @@ Certs without a public certificate URL show their credential ID instead.
 ## Local preview
 
 ```bash
-python3 -m http.server 8899   # then open http://127.0.0.1:8899
+python3 -m http.server 8899 --bind 127.0.0.1   # http://127.0.0.1:8899
+# --bind matters: without it the server listens on every interface and serves
+# .git/, .gstack/ and _local/ to everyone on your network.
 ```
 
 No build, no install. What you see locally is what deploys.

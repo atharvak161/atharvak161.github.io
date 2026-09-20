@@ -143,6 +143,8 @@ if (/\.skill-category:nth-child\(\d\)/.test(css)) {
   fail.push('.skill-category:nth-child(n) colour rules are back — colour must bind to data-team, not DOM position.');
 }
 
+
+
 /* ── 5. Every theme accent needs its -rgb twin in BOTH themes ───────────── */
 for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
   const m = css.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
@@ -197,6 +199,20 @@ let SITE = null;
 try {
   SITE = loadSite(readSiteJs());
 } catch (e) {
+
+/* ── Featured sections must stay a curated subset ────────────────────────
+   The featured flag exists so the home page stays a fixed size while the hubs
+   grow. Nothing stopped someone marking 80 of 100 badges featured, which would
+   put all 80 on the home page and defeat the point. Cap it. */
+const FEATURED_CAP = { badges: 14, certs: 8, projects: 8, writeups: 8 };
+for (const [key, cap] of Object.entries(FEATURED_CAP)) {
+  const arr = SITE[key] || [];
+  const n = arr.filter(x => x.featured).length;
+  if (n > cap) {
+    fail.push(`${n} ${key} are marked featured; the home page cap is ${cap}. Un-feature some — they stay visible on the hub page.`);
+  }
+}
+
   fail.push(`Could not parse SITE.* out of index.html: ${e.message}`);
 }
 function readArray(name) {
