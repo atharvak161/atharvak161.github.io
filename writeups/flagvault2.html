@@ -24,78 +24,19 @@
   <meta name="twitter:title" content="TryHackMe — Flag Vault 2 — Atharva Kulkarni">
   <meta name="twitter:description" content="Format string vulnerability via printf(username) leaking the flag off the stack. TryHackMe Flag Vault 2 writeup by Atharva Kulkarni.">
   <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
-  <style>
-    /* Self-hosted: the writeups previously pulled these from
-       fonts.googleapis.com, a render-blocking third-party request. Both
-       families are OFL licensed and now come from our own origin. */
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/barlow-condensed-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('../assets/fonts/barlow-condensed-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:800;font-display:swap;src:url('../assets/fonts/barlow-condensed-800.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/share-tech-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    :root {
-      --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
-      --border: #1e2d3d; --accent: #00d4ff; --accent-strong: #00d4ff; --accent2: #00ff9d;
-      --accent3: #ff4d6d; --text: #e8edf2; --text2: #8899aa; --text3: #556677;
-      --font-display: 'Barlow Condensed', sans-serif;
-      --font-mono: 'Share Tech Mono', monospace;
-    }
-      [data-theme="light"] {
-        --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
-        --border: #cbd5e1; --accent: #0077aa; --accent-strong: #006699; --accent2: #00704a;
-        --accent3: #c22243; --text: #0f172a; --text2: #475569; --text3: #5b6b7f;
-      }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.8; padding: 0; }
-    .wr-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
-    .wr-back { color: var(--accent-strong); text-decoration: none; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
-    .wr-pager{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:3rem auto 0;max-width:900px;padding:1.2rem 2rem;border-top:1px solid var(--border)}
-    .wr-pager a{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.06em;text-decoration:none;color:var(--accent-strong)}
-    .wr-pager a:hover{color:var(--text)}
-    .wr-pager-hub{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
-    @media (max-width:600px){.wr-pager{padding:1.2rem}.wr-pager a{font-size:.72rem}}
-    .wr-ref{color:var(--accent-strong);text-decoration:none;border-bottom:1px dotted currentColor}
-    .wr-ref:hover{color:var(--text);border-bottom-style:solid}
-    .wr-back:hover { color: var(--text); }
-    .wr-header-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text2); }
-    .wr-hero { padding: 3rem 2rem 2rem; max-width: 860px; margin: 0 auto; }
-    .wr-platform-tag { display: inline-block; background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2); color: var(--accent); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; padding: .25rem .7rem; border-radius: 2px; margin-bottom: 1rem; }
-    .wr-title { font-family: var(--font-display); font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .5rem; }
-    .wr-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .wr-badge { font-size: .72rem; padding: .25rem .7rem; border-radius: 2px; font-family: var(--font-mono); }
+  <link rel="stylesheet" href="../assets/css/writeup.css">
+    <style>
     .wr-badge.easy { background: rgba(0,255,157,.1); color: var(--accent2); border: 1px solid rgba(0,255,157,.2); }
     .wr-badge.medium { background: rgba(255,193,7,.1); color: #ffc107; border: 1px solid rgba(255,193,7,.2); }
-    .wr-badge.category { background: rgba(0,212,255,.08); color: var(--accent); border: 1px solid rgba(0,212,255,.15); }
     .wr-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.5rem; margin-bottom: 2.5rem; }
-    .wr-summary-row { display: flex; gap: 1rem; padding: .35rem 0; border-bottom: 1px solid var(--border); font-size: .8rem; }
-    .wr-summary-row:last-child { border-bottom: none; }
-    .wr-summary-key { color: var(--accent); min-width: 120px; flex-shrink: 0; }
-    .wr-summary-val { color: var(--text); font-family: var(--font-mono); }
     .wr-flag { color: var(--accent2); letter-spacing: .05em; }
-    .wr-body { max-width: 860px; margin: 0 auto; padding: 0 2rem 4rem; }
     .wr-phase { margin-bottom: 3rem; }
-    .wr-phase-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); border-left: 3px solid var(--accent); padding-left: .8rem; margin-bottom: 1.2rem; }
-    .wr-h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text2); margin: 1.5rem 0 .6rem; }
-    .wr-p { font-size: .85rem; color: var(--text2); margin-bottom: .9rem; line-height: 1.8; }
-    .wr-p strong { color: var(--text); }
-    .wr-code { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 1rem 1.2rem; margin: .8rem 0 1.2rem; font-family: var(--font-mono); font-size: .78rem; color: var(--accent2); overflow-x: auto; white-space: pre; line-height: 1.6; }
-    .wr-inline-code { background: var(--surface); border: 1px solid var(--border); color: var(--accent); padding: .1rem .4rem; border-radius: 2px; font-size: .82em; }
     .wr-table { width: 100%; border-collapse: collapse; margin: .8rem 0 1.5rem; font-size: .8rem; }
-    .wr-table th { background: var(--surface); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; padding: .5rem .8rem; text-align: left; border: 1px solid var(--border); font-size: .72rem; }
-    .wr-table td { padding: .5rem .8rem; border: 1px solid var(--border); color: var(--text2); }
-    .wr-table tr:hover td { background: rgba(255,255,255,.02); }
     .wr-lesson { background: rgba(0,255,157,.05); border: 1px solid rgba(0,255,157,.2); border-radius: 4px; padding: 1rem 1.2rem; margin-top: 2rem; }
     .wr-lesson-title { color: var(--accent2); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .5rem; }
     .wr-lesson p { font-size: .83rem; color: var(--text2); }
-    .wr-footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); font-size: .75rem; color: var(--text3); }
-    .wr-footer a { color: var(--accent); text-decoration: none; }
     .wr-flag { word-break: break-all; }
     .wr-table { display: block; overflow-x: auto; }
-    @media (max-width: 600px) {
-      .wr-hero, .wr-body { padding-left: 1.2rem; padding-right: 1.2rem; }
-      .wr-header { padding: 1rem 1.2rem; }
-      .wr-summary-row { flex-direction: column; gap: .1rem; }
-      .wr-summary-key { min-width: 0; }
-    }
   </style>
   <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
