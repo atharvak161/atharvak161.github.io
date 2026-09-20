@@ -269,10 +269,23 @@ export function writeupsGridInner(writeups, basePath) {
 
 /** The home-page "See all N <label> »" link — empty string when every item
  *  is already featured (the mechanism is conditional, not always-on). */
+/* The hub URL for each section, in ONE place. These were previously written out
+   in both build-fallbacks.mjs and check-consistency.mjs, which meant changing a
+   URL in one silently failed the other - the exact duplication this module
+   exists to remove. Directory form, no index.html, so every hub URL reads the
+   same way in the address bar. */
+export const HUB_HREF = {
+  badges: 'badges/',
+  certs: 'certifications/',
+  projects: 'projects/',
+  writeups: 'writeups/',
+};
+
 export function seeAllHTML(items, hubHref, label) {
   const total = items.length;
-  const featured = items.filter(x => x.featured).length;
-  if (featured >= total) return '';
+  // Always rendered, even when the home page already shows everything. The hub
+  // is a real page worth linking either way, and a link that appears on three
+  // sections but not the fourth reads as a bug rather than a rule.
   return `    <a class="section-see-all" href="${ssotEsc(hubHref)}">See all ${total} ${ssotEsc(label)} <span aria-hidden="true">&raquo;</span></a>`;
 }
 
