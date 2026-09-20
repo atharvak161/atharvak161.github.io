@@ -42,6 +42,7 @@ import { dirname, join } from 'node:path';
 import {
   GENERATED_NOTICE,
   loadSite,
+  readSiteJs,
   badgesGridInner,
   certsGridInner,
   projectsGridInner,
@@ -61,7 +62,9 @@ const projectsHubPath = join(root, 'projects/index.html');
 const writeupsHubPath = join(root, 'writeups/index.html');
 
 function buildIndex(html) {
-  const SITE = loadSite(html);
+  // SITE lives in assets/js/site.js since the split; index.html only carries
+  // the GENERATED markup regions this function writes into.
+  const SITE = loadSite(readSiteJs());
   let out = html;
 
   const featuredBadges = SITE.badges.filter(b => b.featured);

@@ -1,7 +1,7 @@
 /**
  * Shared SSOT (single source of truth) helpers for index.html.
  *
- * index.html defines SITE.badges / SITE.certs / SITE.thmShare as plain JS
+ * assets/js/site.js defines SITE.badges / SITE.certs / SITE.thmShare as plain JS
  * literals, then renderBadges()/renderCerts()/renderJsonLd() turn them into
  * DOM at runtime for JS visitors. This module parses those same literals out
  * of index.html on the Node side (for crawlers / no-JS visitors, who get a
@@ -63,6 +63,18 @@ GENERATED_NOTICE.hubWriteupsEnd = GENERATED_NOTICE.writeupsEnd;
 
 export function readIndexHtml() {
   return readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+}
+
+/* The SITE.* arrays moved out of index.html into assets/js/site.js, and the
+   theme tokens into assets/css/site.css, when the page was split into three
+   files. Everything that used to parse index.html for those reads from here
+   instead. */
+export function readSiteJs() {
+  return readFileSync(new URL('../assets/js/site.js', import.meta.url), 'utf8');
+}
+
+export function readSiteCss() {
+  return readFileSync(new URL('../assets/css/site.css', import.meta.url), 'utf8');
 }
 
 /* ── Balanced literal extraction ─────────────────────────────────────────
