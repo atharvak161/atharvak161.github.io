@@ -204,7 +204,10 @@
   }
   #theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,212,255,.3); transform: rotate(20deg); }
   #theme-toggle svg { width: 17px; height: 17px; transition: all .3s; }
-  @media (max-width: 900px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
+  /* Group the toggle with the hamburger wherever the hamburger is showing. This
+   was scoped to 900px while the hamburger band later grew to 1299px, which left
+   the toggle stranded mid-navbar across 399px of widths. */
+  @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
@@ -808,3 +811,8 @@
     .platform-badges{gap:.6rem}
     .hero-badges{flex-direction:column;align-items:center;align-self:center}
   }
+
+/* 44x44 hit areas without changing how either control looks - same trick the
+   terminal close button already uses. */
+#theme-toggle,#backToTop{position:relative}
+#theme-toggle::after,#backToTop::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px}

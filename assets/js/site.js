@@ -144,7 +144,7 @@ SITE.projects = [
 SITE.writeups = [
   { id:'domino', featured:true, delay:0, slug:'domino', icon:'&#x1F3B4;', org:'TryHackMe', name:'Domino',
     desc:'Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.',
-    refs:'CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-732 &middot; A01:2021' },
+    refs:'CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732' },
   { id:'flagvault2', featured:true, delay:1, slug:'flagvault2', icon:'&#x1F9F5;', org:'TryHackMe', name:'Flag Vault 2',
     desc:'Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.',
     refs:'CWE-134 &middot; CWE-125 &middot; A03:2021' },
@@ -779,7 +779,7 @@ termInput.addEventListener('keydown', function(e){
     var target = cmd.slice(cmd.indexOf(' ') + 1).trim();
     var sectionMap = {
       about:'about', skills:'skills', experience:'experience', exp:'experience',
-      projects:'projects', education:'education', edu:'education',
+      projects:'projects', writeups: 'writeups', education:'education', edu:'education',
       certifications:'certifications', certs:'certifications', cert:'certifications',
       badges:'badges', badge:'badges',
       learning:'learning', testimonials:'testimonials', reviews:'testimonials',
