@@ -39,7 +39,7 @@
       --tier-exam:#1d764f;--tier-exam-rgb:29,118,79;--tier-common:#2c7844;--tier-common-rgb:44,120,68;--tier-rare:#905d07;--tier-rare-rgb:144,93,7;--tier-epic:#8e00f8;--tier-epic-rgb:142,0,248}
     /* ── Badge cards — copied from index.html's #badges styles, unchanged. ── */
     .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
-    .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
+    .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
     .badge-card:hover{transform:translateY(-4px)}
     .badge-card img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
     .badge-name{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.3}
@@ -76,7 +76,7 @@
   </div>
   <main id="main" tabindex="-1" class="hub">
     <h1 class="hub-title">Badges</h1>
-    <p class="hub-sub">Every TryHackMe badge earned &mdash; exam badges, League 1st-place wins, and offensive-box tooling badges. The home page shows a curated selection; everything is here.</p>
+    <p class="hub-sub">The TryHackMe badges worth showing &mdash; exam badges, League 1st-place wins, and offensive-box tooling badges. Beginner module badges are left out on purpose; the home page shows a shorter selection still.</p>
     <div class="hub-count"><!-- GENERATED:count-badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->13 badges &middot; TryHackMe<!-- GENERATED:count-badges end --></div>
     <div class="badges-grid">
       <!-- GENERATED:badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->

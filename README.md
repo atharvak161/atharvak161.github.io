@@ -13,7 +13,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── assets/js/site.js             all behaviour + the SITE.* arrays
 ├── badges/ certifications/ projects/   hub pages, generated from the SSOT
 ├── sitemap.xml                    11 URLs: home + 4 hub pages + 6 writeups
-├── thumbnail.png                  og:image — DO NOT MOVE (see below)
+├── thumbnail.jpg                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
 ├── assets/
@@ -96,9 +96,9 @@ with JavaScript disabled, and structured data that a non-executing crawler can
 still read. The consistency checker exists to catch the drift this design
 invites.
 
-**The terminal reads the DOM, not the data.** `cat certs.txt` queries
-`#certifications .cert-card` rather than `SITE.certs`. One less place to update,
-and it can never disagree with what the visitor sees.
+**The terminal reads the SSOT.** `cat certs.txt` reads `SITE.certs` rather than
+the rendered cards, so it lists everything - the home page shows only the
+featured subset, and a file listing that silently hid items would be a lie.
 
 **Dependencies are vendored, not fetched.** GSAP sits in `assets/vendor/`
 rather than loading from a CDN, so an outage or a compromised CDN cannot take
@@ -132,11 +132,13 @@ SITE.identity  →  <title>, meta description, OG/Twitter tags, hero roles
 SITE.certs     →  #certifications cards  +  JSON-LD hasCredential
                   +  terminal `cat certs.txt`
 SITE.badges    →  #badges grid (featured only)  +  /badges/ hub (all)
+SITE.projects  →  #projects (featured only)     +  /projects/ hub (all)
+SITE.writeups  →  #writeups (featured only)     +  /writeups/ hub (all)
                   +  terminal `cat badges.txt` (all, read from the SSOT)
 ```
 
-The terminal builders read the **rendered DOM**, not the arrays, so they follow
-automatically. Add a cert to `SITE.certs` and the card, the structured data and
+The terminal builders read `SITE` directly, so they list the full set even when
+the home page shows a featured subset. Add a cert to `SITE.certs` and the card, the structured data and
 the terminal all update together. That is the point — a partial update should be
 structurally impossible.
 
@@ -146,7 +148,7 @@ structurally impossible.
 list in static HTML (`<aside class="hero-badges">`). Editing `SITE.badges` does
 not touch it. Edit it directly.
 
-**2. Three no-JS fallbacks must be mirrored by hand.** The renderers overwrite
+**2. The no-JS fallbacks are GENERATED, never hand-edited.** The renderers overwrite
 this markup at runtime, so it only shows for visitors and crawlers without
 JavaScript — which means drift here is invisible in a browser:
 
@@ -181,7 +183,7 @@ node tools/check-consistency.mjs     # must print "PASS — all surfaces agree"
 
 It cross-checks the SSOT arrays against the static fallbacks, verifies every
 local asset path resolves, and enforces the skill colour convention
-(offensive → blue, defensive → red). It runs automatically via
+(offensive → red, defensive → blue). It runs automatically via
 `.githooks/pre-commit`, which is wired up with:
 
 ```bash

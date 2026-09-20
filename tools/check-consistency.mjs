@@ -163,11 +163,17 @@ import { existsSync } from 'node:fs';
 // Resolve url() RELATIVE TO THE STYLESHEET, not the repo root. Resolving from
 // root is what let `url('assets/fonts/x.woff2')` look valid after the CSS moved
 // to assets/css/ — the browser resolved it to assets/css/assets/fonts/ and every
-// font 404'd.
-const cssDir = join(root, 'assets/css');
-for (const m of css.matchAll(/url\(['"]?((?!https?:|data:)[^'")]+)['"]?\)/g)) {
-  if (!existsSync(resolve(cssDir, m[1]))) {
-    fail.push(`assets/css/site.css url() does not resolve from the stylesheet: ${m[1]}`);
+// font 404'd. Scans EVERY stylesheet: checking only site.css let the identical
+// bug ship again in hub.css and writeup.css.
+for (const sheet of ['assets/css/site.css', 'assets/css/hub.css', 'assets/css/writeup.css']) {
+  const sheetPath = join(root, sheet);
+  if (!existsSync(sheetPath)) { fail.push(`${sheet} is missing.`); continue; }
+  const sheetCss = readFileSync(sheetPath, 'utf8');
+  const sheetDir = dirname(sheetPath);
+  for (const m of sheetCss.matchAll(/url\(['"]?((?!https?:|data:)[^'")]+)['"]?\)/g)) {
+    if (!existsSync(resolve(sheetDir, m[1]))) {
+      fail.push(`${sheet} url() does not resolve from the stylesheet: ${m[1]}`);
+    }
   }
 }
 for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"/g)) {
@@ -200,21 +206,21 @@ let SITE = null;
 try {
   SITE = loadSite(readSiteJs());
 } catch (e) {
-
-/* ── Featured sections must stay a curated subset ────────────────────────
-   The featured flag exists so the home page stays a fixed size while the hubs
-   grow. Nothing stopped someone marking 80 of 100 badges featured, which would
-   put all 80 on the home page and defeat the point. Cap it. */
-const FEATURED_CAP = { badges: 14, certs: 8, projects: 8, writeups: 8 };
-for (const [key, cap] of Object.entries(FEATURED_CAP)) {
-  const arr = SITE[key] || [];
-  const n = arr.filter(x => x.featured).length;
-  if (n > cap) {
-    fail.push(`${n} ${key} are marked featured; the home page cap is ${cap}. Un-feature some — they stay visible on the hub page.`);
-  }
+  // SITE lives in assets/js/site.js since the split, not index.html.
+  fail.push(`Could not parse SITE.* out of assets/js/site.js: ${e.message}`);
 }
 
-  fail.push(`Could not parse SITE.* out of index.html: ${e.message}`);
+/* Featured sections must stay a curated subset. This block previously sat
+   inside the catch of the SITE parse, so it never ran at all - and would have
+   thrown a TypeError on null if it ever had. Outside the catch, guarded. */
+if (SITE) {
+  const FEATURED_CAP = { badges: 14, certs: 8, projects: 8, writeups: 8 };
+  for (const [key, cap] of Object.entries(FEATURED_CAP)) {
+    const n = (SITE[key] || []).filter(x => x.featured).length;
+    if (n > cap) {
+      fail.push(`${n} ${key} are marked featured; the home page cap is ${cap}. Un-feature some - they stay visible on the hub page.`);
+    }
+  }
 }
 function readArray(name) {
   if (!SITE) return null;
@@ -355,7 +361,7 @@ if (SITE) {
   checkGenerated('projects', GENERATED_NOTICE.projects, GENERATED_NOTICE.projectsEnd,
     featuredProjects ? projectsGridInner(featuredProjects) : null, html, 'index.html');
   checkGenerated('writeups', GENERATED_NOTICE.writeups, GENERATED_NOTICE.writeupsEnd,
-    featuredWriteups ? writeupsGridInner(featuredWriteups, 'writeups/') : null, html, 'index.html');
+    featuredWriteups ? writeupsGridInner(featuredWriteups, HUB_HREF.writeups) : null, html, 'index.html');
 
   checkGenerated('seeall-badges', GENERATED_NOTICE.seeallBadges, GENERATED_NOTICE.seeallBadgesEnd,
     siteBadges ? seeAllHTML(siteBadges, HUB_HREF.badges, 'badges') : null, html, 'index.html');
