@@ -1,5 +1,27 @@
 #!/bin/sh
 
+# No real CTF answer may ever be committed. The working tree was redacted once
+# but the answers were already in history, which is exactly the recurrence this
+# blocks. Placeholders (THM{flag for question #N}) pass; anything else does not.
+leaked=$(git diff --cached -U0 | grep '^+' | grep -oE 'THM\{[^}]*\}' | grep -v 'flag for question' || true)
+if [ -n "$leaked" ]; then
+  echo "" >&2
+  echo "pre-commit BLOCKED: a real CTF flag is staged:" >&2
+  echo "$leaked" | sed 's/^/    /' >&2
+  echo "  Use THM{flag for question #N}. TryHackMe AUP." >&2
+  echo "" >&2
+  exit 1
+fi
+
+# Room credentials and answer hashes, same reasoning.
+creds=$(git diff --cached -U0 | grep '^+' | grep -ioE "(DB_PASS|JWT_SECRET|APP_SECRET)', *'[^']+'" | grep -vi "redacted" || true)
+if [ -n "$creds" ]; then
+  echo "" >&2
+  echo "pre-commit BLOCKED: room credentials staged unredacted:" >&2
+  echo "$creds" | sed 's/^/    /' >&2
+  exit 1
+fi
+
 # No agent-instruction file may ever be committed to this repo - it is served
 # publicly by GitHub Pages. Atharva's rule, 2026-09-19. Catches `git add -f`,
 # which .gitignore alone cannot stop.

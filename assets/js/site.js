@@ -201,7 +201,9 @@ function renderBadges(){
   grid.innerHTML = SITE.badges.filter(function(b){ return b.featured; }).map(function(b, i){
     var href = b.href || SITE.thmShare(b.slug);
     var aria = b.aria || (b.name + ' badge on TryHackMe');
-    var cls = 'badge-card ' + b.tier + (b.cls2 ? ' ' + b.cls2 : '') + ' reveal' + revealDelay(i);
+    // Escaped for the same reason as the Node renderer in tools/ssot.mjs:
+  // these land inside a class attribute and must not be able to break out.
+  var cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
     return '<a class="'+cls+'" href="'+ssotEsc(href)+'" target="_blank" rel="noopener noreferrer" aria-label="'+ssotEsc(aria)+'">'
       + '<img src="'+ssotEsc(b.img)+'" alt="'+ssotEsc(b.name)+' badge" loading="lazy">'
       + '<span class="badge-name">'+ssotEsc(b.name)+'</span>'
@@ -570,7 +572,7 @@ function termPrint(lines){
       a.className = 't-link';
       a.href = l.url;
       a.target = '_blank';
-      a.rel = 'noopener';
+      a.rel = 'noopener noreferrer';
       a.textContent = l.linkText || 'open ↗';
       div.appendChild(a);
     } else {
@@ -860,7 +862,7 @@ function triggerGlitch(el) {
 
 // ── PRINT CV ──────────────────────────────────────────────
 function printCV() {
-  var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank');
+  var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank', 'noopener');
   if(win) win.addEventListener('load', function(){ setTimeout(function(){ win.print(); }, 500); });
 }
 

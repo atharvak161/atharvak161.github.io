@@ -173,7 +173,13 @@ export function badgeCardHTML(b, i, thmShare, basePath) {
   const rawHref = b.href || thmShare(b.slug);
   const href = withBase(rawHref, basePath);
   const aria = b.aria || (b.name + ' badge on TryHackMe');
-  const cls = 'badge-card ' + b.tier + (b.cls2 ? ' ' + b.cls2 : '') + ' reveal' + revealDelay(i);
+  // tier and cls2 land inside a class attribute, so they need escaping like
+  // every other interpolated value - a quote in either breaks out of the
+  // attribute. Nobody but Atharva writes SITE.badges, but an unescaped
+  // interpolation is a latent correctness bug the moment a value contains a
+  // quote or an ampersand, and both renderers would corrupt identically so
+  // the consistency checker would still pass.
+  const cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
   return `    <a class="${cls}" href="${ssotEsc(href)}" target="_blank" rel="noopener noreferrer" aria-label="${ssotEsc(aria)}">
       <img src="${ssotEsc(withBase(b.img, basePath))}" alt="${ssotEsc(b.name)} badge" loading="lazy">
       <span class="badge-name">${ssotEsc(b.name)}</span>
@@ -267,7 +273,7 @@ export function seeAllHTML(items, hubHref, label) {
   const total = items.length;
   const featured = items.filter(x => x.featured).length;
   if (featured >= total) return '';
-  return `    <a class="section-see-all" href="${ssotEsc(hubHref)}">See all ${total} ${label} <span aria-hidden="true">&raquo;</span></a>`;
+  return `    <a class="section-see-all" href="${ssotEsc(hubHref)}">See all ${total} ${ssotEsc(label)} <span aria-hidden="true">&raquo;</span></a>`;
 }
 
 /** Builds the JSON text for the `hasCredential` array value (the `[...]`
