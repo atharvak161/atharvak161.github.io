@@ -140,7 +140,8 @@ export function loadSite(html) {
   const projects = extractAssignment(html, 'SITE.projects').valueText;
   const writeups = extractAssignment(html, 'SITE.writeups').valueText;
   const thmShare = extractAssignment(html, 'SITE.thmShare').valueText;
-  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nreturn SITE;`;
+  const thm = extractAssignment(html, 'SITE.thm').valueText;
+  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nSITE.thm = ${thm};\nreturn SITE;`;
   return Function(src)();
 }
 
@@ -280,6 +281,26 @@ export const HUB_HREF = {
   projects: 'projects/',
   writeups: 'writeups/',
 };
+
+
+/* SITE.thm formatting. Duplicated from SITE.thmDisplay in assets/js/site.js
+   deliberately: this runs in Node with no DOM, and check-consistency.mjs
+   compares the two outputs, so a divergence fails the commit rather than
+   shipping two different numbers. */
+export function thmDisplay(t) {
+  const group = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const LEVEL_NAMES = { 13: 'Legend' };
+  return {
+    rooms: group(t.rooms),
+    points: group(t.points),
+    streak: String(t.streak),
+    badges: String(t.badges),
+    rank: group(t.rank),
+    percentile: `Top ${t.percentile}%`,
+    level: '0x' + t.level.toString(16).toUpperCase(),
+    levelName: LEVEL_NAMES[t.level] || '',
+  };
+}
 
 export function seeAllHTML(items, hubHref, label) {
   const total = items.length;
