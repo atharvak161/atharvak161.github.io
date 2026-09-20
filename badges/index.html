@@ -26,32 +26,17 @@
   <meta name="twitter:title" content="Badges &mdash; Atharva Kulkarni">
   <meta name="twitter:description" content="All TryHackMe badges earned by Atharva Kulkarni.">
   <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
-  <style>
+  <link rel="stylesheet" href="../assets/css/hub.css">
+    <style>
     /* Self-hosted: previously pulled from fonts.googleapis.com, a
        render-blocking third-party request. Both families are OFL licensed
        and now come from our own origin. */
     @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/barlow-condensed-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('../assets/fonts/barlow-condensed-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:800;font-display:swap;src:url('../assets/fonts/barlow-condensed-800.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    @font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/share-tech-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
     :root{--bg:#080b10;--bg2:#0d1117;--surface:#141c26;--border:#1e2d3d;--accent:#00d4ff; --accent-strong: #00d4ff;--accent2:#00ff9d;--text:#e8edf2;--text2:#8899aa;--text3:#758697;--text-dim:#8899aa;--surface-2:#141a24;
       --tier-exam:#3ecf8e;--tier-exam-rgb:62,207,142;--tier-common:#8fd6a6;--tier-common-rgb:143,214,166;--tier-rare:#f5a623;--tier-rare-rgb:245,166,35;--tier-epic:#d7a1ff;--tier-epic-rgb:215,161,255;
       --font-display:'Barlow Condensed',sans-serif;--font-mono:'Share Tech Mono',monospace}
     [data-theme="light"]{--bg:#f0f4f8;--bg2:#e2e8f0;--surface:#ffffff;--border:#cbd5e1;--accent:#0077aa; --accent-strong: #006699;--accent2:#00704a;--text:#0f172a;--text2:#475569;--text3:#5b6b7f;--text-dim:#475569;--surface-2:#ffffff;
       --tier-exam:#1d764f;--tier-exam-rgb:29,118,79;--tier-common:#2c7844;--tier-common-rgb:44,120,68;--tier-rare:#905d07;--tier-rare-rgb:144,93,7;--tier-epic:#8e00f8;--tier-epic-rgb:142,0,248}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:var(--font-mono);line-height:1.8}
-    .skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100;background:var(--accent);color:#04121a;padding:.6rem 1rem;font-weight:700;text-decoration:none}
-    .skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
-    :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-    .wr-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
-    .wr-back{color:var(--accent-strong);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
-    .wr-back:hover{color:var(--text)}
-    .wr-header-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text2)}
-    .hub{max-width:1200px;margin:0 auto;padding:3rem 2rem 4rem}
-    .hub-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
-    .hub-sub{font-size:.85rem;color:var(--text2);max-width:680px;margin-bottom:.6rem}
-    .hub-count{font-size:.72rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2.2rem}
     /* ── Badge cards — copied from index.html's #badges styles, unchanged. ── */
     .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
     .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
@@ -78,8 +63,6 @@
     .badge-desc{position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(5px);width:max-content;max-width:196px;background:var(--surface-2,#141a24);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.7rem;font-weight:500;line-height:1.45;text-align:center;box-shadow:0 10px 26px -10px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;z-index:20}
     .badge-desc::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border)}
     .badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{opacity:1;transform:translateX(-50%) translateY(0)}
-    .wr-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text3)}
-    .wr-footer a{color:var(--accent);text-decoration:none}
     @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}.badge-desc{max-width:150px}}
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}.badge-desc{transition:opacity .22s ease;transform:translateX(-50%)}.badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{transform:translateX(-50%)}}
   </style>
