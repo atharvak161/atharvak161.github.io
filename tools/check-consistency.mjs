@@ -23,6 +23,7 @@ import {
   writeupsGridInner,
   hasCredentialArrayText,
   seeAllHTML,
+  HUB_HREF,
   getRegion,
   getHasCredentialText,
 } from './ssot.mjs';
@@ -357,13 +358,13 @@ if (SITE) {
     featuredWriteups ? writeupsGridInner(featuredWriteups, 'writeups/') : null, html, 'index.html');
 
   checkGenerated('seeall-badges', GENERATED_NOTICE.seeallBadges, GENERATED_NOTICE.seeallBadgesEnd,
-    siteBadges ? seeAllHTML(siteBadges, 'badges/index.html', 'badges') : null, html, 'index.html');
+    siteBadges ? seeAllHTML(siteBadges, HUB_HREF.badges, 'badges') : null, html, 'index.html');
   checkGenerated('seeall-certs', GENERATED_NOTICE.seeallCerts, GENERATED_NOTICE.seeallCertsEnd,
-    siteCerts ? seeAllHTML(siteCerts, 'certifications/index.html', 'certifications') : null, html, 'index.html');
+    siteCerts ? seeAllHTML(siteCerts, HUB_HREF.certs, 'certifications') : null, html, 'index.html');
   checkGenerated('seeall-projects', GENERATED_NOTICE.seeallProjects, GENERATED_NOTICE.seeallProjectsEnd,
-    siteProjects ? seeAllHTML(siteProjects, 'projects/index.html', 'projects') : null, html, 'index.html');
+    siteProjects ? seeAllHTML(siteProjects, HUB_HREF.projects, 'projects') : null, html, 'index.html');
   checkGenerated('seeall-writeups', GENERATED_NOTICE.seeallWriteups, GENERATED_NOTICE.seeallWriteupsEnd,
-    siteWriteups ? seeAllHTML(siteWriteups, 'writeups/index.html', 'writeups') : null, html, 'index.html');
+    siteWriteups ? seeAllHTML(siteWriteups, HUB_HREF.writeups, 'writeups') : null, html, 'index.html');
 
   const actualHasCred = getHasCredentialText(html, GENERATED_NOTICE.jsonld, GENERATED_NOTICE.jsonldEnd);
   if (actualHasCred === null) {

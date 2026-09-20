@@ -49,6 +49,7 @@ import {
   writeupsGridInner,
   hasCredentialArrayText,
   seeAllHTML,
+  HUB_HREF,
   spliceBetweenMarkers,
   spliceInline,
   spliceHasCredential,
@@ -82,13 +83,13 @@ function buildIndex(html) {
     writeupsGridInner(featuredWriteups, 'writeups/'));
 
   out = spliceBetweenMarkers(out, GENERATED_NOTICE.seeallBadges, GENERATED_NOTICE.seeallBadgesEnd,
-    seeAllHTML(SITE.badges, 'badges/index.html', 'badges'));
+    seeAllHTML(SITE.badges, HUB_HREF.badges, 'badges'));
   out = spliceBetweenMarkers(out, GENERATED_NOTICE.seeallCerts, GENERATED_NOTICE.seeallCertsEnd,
-    seeAllHTML(SITE.certs, 'certifications/index.html', 'certifications'));
+    seeAllHTML(SITE.certs, HUB_HREF.certs, 'certifications'));
   out = spliceBetweenMarkers(out, GENERATED_NOTICE.seeallProjects, GENERATED_NOTICE.seeallProjectsEnd,
-    seeAllHTML(SITE.projects, 'projects/index.html', 'projects'));
+    seeAllHTML(SITE.projects, HUB_HREF.projects, 'projects'));
   out = spliceBetweenMarkers(out, GENERATED_NOTICE.seeallWriteups, GENERATED_NOTICE.seeallWriteupsEnd,
-    seeAllHTML(SITE.writeups, 'writeups/index.html', 'writeups'));
+    seeAllHTML(SITE.writeups, HUB_HREF.writeups, 'writeups'));
 
   out = spliceHasCredential(out, GENERATED_NOTICE.jsonld, GENERATED_NOTICE.jsonldEnd,
     hasCredentialArrayText(SITE.certs));
