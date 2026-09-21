@@ -188,6 +188,65 @@ for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"
 }
 
 
+/* ── Favicon on every page ───────────────────────────────────────────────────
+   Ten of eleven pages shipped a favicon tag truncated mid-attribute:
+
+     <link rel="icon" href="data:image/svg+xml,<svg ... viewBox='0 0 100 100'>
+
+   No closing quote, so the parser ran the href on to the next `"` it found,
+   which lived inside the following <meta property="og:type">. Result: a blank
+   favicon on every sub-page AND a silently destroyed og:type, the tag
+   LinkedIn and Slack read when someone shares a writeup.
+
+   A 500-character data URI copy-pasted into eleven files is what made that
+   possible. The icon is now one file referenced by absolute path, so it
+   resolves identically from /, /writeups/ and any depth added later.  */
+{
+  const ICON_FILES = ['favicon.ico', 'favicon.svg', 'apple-touch-icon.png'];
+  for (const f of ICON_FILES) {
+    if (!existsSync(join(root, f))) fail.push(`${f} is missing from the repo root.`);
+  }
+
+  const REQUIRED = [
+    /<link[^>]+rel="icon"[^>]+href="\/favicon\.ico"/,
+    /<link[^>]+rel="icon"[^>]+href="\/favicon\.svg"/,
+    /<link[^>]+rel="apple-touch-icon"[^>]+href="\/apple-touch-icon\.png"/
+  ];
+
+  const pages = [];
+  const walk = dir => {
+    for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
+      if (entry.name.startsWith('.') || entry.name === '_local'
+        || entry.name === 'node_modules' || entry.name === 'assets') continue;
+      const rel = dir ? `${dir}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) walk(rel);
+      else if (entry.name.endsWith('.html')) pages.push(rel);
+    }
+  };
+  walk('');
+
+  for (const rel of pages) {
+    const pageHtml = readFileSync(join(root, rel), 'utf8');
+
+    for (const re of REQUIRED) {
+      if (!re.test(pageHtml)) fail.push(`${rel}: missing icon link matching ${re}`);
+    }
+    // The original defect: an icon href that never closes its quote.
+    for (const m of pageHtml.matchAll(/<link[^>]*rel="[^"]*icon[^>]*$/gm)) {
+      fail.push(`${rel}: icon link is not closed on its own line — ${m[0].slice(0, 70)}...`);
+    }
+    // A data: URI here is what got truncated. Files only.
+    if (/<link[^>]*rel="[^"]*icon[^>]*href="data:/.test(pageHtml)) {
+      fail.push(`${rel}: icon uses a data: URI. Reference /favicon.svg instead — the inline copy is what broke.`);
+    }
+    // og:type is the tag the broken href swallowed.
+    if (!/<meta[^>]+property="og:type"/.test(pageHtml)) {
+      fail.push(`${rel}: og:type is missing.`);
+    }
+  }
+}
+
+
 /* ── Sub-page return links ───────────────────────────────────────────────────
    Every hub and writeup page carries a "← Portfolio" link home. Those links
    were `../index.html`: a valid path that exists on disk, so the asset check
