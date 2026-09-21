@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="AK">
+  <rect width="100" height="100" rx="8" fill="#080b10"/>
+  <text x="50" y="50" dominant-baseline="central" text-anchor="middle"
+        font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+        font-size="54" font-weight="bold" fill="#00d4ff">AK</text>
+  <rect x="10" y="68" width="80" height="2" rx="1" fill="#00ff9d"/>
+</svg>
