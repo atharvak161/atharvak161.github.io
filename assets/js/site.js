@@ -55,12 +55,12 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    (the API blocks curl; read it in a browser), update here, run
    `node tools/build-fallbacks.mjs`, and every surface follows. */
 SITE.thm = {
-  asOf:       '2026-09-20',
+  asOf:       '2026-09-21',
   rooms:      152,
-  points:     24633,
-  streak:     126,
+  points:     24645,
+  streak:     128,
   badges:     26,
-  rank:       22993,
+  rank:       22966,
   percentile: 1,          // topPercentage from the API
   level:      13          // rendered as hex, 13 -> 0xD
 };

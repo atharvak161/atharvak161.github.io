@@ -182,8 +182,9 @@ node tools/check-consistency.mjs     # must print "PASS — all surfaces agree"
 ```
 
 It cross-checks the SSOT arrays against the static fallbacks, verifies every
-local asset path resolves, and enforces the skill colour convention
-(offensive → red, defensive → blue). It runs automatically via
+local asset path resolves, enforces the skill colour convention
+(offensive → red, defensive → blue), and checks that every sub-page's return
+link points back at the section that owns it. It runs automatically via
 `.githooks/pre-commit`, which is wired up with:
 
 ```bash
@@ -192,6 +193,24 @@ git config core.hooksPath .githooks
 
 That config is per-clone, so **run it again after any fresh clone** or the hook
 silently does nothing.
+
+## Return links from sub-pages
+
+Every hub and writeup page links home as `../#<section>`, never `../index.html`:
+
+| Page | Returns to |
+|---|---|
+| `writeups/*.html` | `../#writeups` |
+| `projects/index.html` | `../#projects` |
+| `certifications/index.html` | `../#certifications` |
+| `badges/index.html` | `../#badges` |
+
+Two reasons, and the asset check catches neither, which is why
+`check-consistency.mjs` enforces it separately. A bare `../index.html` is a
+valid path that exists on disk, so it passes every existence check while being
+the wrong destination: it drops the reader at the top of the home page instead
+of the section they came from, and it resolves to `/index.html` rather than the
+canonical `/`, splitting analytics across two URLs for one page.
 
 ## Linking convention for credentials
 
