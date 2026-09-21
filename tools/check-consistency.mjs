@@ -9,7 +9,7 @@
  * The Certifications section is treated as the SOURCE OF TRUTH. Everything else must
  * agree with it. Run before every commit:  node tools/check-consistency.mjs
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import {
@@ -185,6 +185,46 @@ for (const m of html.matchAll(/(?:src|href)="((?!https?:|data:|mailto:|#)[^"]+)"
   // paths — the real values are checked by the SSOT block below.
   if (p.includes("'+") || p.includes("+'") || p.includes('${')) continue;
   if (!existsSync(join(root, p))) warn.push(`Referenced asset not found on disk: ${p}`);
+}
+
+
+/* ── Sub-page return links ───────────────────────────────────────────────────
+   Every hub and writeup page carries a "← Portfolio" link home. Those links
+   were `../index.html`: a valid path that exists on disk, so the asset check
+   above passed them for months, but the wrong DESTINATION. Clicking one is a
+   fresh navigation that lands at the top of the homepage, losing the section
+   the reader came from, and it resolves to /index.html rather than the
+   canonical /, splitting analytics across two URLs for one page.
+
+   Existence was never the invariant. The invariant is that a return link goes
+   back to the section that owns the page. This block checks destination, which
+   is the class of bug the disk check structurally cannot see.  */
+{
+  const RETURN_SECTION = {
+    writeups: '#writeups',
+    projects: '#projects',
+    certifications: '#certifications',
+    badges: '#badges',
+  };
+  for (const [dir, hash] of Object.entries(RETURN_SECTION)) {
+    const dirPath = join(root, dir);
+    if (!existsSync(dirPath)) { fail.push(`${dir}/ is missing.`); continue; }
+    for (const entry of readdirSync(dirPath)) {
+      if (!entry.endsWith('.html')) continue;
+      const rel = `${dir}/${entry}`;
+      const pageHtml = readFileSync(join(dirPath, entry), 'utf8');
+      // Links that leave the sub-directory and head for the homepage.
+      for (const m of pageHtml.matchAll(/href="(\.\.\/[^"]*)"/g)) {
+        const href = m[1];
+        if (!/^\.\.\/(index\.html)?(#|$)/.test(href)) continue;   // not a homepage link
+        if (href === `../${hash}`) continue;                        // correct
+        fail.push(
+          `${rel}: return link is "${href}" — it must be "../${hash}" so the reader `
+          + `lands back on the section this page belongs to, on the canonical / URL.`
+        );
+      }
+    }
+  }
 }
 
 
