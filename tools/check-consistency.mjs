@@ -28,6 +28,10 @@ import {
   getRegion,
   getHasCredentialText,
   badgeAria,
+  shareImageUrl,
+  applyShareTags,
+  applyWriteupJsonLd,
+  allPages,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -590,6 +594,50 @@ if (warn.length) {
   console.log(`\n${warn.length} warning(s):`);
   warn.forEach(w => console.log(`  ! ${w}`));
 }
+/* ── Share tags: one value, every page ───────────────────────────────────────
+   The image URL used to be hand-written into eleven pages. The README named the
+   wrong file for months because of it. These checks mean a page that drifts, or
+   loses the tag entirely, fails the commit. */
+{
+  const want = shareImageUrl(SITE);
+  for (const rel of allPages(root)) {
+    const t = readFileSync(join(root, rel), 'utf8');
+    for (const [label, re] of [
+      ['og:image', /<meta\s+property="og:image"\s+content="([^"]*)"/],
+      ['twitter:image', /<meta\s+name="twitter:image"\s+content="([^"]*)"/],
+    ]) {
+      const m = t.match(re);
+      if (!m) { fail.push(`${rel}: ${label} is missing — a shared link will have no preview image.`); continue; }
+      if (m[1] !== want) fail.push(`${rel}: ${label} is "${m[1]}" but SITE.share says "${want}".`);
+    }
+    // Catch the failure mode that nearly shipped: a blank value reads as present.
+    if (/<meta\s+(?:property="og:image"|name="twitter:image")\s+content=""/.test(t)) {
+      fail.push(`${rel}: a share-image tag is present but empty.`);
+    }
+    if (applyShareTags(t, SITE) !== t) {
+      fail.push(`${rel}: share tags differ from what build-fallbacks would write. Run it and commit the result.`);
+    }
+  }
+}
+
+/* ── Every writeup carries its own generated TechArticle block ───────────── */
+for (const w of SITE.writeups) {
+  const rel = `writeups/${w.slug}.html`;
+  const t = readFileSync(join(root, rel), 'utf8');
+  if (!t.includes('application/ld+json')) {
+    fail.push(`${rel}: no JSON-LD. Run node tools/build-fallbacks.mjs.`);
+    continue;
+  }
+  if (applyWriteupJsonLd(t, w, SITE) !== t) {
+    fail.push(`${rel}: JSON-LD region is stale or hand-edited. Run node tools/build-fallbacks.mjs and commit the result.`);
+  }
+  // It is structured data; if it does not parse, it is worse than absent.
+  const m = t.match(/GENERATED:writeup-jsonld start[\s\S]*?<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
+  if (!m) { fail.push(`${rel}: generated JSON-LD markers present but no script block found.`); continue; }
+  try { JSON.parse(m[1]); }
+  catch (e) { fail.push(`${rel}: generated JSON-LD does not parse: ${e.message}`); }
+}
+
 if (fail.length) {
   console.error(`\nFAIL — ${fail.length} consistency problem(s):`);
   fail.forEach(f => console.error(`  ✗ ${f}`));

@@ -25,6 +25,24 @@ SITE.knowsAbout = ['Penetration Testing','Ethical Hacking','Red Teaming','Networ
 
 /* identity: one place for the rotating hero roles + <title> + meta description +
    OG/Twitter social tags. renderIdentity() syncs the live DOM from these. */
+/* share: the Open Graph / Twitter card image, in one place.
+
+   The URL was hand-written into all eleven pages, 22 tags in total. That is the
+   same drift risk that put the wrong filename in the README: it named
+   thumbnail.png as the og:image when every page has always pointed at
+   thumbnail.jpg. Changing the banner used to mean editing eleven files and
+   getting all of them right.
+
+   `node tools/build-fallbacks.mjs` writes these values into every page, and
+   check-consistency.mjs fails the commit if any page disagrees. Change the
+   banner here, run the generator, and all eleven follow. */
+SITE.share = {
+  base:   'https://atharvaxsecurity.com/',
+  image:  'thumbnail.jpg',
+  width:  1200,
+  height: 627
+};
+
 SITE.identity = {
   roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
   title: 'Atharva Kulkarni — Junior Penetration Tester | Offensive Security | CEH V12 | MSc Applied Cyber Security',

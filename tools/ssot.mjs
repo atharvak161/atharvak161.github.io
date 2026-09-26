@@ -18,7 +18,8 @@
  * eval of the whole file: only the specific SITE.* assignments we locate by
  * bracket-balanced parsing are ever evaluated.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 function markers(name, srcArray) {
   return [
@@ -141,7 +142,11 @@ export function loadSite(html) {
   const writeups = extractAssignment(html, 'SITE.writeups').valueText;
   const thmShare = extractAssignment(html, 'SITE.thmShare').valueText;
   const thm = extractAssignment(html, 'SITE.thm').valueText;
-  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nSITE.thm = ${thm};\nreturn SITE;`;
+  const share = extractAssignment(html, 'SITE.share').valueText;
+  // Every key this function is to expose must be listed here. It is not a
+  // generic reader: a key that is added to site.js but not added here arrives
+  // as undefined, which is how the share tags were briefly written as empty.
+  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nSITE.thm = ${thm};\nSITE.share = ${share};\nreturn SITE;`;
   return Function(src)();
 }
 
@@ -354,6 +359,110 @@ export function spliceBetweenMarkers(html, startMarker, endMarker, newInner) {
 
 /** Like spliceBetweenMarkers but for a single-line/inline region (e.g. a
  *  hub's ".hub-count" text) — no injected newlines or indentation. */
+/* F8: per-writeup TechArticle structured data.
+
+   Only the home page and the writeups index carried JSON-LD. The six writeup
+   pages, which are the longest and most substantive content on the site, had
+   none, so a search engine saw them as ordinary pages.
+
+   Generated from SITE.writeups, the same array the cards and the index's
+   CollectionPage already come from, so a writeup cannot end up described one
+   way in a card and another way in its own structured data. The description is
+   stripped of the HTML entities the card markup uses, because JSON-LD is read
+   as text, not parsed as HTML. */
+export const WRITEUP_JSONLD_START = '<!-- GENERATED:writeup-jsonld start \u2014 produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->';
+export const WRITEUP_JSONLD_END = '<!-- GENERATED:writeup-jsonld end -->';
+
+/* Writes (or rewrites) the block on one writeup page. Inserted before </head>
+   the first time, then only ever replaced between its own markers. */
+export function applyWriteupJsonLd(html, w, SITE) {
+  const block = WRITEUP_JSONLD_START + '\n<script type="application/ld+json">\n'
+    + writeupJsonLd(w, SITE) + '\n</script>\n' + WRITEUP_JSONLD_END;
+  const i = html.indexOf(WRITEUP_JSONLD_START);
+  if (i === -1) {
+    const h = html.indexOf('</head>');
+    if (h === -1) throw new Error('applyWriteupJsonLd: no </head> found');
+    return html.slice(0, h) + block + '\n' + html.slice(h);
+  }
+  const j = html.indexOf(WRITEUP_JSONLD_END);
+  if (j === -1) throw new Error('applyWriteupJsonLd: start marker without end marker');
+  return html.slice(0, i) + block + html.slice(j + WRITEUP_JSONLD_END.length);
+}
+
+export function writeupJsonLd(w, SITE) {
+  const base = (SITE.share && SITE.share.base) || 'https://atharvaxsecurity.com/';
+  const url = `${base}writeups/${w.slug}.html`;
+  const plain = String(w.desc || '')
+    .replace(/&middot;/g, '\u00b7')
+    .replace(/&mdash;/g, '\u2014')
+    .replace(/&ndash;/g, '\u2013')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/<[^>]*>/g, '')
+    .trim();
+  const obj = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: `${w.name} \u2014 ${w.org} walkthrough`,
+    name: w.name,
+    url,
+    description: plain,
+    author: { '@type': 'Person', name: 'Atharva Kulkarni', url: base },
+    publisher: { '@type': 'Person', name: 'Atharva Kulkarni', url: base },
+    inLanguage: 'en',
+    isPartOf: { '@type': 'CollectionPage', name: 'CTF Writeups', url: `${base}writeups/` },
+    about: { '@type': 'Thing', name: 'Penetration testing walkthrough' },
+  };
+  return JSON.stringify(obj, null, 2);
+}
+
+/* Share-image tags, driven from SITE.share.
+
+   Eleven pages carried the image URL by hand, 22 tags in all, plus the two
+   dimension tags on the home page. One value now feeds every one of them.
+   Used by build-fallbacks.mjs to write them and by check-consistency.mjs to
+   verify them, so the two can never disagree about what is correct. */
+export function shareImageUrl(SITE) {
+  const sh = SITE.share || {};
+  return String(sh.base || '') + String(sh.image || '');
+}
+
+export function applyShareTags(html, SITE) {
+  const url = shareImageUrl(SITE);
+  const sh = SITE.share || {};
+  // Refuse to write nothing. Without this a missing SITE.share silently blanked
+  // og:image and twitter:image on all eleven pages, which would have shipped a
+  // site whose every shared link had no preview image. A generator that can
+  // write an empty required value is a generator that eventually will.
+  if (!sh.base || !sh.image || !/^https?:\/\/\S+$/.test(url)) {
+    throw new Error(
+      `applyShareTags: SITE.share is missing or unusable (base=${JSON.stringify(sh.base)}, ` +
+      `image=${JSON.stringify(sh.image)}). Refusing to blank the share tags.`
+    );
+  }
+  let out = html;
+  out = out.replace(/(<meta\s+property="og:image"\s+content=")[^"]*(")/g, `$1${url}$2`);
+  out = out.replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*(")/g, `$1${url}$2`);
+  // Dimensions only exist where they are already declared; this never adds them.
+  if (sh.width)  out = out.replace(/(<meta\s+property="og:image:width"\s+content=")[^"]*(")/g,  `$1${sh.width}$2`);
+  if (sh.height) out = out.replace(/(<meta\s+property="og:image:height"\s+content=")[^"]*(")/g, `$1${sh.height}$2`);
+  return out;
+}
+
+/* Every HTML page in the repo, read from the tree rather than hardcoded, so a
+   writeup added later is covered without anyone remembering to list it. */
+export function allPages(root) {
+  return [
+    'index.html',
+    'badges/index.html', 'certifications/index.html',
+    'projects/index.html', 'writeups/index.html',
+    ...readdirSync(join(root, 'writeups'))
+      .filter(f => f.endsWith('.html') && f !== 'index.html')
+      .map(f => `writeups/${f}`),
+  ];
+}
+
 export function spliceInline(html, startMarker, endMarker, newInner) {
   const startIdx = html.indexOf(startMarker);
   const endIdx = html.indexOf(endMarker);
