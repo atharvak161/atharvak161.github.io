@@ -387,12 +387,26 @@ function updateProgress(){
 
 // ── SCROLL REVEAL + NAVBAR ────────────────────────────────
 var navbar = document.getElementById('navbar');
-window.addEventListener('scroll', function(){
-  navbar.classList.toggle('scrolled', window.scrollY > 50);
-  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+// Coalesced into one requestAnimationFrame. Previously all four jobs ran on
+// every scroll event, and updateActiveNav() does a querySelectorAll per call,
+// so a fast scroll did far more layout reads than there are frames to paint.
+// One flag means at most one pass per frame no matter how many events fire.
+var scrollQueued = false;
+function onScrollFrame(){
+  scrollQueued = false;
+  var y = window.scrollY;
+  navbar.classList.toggle('scrolled', y > 50);
+  document.getElementById('backToTop').classList.toggle('visible', y > 400);
   updateProgress();
   updateActiveNav();
-});
+}
+window.addEventListener('scroll', function(){
+  if(scrollQueued) return;
+  scrollQueued = true;
+  requestAnimationFrame(onScrollFrame);
+}, { passive: true });
+// Run once at load so a page restored mid-scroll is correct before any event.
+onScrollFrame();
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
@@ -830,14 +844,29 @@ termInput.addEventListener('keydown', function(e){
   if(cmd === 'exit'){ termPrint([{t:'t-out',v:'Goodbye.'}]); setTimeout(closeTerminal, 600); return; }
   if(cmd.indexOf('goto ') === 0 || cmd.indexOf('cd ') === 0){
     var target = cmd.slice(cmd.indexOf(' ') + 1).trim();
-    var sectionMap = {
-      about:'about', skills:'skills', experience:'experience', exp:'experience',
-      projects:'projects', writeups: 'writeups', education:'education', edu:'education',
-      certifications:'certifications', certs:'certifications', cert:'certifications',
-      badges:'badges', badge:'badges',
-      learning:'learning', testimonials:'testimonials', reviews:'testimonials',
-      cv:'cv', resume:'cv', contact:'contact'
+    // Derived from the nav, exactly as updateActiveNav() does, so a new section
+    // works in `goto` the moment it has a nav link. This was a hardcoded
+    // 17-entry literal while the nav highlighter was already derived, so the
+    // next section added would have highlighted correctly in the nav and
+    // returned "section not found" here.
+    var sectionMap = {};
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.nav-links a[href^="#"]'),
+      function(a){
+        var id = a.getAttribute('href').slice(1);
+        if(id && document.getElementById(id)) sectionMap[id] = id;
+      }
+    );
+    // Aliases only. These are shorthands a person might type, not sections, so
+    // they stay a literal - but each resolves to a real id above, and one that
+    // no longer exists simply drops out.
+    var ALIASES = {
+      exp:'experience', edu:'education', certs:'certifications',
+      cert:'certifications', badge:'badges', reviews:'testimonials', resume:'cv'
     };
+    Object.keys(ALIASES).forEach(function(k){
+      if(sectionMap[ALIASES[k]]) sectionMap[k] = ALIASES[k];
+    });
     var id = sectionMap[target];
     if(id){
       termPrint([{t:'t-green', v:'> navigating to ' + target + '...'}]);
