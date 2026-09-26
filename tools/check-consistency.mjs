@@ -147,14 +147,74 @@ if (/\.skill-category:nth-child\(\d\)/.test(css)) {
 
 
 
-/* ── 5. Every theme accent needs its -rgb twin in BOTH themes ───────────── */
-for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
-  const m = css.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
-  if (!m) { fail.push(`Theme block ${block} not found.`); continue; }
-  const body = m[1];
-  for (const v of ['--accent', '--accent2', '--accent3', '--accent4']) {
-    if (body.includes(`${v}:`) && !body.includes(`${v}-rgb:`)) {
-      fail.push(`${block}: ${v} defined without ${v}-rgb — rgba(var(...)) tints will break.`);
+/* ── 5. Theme tokens: one file, both themes, every accent with its -rgb ──── */
+// Tokens moved out of site.css into assets/css/tokens.css. They had been
+// copy-pasted into six files and drifted, which is what produced two live
+// WCAG failures: a contrast fix landed in some copies and not the others.
+// These checks enforce the new shape so that cannot come back.
+const tokensPath = join(root, 'assets/css/tokens.css');
+if (!existsSync(tokensPath)) {
+  fail.push('assets/css/tokens.css is missing — it is the single source of truth for every theme token.');
+} else {
+  const tokens = readFileSync(tokensPath, 'utf8');
+
+  for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
+    const m = tokens.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
+    if (!m) { fail.push(`tokens.css: theme block ${block} not found.`); continue; }
+    const body = m[1];
+    for (const v of ['--accent', '--accent2', '--accent3', '--accent4']) {
+      if (body.includes(`${v}:`) && !body.includes(`${v}-rgb:`)) {
+        fail.push(`tokens.css ${block}: ${v} defined without ${v}-rgb — rgba(var(...)) tints will break.`);
+      }
+    }
+  }
+
+  // An -rgb twin that does not match its own hex is how the open-to-work banner
+  // and the green skill category kept rendering the pre-fix colour after the hex
+  // was corrected. Compare them, per theme.
+  for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
+    const m = tokens.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
+    if (!m) continue;
+    const body = m[1];
+    for (const v of ['--accent', '--accent2', '--accent3', '--accent4', '--tier-exam', '--tier-common', '--tier-rare', '--tier-epic']) {
+      const hex = body.match(new RegExp(`${v}:\\s*#([0-9a-fA-F]{6})`));
+      const rgb = body.match(new RegExp(`${v}-rgb:\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)`));
+      if (!hex || !rgb) continue;
+      const want = [1, 3, 5].map(i => parseInt(hex[1].slice(i - 1, i + 1), 16));
+      const got = [rgb[1], rgb[2], rgb[3]].map(Number);
+      if (want.join(',') !== got.join(',')) {
+        fail.push(`tokens.css ${block}: ${v} is #${hex[1]} but ${v}-rgb is ${got.join(',')} — should be ${want.join(',')}.`);
+      }
+    }
+  }
+
+  // No page may reintroduce a local token block and start the drift again.
+  // Built from the tree rather than hardcoded, so a writeup added later is
+  // checked without anyone remembering to add it here.
+  const allPages = [
+    'index.html',
+    'badges/index.html', 'certifications/index.html',
+    'projects/index.html', 'writeups/index.html',
+    ...readdirSync(join(root, 'writeups'))
+      .filter(f => f.endsWith('.html') && f !== 'index.html')
+      .map(f => `writeups/${f}`),
+  ];
+  for (const f of allPages) {
+    const t = readFileSync(join(root, f), 'utf8');
+    if (/^[ \t]*:root[ \t]*\{/m.test(t)) {
+      fail.push(`${f} declares its own :root block — theme tokens belong only in assets/css/tokens.css.`);
+    }
+    if (!t.includes('css/tokens.css')) {
+      fail.push(`${f} does not load assets/css/tokens.css — its colours will fall back to nothing.`);
+    }
+  }
+  for (const sheet of ['assets/css/site.css', 'assets/css/hub.css', 'assets/css/writeup.css']) {
+    const t = readFileSync(join(root, sheet), 'utf8');
+    // Only a BARE selector defines tokens. `[data-theme="light"] body { ... }`
+    // and `[data-theme="light"] #net-canvas { ... }` are ordinary themed rules
+    // and must keep working, so the selector has to end at the brace.
+    if (/^[ \t]*(?::root|\[data-theme="[a-z]+"\])[ \t]*\{/m.test(t)) {
+      fail.push(`${sheet} declares theme tokens — they belong only in assets/css/tokens.css.`);
     }
   }
 }

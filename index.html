@@ -45,6 +45,7 @@
      hero role line reflowed once the font landed. -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/rajdhani-700.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/rajdhani-600.woff2">
+<link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- With JavaScript off, #loader (fixed, inset:0, opaque) is never dismissed
      and every .reveal element stays at opacity:0, so the page was a permanent
@@ -1073,9 +1074,9 @@
       </div>
       <div class="contact-form-col reveal reveal-delay-2">
         <div class="contact-form">
-          <div class="form-group"><label for="fname">Name</label><input type="text" id="fname" placeholder="Your name"></div>
-          <div class="form-group"><label for="femail">Email</label><input type="email" id="femail" placeholder="your@email.com"></div>
-          <div class="form-group"><label for="fmsg">Message</label><textarea id="fmsg" placeholder="Introduce yourself or your opportunity..."></textarea></div>
+          <div class="form-group"><label for="fname">Name</label><input type="text" id="fname" placeholder="Your name" autocomplete="name" maxlength="100" required aria-required="true"></div>
+          <div class="form-group"><label for="femail">Email</label><input type="email" id="femail" placeholder="your@email.com" autocomplete="email" inputmode="email" maxlength="254" required aria-required="true"></div>
+          <div class="form-group"><label for="fmsg">Message</label><textarea id="fmsg" placeholder="Introduce yourself or your opportunity..." maxlength="4000" required aria-required="true"></textarea></div>
           <button class="form-submit" onclick="handleFormSubmit()">&#x27F6; Send Message</button>
           <p class="form-notice" id="formNotice"></p>
         </div>
