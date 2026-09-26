@@ -32,6 +32,7 @@ import {
   applyShareTags,
   applyWriteupJsonLd,
   allPages,
+  applyIdentityTags,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -636,6 +637,26 @@ for (const w of SITE.writeups) {
   if (!m) { fail.push(`${rel}: generated JSON-LD markers present but no script block found.`); continue; }
   try { JSON.parse(m[1]); }
   catch (e) { fail.push(`${rel}: generated JSON-LD does not parse: ${e.message}`); }
+}
+
+/* ── The title a crawler reads must match SITE.identity ─────────────────────
+   renderIdentity() covers people, not crawlers. Without this check the static
+   tag drifts from SITE.identity in silence, which is how a shortened title
+   reached the source and not the live search result. */
+{
+  const t = readFileSync(join(root, 'index.html'), 'utf8');
+  const id = SITE.identity || {};
+  const shown = (t.match(/<title>([\s\S]*?)<\/title>/) || [])[1];
+  if (!shown) fail.push('index.html has no <title>.');
+  else if (shown !== id.title) {
+    fail.push(`index.html <title> is "${shown}" but SITE.identity.title is "${id.title}". Run node tools/build-fallbacks.mjs.`);
+  }
+  if (id.title && id.title.length > 62) {
+    fail.push(`SITE.identity.title is ${id.title.length} characters; Google shows about 60, so it will truncate mid-phrase.`);
+  }
+  if (applyIdentityTags(t, SITE) !== t) {
+    fail.push('index.html identity tags differ from what build-fallbacks would write. Run it and commit the result.');
+  }
 }
 
 if (fail.length) {

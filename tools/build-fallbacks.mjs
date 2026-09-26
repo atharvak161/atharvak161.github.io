@@ -57,6 +57,7 @@ import {
   applyShareTags,
   allPages,
   applyWriteupJsonLd,
+  applyIdentityTags,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -235,3 +236,22 @@ for (const w of SITE.writeups) {
   }
 }
 if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already up to date.');
+
+/* ── Title and description on index.html, from SITE.identity ────────────────
+   renderIdentity() writes these at runtime, which a crawler never sees. Without
+   this the static tag a search result shows drifts from SITE.identity silently,
+   which is exactly how the shortened title failed to reach the live page. */
+{
+  const before = readFileSync(indexPath, 'utf8');
+  const after = applyIdentityTags(before, SITE);
+  if (after !== before) {
+    writeFileSync(indexPath, after);
+    console.log('build-fallbacks: index.html identity tags updated.');
+  } else {
+    console.log('build-fallbacks: identity tags already up to date.');
+  }
+  if (applyIdentityTags(after, SITE) !== after) {
+    console.error('build-fallbacks: NOT IDEMPOTENT (identity tags).');
+    process.exit(1);
+  }
+}
