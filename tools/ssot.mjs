@@ -143,10 +143,11 @@ export function loadSite(html) {
   const thmShare = extractAssignment(html, 'SITE.thmShare').valueText;
   const thm = extractAssignment(html, 'SITE.thm').valueText;
   const share = extractAssignment(html, 'SITE.share').valueText;
+  const identity = extractAssignment(html, 'SITE.identity').valueText;
   // Every key this function is to expose must be listed here. It is not a
   // generic reader: a key that is added to site.js but not added here arrives
   // as undefined, which is how the share tags were briefly written as empty.
-  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nSITE.thm = ${thm};\nSITE.share = ${share};\nreturn SITE;`;
+  const src = `"use strict";\nconst SITE = {};\nSITE.certs = ${certs};\nSITE.badges = ${badges};\nSITE.projects = ${projects};\nSITE.writeups = ${writeups};\nSITE.thmShare = ${thmShare};\nSITE.thm = ${thm};\nSITE.share = ${share};\nSITE.identity = ${identity};\nreturn SITE;`;
   return Function(src)();
 }
 
@@ -418,6 +419,48 @@ export function writeupJsonLd(w, SITE) {
     about: { '@type': 'Thing', name: 'Penetration testing walkthrough' },
   };
   return JSON.stringify(obj, null, 2);
+}
+
+/* Title and description tags, driven from SITE.identity.
+
+   renderIdentity() in assets/js/site.js writes these at runtime, which covers
+   people but NOT crawlers: a search engine reads the static HTML and never runs
+   the script. So the tag a search result actually shows was the hand-written
+   one, and it silently stopped matching SITE.identity the moment either changed.
+   That is exactly what happened when the title was shortened - the live page
+   still served the old 104-character title.
+
+   These are now generated, so the static tag and the runtime value cannot
+   disagree, and check-consistency.mjs fails the commit if they do. */
+const IDENTITY_TAGS = [
+  ['title',       'title',                                            null],
+  ['meta',        'meta[name="description"]',      'metaDescription'],
+  ['meta',        'meta[property="og:title"]',     'ogTitle'],
+  ['meta',        'meta[property="og:description"]', 'ogDescription'],
+  ['meta',        'meta[name="twitter:title"]',    'twTitle'],
+  ['meta',        'meta[name="twitter:description"]', 'twDescription'],
+];
+
+export function applyIdentityTags(html, SITE) {
+  const id = SITE.identity || {};
+  if (!id.title || !id.metaDescription) {
+    throw new Error('applyIdentityTags: SITE.identity is missing title or metaDescription. Refusing to blank the page title.');
+  }
+  let out = html;
+  out = out.replace(/<title>[\s\S]*?<\/title>/, `<title>${id.title}</title>`);
+  const metas = [
+    ['name="description"', id.metaDescription],
+    ['property="og:title"', id.ogTitle],
+    ['property="og:description"', id.ogDescription],
+    ['name="twitter:title"', id.twTitle],
+    ['name="twitter:description"', id.twDescription],
+  ];
+  for (const [attr, val] of metas) {
+    if (!val) continue;
+    const re = new RegExp(`(<meta\\s+${attr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+content=")[^"]*(")`);
+    out = out.replace(re, `$1${val.replace(/"/g, '&quot;')}$2`);
+  }
+  return out;
 }
 
 /* Share-image tags, driven from SITE.share.
