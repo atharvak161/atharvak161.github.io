@@ -68,7 +68,7 @@
     @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}.badge-desc{max-width:150px}}
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}.badge-desc{transition:opacity .22s ease;transform:translateX(-50%)}.badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{transform:translateX(-50%)}}
   </style>
-  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -80,6 +80,7 @@
     <h1 class="hub-title">Badges</h1>
     <p class="hub-sub">The TryHackMe badges worth showing &mdash; exam badges, League 1st-place wins, and offensive-box tooling badges. Beginner module badges are left out on purpose; the home page shows a shorter selection still.</p>
     <div class="hub-count"><!-- GENERATED:count-badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->15 badges &middot; TryHackMe<!-- GENERATED:count-badges end --></div>
+    <h2 class="sr-only">All badges</h2>
     <div class="badges-grid">
       <!-- GENERATED:badges start — produced by tools/build-fallbacks.mjs from SITE.badges. Do not hand-edit; edit SITE.badges and run `node tools/build-fallbacks.mjs` instead. -->
     <a class="badge-card t-exam exam reveal" href="https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url" target="_blank" rel="noopener noreferrer" aria-label="Cyber Security 101 (SEC1) — verify on Credly">

@@ -61,7 +61,7 @@
     @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.project-card{padding:1.4rem}}
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
   </style>
-  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -73,11 +73,12 @@
     <h1 class="hub-title">CTF Writeups</h1>
     <p class="hub-sub">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. Every command is explained, not just listed.</p>
     <div class="hub-count"><!-- GENERATED:count-writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->6 writeups &middot; TryHackMe<!-- GENERATED:count-writeups end --></div>
+    <h2 class="sr-only">All writeups</h2>
     <div class="projects-grid">
       <!-- GENERATED:writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
     <a href="domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F3B4;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F3B4;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Domino</h3></div>
       <p>Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.</p>
@@ -86,7 +87,7 @@
     </a>
     <a href="flagvault2.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F9F5;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F9F5;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Flag Vault 2</h3></div>
       <p>Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.</p>
@@ -95,7 +96,7 @@
     </a>
     <a href="flagvault.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F4BE;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F4BE;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Flag Vault</h3></div>
       <p>Exploited a stack buffer overflow (CWE-121) via gets() to overwrite an adjacent stack variable and bypass authentication.</p>
@@ -104,7 +105,7 @@
     </a>
     <a href="capture.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F510;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F510;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Capture!</h3></div>
       <p>Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.</p>
@@ -113,7 +114,7 @@
     </a>
     <a href="simplectf.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F3F3;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F3F3;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Simple CTF</h3></div>
       <p>Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3.0 8.1) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.</p>
@@ -122,7 +123,7 @@
     </a>
     <a href="picklerick.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">&#x1F952;</div>
+        <div class="project-icon" aria-hidden="true">&#x1F952;</div>
       </div>
       <div><div class="project-org">TryHackMe</div><h3>Pickle Rick</h3></div>
       <p>Retrieved credentials via information disclosure in HTML comments and robots.txt, then achieved RCE and root escalation through a misconfigured sudo policy.</p>

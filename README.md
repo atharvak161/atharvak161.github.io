@@ -6,7 +6,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 
 ```
 .
-├── index.html                     the markup and the SSOT arrays; CSS and JS live in assets/
+├── index.html                     the markup; the SSOT arrays live in assets/js/site.js
 ├── CNAME                          custom domain for GitHub Pages
 ├── robots.txt                     → sitemap.xml
 ├── assets/css/site.css           all styles for the home page
@@ -17,7 +17,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
 ├── assets/
-│   ├── badges/thm/                all TryHackMe badge art (13 WebP badge images)
+│   ├── badges/thm/                all TryHackMe badge art (15 WebP badge images)
 │   │                              exam badges + league and room badges
 │   ├── certs/                     every certificate PDF, self-hosted
 │   │   ├── CEH-V12-Certificate.pdf
@@ -125,7 +125,7 @@ are accepted trade-offs for zero-config hosting, not oversights.
 ## The one thing to understand: the SSOT
 
 Certifications, badges and identity strings are each declared **once**, in
-`window.SITE` near the bottom of `index.html`. Every surface renders from it:
+`window.SITE`, at the top of `assets/js/site.js`. Every surface renders from it:
 
 ```
 SITE.identity  →  <title>, meta description, OG/Twitter tags, hero roles
@@ -158,10 +158,15 @@ JavaScript — which means drift here is invisible in a browser:
 | static `.badges-grid` | `SITE.badges` |
 | static `<script type="application/ld+json">` | earned entries of `SITE.certs` |
 
-**3. Two root files are load-bearing public URLs.** `thumbnail.png` is the
-`og:image` already cached by LinkedIn, X and Slack; `Atharva_Kulkarni_Resume.pdf`
-has been linked from job applications. Moving either into `assets/` would tidy
-the tree and break live links. They stay at root on purpose.
+**3. Two root files are load-bearing public URLs.** `thumbnail.jpg` is the
+`og:image` cached by LinkedIn, X and Slack, referenced by all 11 pages;
+`Atharva_Kulkarni_Resume.pdf` has been linked from job applications. Moving
+either into `assets/` would tidy the tree and break live links. They stay at
+root on purpose.
+
+`thumbnail.png` (209KB) is a different matter: nothing in the repo references
+it any more. This file used to name it as the og:image, which was wrong. Before
+moving it, check whether an old shared post still hotlinks it.
 
 ## Asset conventions
 

@@ -14,3 +14,11 @@ AGENTS.md
 GEMINI.md
 **/GEMINI.md
 .cursorrules
+
+# Machine-only scratch. Previously excluded by .git/info/exclude alone, which is
+# NOT versioned - it does not survive a fresh clone and does not stop `git add -f`.
+# This repo is served by GitHub Pages, so anything committed is world-readable.
+_local/
+**/_local/
+.gstack/
+**/.gstack/

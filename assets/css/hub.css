@@ -19,3 +19,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-mono);line-he
 .hub-count{font-size:.72rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2.2rem}
 .wr-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text3)}
 .wr-footer a{color:var(--accent);text-decoration:none}
+
+/* Reduced motion. The four hub pages each repeat this inline, independently,
+   which is exactly how one of them ends up forgotten. In the shared file it is
+   structural: any page that loads hub.css is covered. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+/* sr-only: for the grid headings below. Each hub jumped <h1> straight to the
+   cards' <h3>, so heading navigation saw an unexplained level skip repeated
+   once per card. The card titles cannot simply become <h2> - .project-card h3
+   is an element selector in site.css and restyling it would shift the visual
+   design - so each grid gets its true <h2> parent, present for assistive tech
+   and invisible on screen. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}

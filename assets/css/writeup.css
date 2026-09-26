@@ -11,7 +11,7 @@
 :root {
       --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
       --border: #1e2d3d; --accent: #00d4ff; --accent-strong: #00d4ff; --accent2: #00ff9d;
-      --accent3: #ff4d6d; --text: #e8edf2; --text2: #8899aa; --text3: #556677;
+      --accent3: #ff4d6d; --text: #e8edf2; --text2: #8899aa; --text3: #758697;
       --font-display: 'Barlow Condensed', sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
@@ -66,3 +66,17 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-mono);
    column was squeezed past its min-content width and pushed the page 12px wide. */
 .wr-takeaways{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem}
 @media (max-width:600px){.wr-takeaways{grid-template-columns:1fr}}
+
+/* skip-link: the six writeup pages are the longest documents on the site and
+   had no way to bypass the header. Matches hub.css so the focus ring, colour
+   and position are identical wherever a reader meets it. */
+.skip-link{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;top:0;left:0;z-index:100;background:var(--accent);color:#04121a;padding:.6rem 1rem;font-weight:700;text-decoration:none}
+.skip-link:focus{width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
+
+/* Reduced motion. site.css has this; writeup.css did not, and the six writeup
+   pages load ONLY this file - no site.css, and no inline block like the hubs
+   carry. Nothing here animates today, so this is pre-emptive: the guard is in
+   place the first time an animation is added, not remembered afterwards. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}

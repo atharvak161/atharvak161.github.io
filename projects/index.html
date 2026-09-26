@@ -53,7 +53,7 @@
     @media(max-width:600px){.hub{padding:2rem 1.2rem 3rem}.wr-header{padding:1rem 1.2rem}.project-card{padding:1.4rem}}
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
   </style>
-  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -65,80 +65,81 @@
     <h1 class="hub-title">Projects</h1>
     <p class="hub-sub">Full-stack and security builds, plus the academic and CTF research that came before them. The home page shows a curated selection; everything is here.</p>
     <div class="hub-count"><!-- GENERATED:count-projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->11 projects<!-- GENERATED:count-projects end --></div>
+    <h2 class="sr-only">All projects</h2>
     <div class="projects-grid">
       <!-- GENERATED:projects start — produced by tools/build-fallbacks.mjs from SITE.projects. Do not hand-edit; edit SITE.projects and run `node tools/build-fallbacks.mjs` instead. -->
     <div class="project-card reveal">
-      <div class="project-icon">&#x1F3AF;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F3AF;</div>
       <div><div class="project-org">Ongoing &middot; TryHackMe &amp; HackTheBox</div><h3>CTF &amp; Penetration Testing Labs</h3></div>
       <p>Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.</p>
       <ul class="project-outcomes"><li>Active on Junior Penetration Testing path on TryHackMe</li><li>Practising manual exploit identification and vulnerability chaining</li><li>Developing recon, web app testing, and post-exploitation techniques</li></ul>
       <div class="tech-stack"><span class="tech-badge">Nmap</span><span class="tech-badge">Burp Suite</span><span class="tech-badge">Metasploit</span><span class="tech-badge">Linux</span><span class="tech-badge">Web Exploitation</span></div>
     </div>
     <div class="project-card reveal reveal-delay-1">
-      <div class="project-icon">&#x1F916;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F916;</div>
       <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>ML Attacks on Physical Unclonable Functions</h3></div>
       <p>MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.</p>
       <ul class="project-outcomes"><li>Demonstrated measurable PUF vulnerability through GAN-synthesised datasets</li><li>Evaluated attack success rates and proposed countermeasures</li><li>Advanced hardware-level threat research across ML and cryptography</li></ul>
       <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">GANs</span><span class="tech-badge">Machine Learning</span><span class="tech-badge">Cryptography</span><span class="tech-badge">PUFs</span></div>
     </div>
     <div class="project-card reveal reveal-delay-2">
-      <div class="project-icon">&#x1F510;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F510;</div>
       <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>Honey Encryption: Brute-Force Resistant Security</h3></div>
       <p>Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.</p>
       <ul class="project-outcomes"><li>Designed a developer API for web and cloud application integration</li><li>Applied DTE encoding to passwords, PINs, and biometrics</li><li>Mapped use cases across internet banking and cloud security</li></ul>
       <div class="tech-stack"><span class="tech-badge">Python</span><span class="tech-badge">Encryption</span><span class="tech-badge">DTE</span><span class="tech-badge">API Design</span><span class="tech-badge">Cloud Security</span></div>
     </div>
     <div class="project-card reveal reveal-delay-3">
-      <div class="project-icon">&#x1F50E;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F50E;</div>
       <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>NTFS Digital Forensics: File Recovery on Windows 10</h3></div>
       <p>Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.</p>
       <ul class="project-outcomes"><li>Analysed MFT entries, slack space, and disk imaging for artifact recovery</li><li>Compared CLI tools and recovery software for forensic soundness</li><li>Documented best practices for evidence preservation and breach analysis</li></ul>
       <div class="tech-stack"><span class="tech-badge">NTFS</span><span class="tech-badge">Disk Imaging</span><span class="tech-badge">MFT Analysis</span><span class="tech-badge">Windows Forensics</span><span class="tech-badge">CLI Tools</span></div>
     </div>
     <div class="project-card reveal">
-      <div class="project-icon">&#x1F6E1;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F6E1;</div>
       <div><div class="project-org">Queen&#39;s University Belfast &middot; 2023</div><h3>Automated Network Intrusion Response System (AIRS)</h3></div>
       <p>Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.</p>
       <ul class="project-outcomes"><li>Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations</li><li>Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT</li><li>Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment</li></ul>
       <div class="tech-stack"><span class="tech-badge">IDS/IPS</span><span class="tech-badge">IRS</span><span class="tech-badge">Network Security</span><span class="tech-badge">Threat Mitigation</span><span class="tech-badge">Anomaly Detection</span></div>
     </div>
     <a href="https://github.com/atharvak161/claude-org-framework" target="_blank" rel="noopener noreferrer" class="project-card reveal" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F3DB;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F3DB;</div>
       <div><div class="project-org">2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span></div><h3>Claude Org Framework &mdash; AI Agent Orchestration</h3></div>
       <p>A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.</p>
       <ul class="project-outcomes"><li>89 role-scoped agents with enforced separation between building, reviewing and shipping</li><li>Mandatory security and QA sign-off gates before anything reaches production</li><li>Git hooks and a consistency checker that block policy violations mechanically, not by convention</li></ul>
       <div class="tech-stack"><span class="tech-badge">Claude Code</span><span class="tech-badge">Multi-Agent Systems</span><span class="tech-badge">Bash</span><span class="tech-badge">Git Hooks</span><span class="tech-badge">Process Design</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/cybersec-toolkit/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F9F0;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F9F0;</div>
       <div><div class="project-org">2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span></div><h3>Cybersec Toolkit</h3></div>
       <p>A client-side cybersecurity utilities toolkit &mdash; encoding/decoding, hashing, JWT/AES/RSA tools, a CyberChef-style recipe chainer, and OSINT lookups. Nothing ever leaves the browser except a few clearly-disclosed public API calls.</p>
       <ul class="project-outcomes"><li>Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer</li><li>OSINT lookup utilities alongside classic encode/decode and crypto tools</li><li>Fully client-side &mdash; no data leaves the browser except disclosed public API calls</li></ul>
       <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Web Crypto API</span><span class="tech-badge">JWT</span><span class="tech-badge">OSINT</span><span class="tech-badge">Client-Side Security</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/cybersec-vault/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F5C4;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F5C4;</div>
       <div><div class="project-org">2026 &middot; Cybersecurity Knowledge Base &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-vault</span></div><h3>The Vault</h3></div>
       <p>A fast, fully client-side knowledge base for 248 cybersecurity notes &mdash; cloud, GRC, OSCP, and red-team &mdash; with an Obsidian-style reader: instant full-text search, a command palette, wiki-style cross-links, an interactive link graph, and backlinks. No backend, nothing leaves the browser.</p>
       <ul class="project-outcomes"><li>248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette</li><li>Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents</li><li>Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls</li></ul>
       <div class="tech-stack"><span class="tech-badge">JavaScript</span><span class="tech-badge">Markdown</span><span class="tech-badge">Full-Text Search</span><span class="tech-badge">Graph View</span><span class="tech-badge">Client-Side</span></div>
     </a>
     <a href="https://github.com/atharvak161/jobscope" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F50E;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F50E;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/jobscope</span></div><h3>JobScope &mdash; UK Job Aggregator</h3></div>
       <p>UK job aggregator that filters listings by visa sponsorship status and security clearance requirements &mdash; built for candidates who need to know eligibility before they apply. Resume parsing powered by Claude AI.</p>
       <ul class="project-outcomes"><li>Filters roles by visa sponsorship and security clearance eligibility</li><li>Claude AI resume parsing for automated candidate-to-role matching</li><li>IDOR, SSRF, and prompt-injection defences built in from the ground up</li></ul>
       <div class="tech-stack"><span class="tech-badge">Next.js 16</span><span class="tech-badge">TypeScript</span><span class="tech-badge">PostgreSQL</span><span class="tech-badge">Prisma 7</span><span class="tech-badge">Claude AI</span></div>
     </a>
     <a href="https://atharvaxsecurity.com/Blueprint/" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F4CB;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F4CB;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/Blueprint</span></div><h3>Blueprint &mdash; Project Management Tool</h3></div>
       <p>A project management dashboard for tracking tasks, milestones, and team progress. Built as a single-page app with a clean kanban-style interface.</p>
       <ul class="project-outcomes"><li>Visual project and task tracking with status columns</li><li>Milestone management with progress indicators</li><li>Deployed via GitHub Actions to GitHub Pages</li></ul>
       <div class="tech-stack"><span class="tech-badge">TypeScript</span><span class="tech-badge">Python</span><span class="tech-badge">GitHub Actions</span><span class="tech-badge">GitHub Pages</span></div>
     </a>
     <a href="https://github.com/atharvak161/finance-dashboard" target="_blank" rel="noopener noreferrer" class="project-card reveal reveal-delay-3" style="text-decoration:none;color:inherit;">
-      <div class="project-icon">&#x1F4B7;</div>
+      <div class="project-icon" aria-hidden="true">&#x1F4B7;</div>
       <div><div class="project-org">2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/finance-dashboard</span></div><h3>Finance Dashboard &mdash; Personal Finance Tracker</h3></div>
       <p>Comprehensive personal finance tracker for NRI/UK professionals. Tracks income, expenses, investments, debts, and goals across GBP and INR. Includes ROAI analytics, envelope budgeting, bill calendar, SMS transaction parsing, and OLED dark mode.</p>
       <ul class="project-outcomes"><li>Cross-currency portfolio tracking with real-time ROAI metrics</li><li>SMS and CSV bank import with auto-categorisation</li><li>Privacy mode, keyboard shortcuts, and OLED dark mode</li></ul>

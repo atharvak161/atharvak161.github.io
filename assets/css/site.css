@@ -17,6 +17,14 @@
     --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
     --border: #1e2d3d; --accent: #00d4ff; --accent-rgb: 0,212,255; --accent2: #00ff9d; --accent2-rgb: 0,255,157;
     --accent3: #ff4d6d; --accent3-rgb: 255,77,109; --accent4: #f5a623; --accent4-rgb: 245,166,35;
+    /* thm-green: was a hardcoded lime in five .thm-* rules, so it never adapted
+       for light theme, where it measured 1.44:1 on white. Dark value unchanged,
+       so dark theme renders exactly as before. */
+    --thm-green: #a2ea2a;
+    /* danger: form-notice error text. --accent3 light is #e03050 = 4.46:1 on
+       white, just under AA. A separate token fixes the text without shifting
+       --accent3, which also paints the glitch layer and the red skill category. */
+    --danger: #ff4d6d;
     --text: #e8edf2; --text2: #8899aa; --text3: #758697; --surface-2: #141a24;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
@@ -28,8 +36,10 @@
   }
   [data-theme="light"] {
     --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
-    --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00875a; --accent2-rgb: 0,135,90;
+    --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00704a; --accent2-rgb: 0,135,90;
     --accent3: #e03050; --accent3-rgb: 224,48,80; --accent4: #b8730f; --accent4-rgb: 184,115,15;
+    --thm-green: #4e7a08;  /* 5.11:1 on white, was 1.44:1 */
+    --danger: #c92645;     /* 5.46:1 on white, was 4.46:1 */
     --text: #0f172a; --text2: #475569; --text3: #5b6b7f; --surface-2: #ffffff;
     /* Same hue/saturation as dark, lightness lowered to clear 4.5:1 on a white card. */
     --tier-exam: #1d764f; --tier-exam-rgb: 29,118,79;
@@ -269,21 +279,21 @@
   .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all .25s; }
   .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
   .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 100%; max-width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
-  .thm-card:hover { border-color: #a2ea2a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  .thm-card:hover { border-color: var(--thm-green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .thm-card-head { display: flex; align-items: center; gap: .75rem; }
   .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center 20%; border: 2px solid var(--border); transition: border-color .25s; }
-  .thm-card:hover .thm-card-avatar { border-color: #a2ea2a; }
+  .thm-card:hover .thm-card-avatar { border-color: var(--thm-green); }
   .thm-card-info { display: flex; flex-direction: column; min-width: 0; }
   .thm-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
   .thm-card-handle { font-size: .9rem; color: var(--text); font-weight: 700; line-height: 1.2; }
-  .thm-card-pts { margin-left: auto; font-size: 1.05rem; font-weight: 800; color: #a2ea2a; line-height: 1; white-space: nowrap; }
+  .thm-card-pts { margin-left: auto; font-size: 1.05rem; font-weight: 800; color: var(--thm-green); line-height: 1; white-space: nowrap; }
   .thm-card-pts small { font-size: .6rem; font-weight: 600; color: var(--text3); margin-left: .15rem; }
   .thm-card-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; border-top: 1px solid var(--border); padding-top: .7rem; }
   .thm-stat { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
   .thm-stat b { font-size: .92rem; font-weight: 800; color: var(--text); line-height: 1; }
   .thm-stat span { font-size: .55rem; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
-  .thm-stat-icon { width: 15px; height: 15px; color: #a2ea2a; opacity: .9; margin-bottom: .15rem; }
-  .thm-pts-icon { width: 14px; height: 14px; vertical-align: -1px; margin-right: .4rem; color: #a2ea2a; }
+  .thm-stat-icon { width: 15px; height: 15px; color: var(--thm-green); opacity: .9; margin-bottom: .15rem; }
+  .thm-pts-icon { width: 14px; height: 14px; vertical-align: -1px; margin-right: .4rem; color: var(--thm-green); }
   .thm-card-pts small { margin-left: .35rem; }
   /* GitHub card — self-contained, matches the boxed-card look */
   .gh-card { display: flex; align-items: center; gap: .75rem; width: 100%; max-width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
