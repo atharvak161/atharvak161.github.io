@@ -186,9 +186,9 @@
   @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
-  nav.scrolled { padding: .7rem 3rem; box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
+  nav.scrolled { padding: .7rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
@@ -203,7 +203,7 @@
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
   /* ── HERO ────────────────────────────────────────────────── */
-  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); overflow: hidden; z-index: 2; }
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
   @keyframes pulseGlow { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7} }
@@ -271,7 +271,7 @@
   @keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
   /* ── SECTIONS ────────────────────────────────────────────── */
-  section { position: relative; z-index: 2; padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  section { position: relative; z-index: 2; padding: 6rem 3rem; max-width: var(--page-max); margin: 0 auto; }
   .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
   .section-num { font-size: .72rem; color: var(--accent); letter-spacing: .2em; font-weight: 700; }
   h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
@@ -621,14 +621,49 @@
   }
   /* ── CONTACT ─────────────────────────────────────────────── */
   #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(var(--accent-rgb),.03))}
-  .contact-inner{max-width:1200px;margin:0 auto}
+  .contact-inner{max-width:var(--page-max);margin:0 auto}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;column-gap:4rem;row-gap:0;align-items:start}
   .contact-info h3{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:1rem;letter-spacing:.08em;text-transform:uppercase}
   .contact-info h3 span{color:var(--accent)}
   .contact-info p{font-size:.85rem;color:var(--text2);line-height:1.8;margin-bottom:2rem;max-width:380px}
+  /* Local time and availability. Starts [hidden] in the markup and is only
+     revealed if SITE.features.clock is on, so turning the feature off leaves no
+     empty row behind. */
+  .local-now{display:flex;align-items:center;gap:.5rem;margin:.9rem 0 0;font-family:var(--font-mono);
+    font-size:.72rem;color:var(--text3);letter-spacing:.04em}
+  .now-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex:none;
+    box-shadow:0 0 0 0 rgba(var(--accent2-rgb),.55);animation:nowPulse 2.4s ease-out infinite}
+  .now-dot.off{background:var(--text3);animation:none;box-shadow:none}
+  @keyframes nowPulse{
+    0%{box-shadow:0 0 0 0 rgba(var(--accent2-rgb),.5)}
+    70%{box-shadow:0 0 0 7px rgba(var(--accent2-rgb),0)}
+    100%{box-shadow:0 0 0 0 rgba(var(--accent2-rgb),0)}
+  }
+  .now-label{color:var(--text3)}
+  .now-time{color:var(--text2);font-variant-numeric:tabular-nums}
+  .now-avail{color:var(--accent2)}
+  .now-avail.off{color:var(--text3)}
   .contact-links{display:flex;flex-direction:column;gap:.8rem}
   .contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text2);padding:.9rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s;font-size:.82rem}
   .contact-link:hover{border-color:var(--accent);color:var(--text);transform:translateX(4px)}
+  /* A row so the copy button can be a sibling of the link rather than inside
+     it - a <button> nested in an <a> is invalid and swallows the click. The
+     link still takes all the spare width, so the layout is unchanged when the
+     button is hidden (no clipboard support). */
+  .contact-row{display:flex;align-items:stretch;gap:.5rem}
+  .contact-row > .contact-link{flex:1 1 auto;min-width:0}
+  .copy-btn{flex:none;display:flex;align-items:center;justify-content:center;width:44px;
+    background:var(--surface);border:1px solid var(--border);border-radius:3px;color:var(--text3);
+    cursor:pointer;transition:border-color .25s,color .25s,background .25s;font-family:var(--font-mono)}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .copy-btn.copied{border-color:var(--accent2);color:var(--accent2);background:rgba(var(--accent2-rgb),.08)}
+  .copy-icon{font-size:.95rem;line-height:1}
+  /* Visible label for assistive tech only. The icon alone would leave the
+     button unnamed, and four identically-named buttons would be useless. */
+  .copy-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+  .copy-status{font-size:.7rem;color:var(--accent2);min-height:1em;margin:.1rem 0 0;font-family:var(--font-mono)}
   .contact-link-icon{width:32px;height:32px;border-radius:4px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
   /* The form is a sibling of .contact-info, not of .contact-links, so it has
      no structural way to align with the email tile. This offset is the
@@ -664,7 +699,7 @@
   .form-notice{font-size:.7rem;color:var(--text3);margin-top:-.3rem}
 
   /* ── FOOTER ──────────────────────────────────────────────── */
-  footer{position:relative;z-index:2;text-align:center;padding:2rem 3rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
+  footer{position:relative;z-index:2;text-align:center;padding:2rem 3rem;padding-inline: max(3rem, calc((100% - var(--page-max)) / 2));border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
   footer span{color:var(--accent)}
 
   /* ── BACK TO TOP ─────────────────────────────────────────── */
