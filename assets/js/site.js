@@ -17,7 +17,11 @@ window.SITE = window.SITE || {};
    it is not in the same class as the canvas animation. The dot's pulse is CSS
    and is already covered by the site's prefers-reduced-motion guard. */
 SITE.features = {
-  clock: true
+  clock: true,
+  /* warmup: do real preparation behind the loading screen instead of letting
+     those seconds only count down. See the LOADER WARM-UP block below. Turning
+     it off costs nothing but a slower first scroll and first hub click. */
+  warmup: true
 };
 
 SITE.jobTitle = 'Security Analyst | Offensive Security';
@@ -393,20 +397,82 @@ renderAll();
     loader.classList.add('fade-out');
     setTimeout(function(){ loader.style.display = 'none'; }, 700);
   }
-  // The loading screen is a real loading window, not just decoration: the
-  // deferred GSAP bundle, the fonts and the images all arrive behind it. So
-  // dismiss when the page is genuinely ready rather than on a fixed timer -
-  // 2400ms becomes a MINIMUM so the animation is never cut off mid-beat, and
-  // the wait is only longer than that if something is actually still loading.
-  var loaderShownAt = Date.now(), MIN_SHOW = 2400;
+  // ── LOADER WARM-UP ──────────────────────────────────────────────────────
+  // The loading screen stays, by decision. What changes is that its seconds do
+  // real work instead of only counting down, so the page is genuinely ready
+  // when it lifts rather than merely allowed to appear.
+  //
+  // Two jobs, both chosen because they pay off within seconds of the loader
+  // going and neither blocks anything:
+  //
+  //   1. Decode the images just below the fold. They are loading="lazy", so the
+  //      browser fetches them late and then decodes them during the first
+  //      scroll, which is exactly when the main thread is busiest. Decoding now
+  //      moves that cost into time the visitor is already spending.
+  //   2. Prefetch the four hub pages. They are small HTML and are the most
+  //      likely first click, so the first navigation becomes instant.
+  //
+  // "Only if needed", per the brief: skipped entirely on a metered or slow
+  // connection, and skipped if the visitor asked for reduced data. Prefetch is
+  // speculative, and spending someone's mobile data on a page they may not open
+  // is not a favour.
+  function warmUp(){
+    if(!(window.SITE && SITE.features && SITE.features.warmup)) return Promise.resolve('off');
+
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(c){
+      if(c.saveData) return Promise.resolve('skipped: save-data');
+      if(/(^|-)2g$/.test(c.effectiveType || '')) return Promise.resolve('skipped: slow connection');
+    }
+
+    var jobs = [];
+
+    // 1. Decode what the first scroll will need.
+    var imgs = document.querySelectorAll('.badge-card img, .thm-card-avatar, .hero-avatar, #badges img');
+    Array.prototype.slice.call(imgs, 0, 16).forEach(function(img){
+      if(!img.decode) return;
+      // A lazy image has no bytes yet; asking for them now is the point.
+      if(img.loading === 'lazy') img.loading = 'eager';
+      jobs.push(img.decode().catch(function(){ /* a failed decode is not an error worth surfacing */ }));
+    });
+
+    // 2. Prefetch the hub pages. rel=prefetch is a hint: the browser is free to
+    //    ignore it, which is correct behaviour and needs no handling here.
+    ['badges/', 'certifications/', 'projects/', 'writeups/'].forEach(function(href){
+      var link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = href;
+      link.as = 'document';
+      document.head.appendChild(link);
+    });
+
+    return Promise.all(jobs).then(function(){ return 'done: ' + jobs.length + ' images decoded, 4 pages prefetched'; });
+  }
+
+  // The loading screen is a real loading window, not decoration: the GSAP
+  // bundle, the fonts and the images all arrive behind it, and now the warm-up
+  // runs there too. So dismissal waits on actual readiness - MIN_SHOW is only a
+  // floor so the animation is never cut off mid-beat, and WARM_CAP stops a slow
+  // warm-up from ever holding the page hostage.
+  var loaderShownAt = Date.now(), MIN_SHOW = 2400, WARM_CAP = 1200;
+  var warmDone = false;
+  var warmPromise;
+  try { warmPromise = warmUp(); } catch(e) { warmPromise = Promise.resolve('failed'); }
+  warmPromise.then(function(){ warmDone = true; }, function(){ warmDone = true; });
+  // Hard cap, so a stalled decode cannot add to the wait.
+  setTimeout(function(){ warmDone = true; }, WARM_CAP);
+
   function dismissWhenReady(){
     var waited = Date.now() - loaderShownAt;
     if(waited < MIN_SHOW){ setTimeout(dismissWhenReady, MIN_SHOW - waited); return; }
+    // Past the floor: give the warm-up the remainder of its cap, no longer.
+    if(!warmDone && waited < MIN_SHOW + WARM_CAP){ setTimeout(dismissWhenReady, 80); return; }
     dismissLoader();
   }
   if(document.readyState === 'complete'){ dismissWhenReady(); }
   else { window.addEventListener('load', dismissWhenReady); }
-  // Safety fallback — force dismiss after 5s no matter what
+  // Safety fallback — force dismiss after 5s no matter what. MIN_SHOW plus
+  // WARM_CAP is 3600ms, so this still has headroom and remains a real backstop.
   setTimeout(function(){ if(loader && loader.style.display !== 'none'){ dismissLoader(); } }, 5000);
 })();
 
