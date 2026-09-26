@@ -6,7 +6,7 @@
      is delivered as a meta tag. These pages load nothing external at all, so the policy is stricter:
      no off-origin scripts, no outbound connections.
      Note: frame-ancestors and report-uri are ignored in meta form. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://atharvak161.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <!-- Outbound links previously sent the full page URL to LinkedIn, GitHub,
      Credly and every other destination. Origin only, cross-origin. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -26,6 +26,7 @@
   <meta name="twitter:title" content="TryHackMe &mdash; Domino &mdash; Atharva Kulkarni">
   <meta name="twitter:description" content="Chaining IDOR, blind XSS session hijacking, JWT alg:none forgery, RFI to RCE, password reuse and a cron privilege escalation to root.">
   <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/writeup.css">
     <style>
     .wr-badge.hard { background: rgba(255,77,109,.1); color: var(--accent3); border: 1px solid rgba(255,77,109,.2); }
@@ -39,6 +40,39 @@
     .wr-table { width: 100%; border-collapse: collapse; margin: .8rem 0 1.5rem; font-size: .8rem; display: block; overflow-x: auto; }
   </style>
   <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<!-- GENERATED:writeup-jsonld start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Domino — TryHackMe walkthrough",
+  "name": "Domino",
+  "url": "https://atharvaxsecurity.com/writeups/domino.html",
+  "description": "Chained seven weaknesses into a root shell and all 5 flags — user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.",
+  "author": {
+    "@type": "Person",
+    "name": "Atharva Kulkarni",
+    "url": "https://atharvaxsecurity.com/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Atharva Kulkarni",
+    "url": "https://atharvaxsecurity.com/"
+  },
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "CollectionPage",
+    "name": "CTF Writeups",
+    "url": "https://atharvaxsecurity.com/writeups/"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "Penetration testing walkthrough"
+  }
+}
+</script>
+<!-- GENERATED:writeup-jsonld end -->
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>

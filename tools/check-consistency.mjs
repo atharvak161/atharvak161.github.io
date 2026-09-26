@@ -27,6 +27,11 @@ import {
   HUB_HREF,
   getRegion,
   getHasCredentialText,
+  badgeAria,
+  shareImageUrl,
+  applyShareTags,
+  applyWriteupJsonLd,
+  allPages,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -147,14 +152,74 @@ if (/\.skill-category:nth-child\(\d\)/.test(css)) {
 
 
 
-/* ── 5. Every theme accent needs its -rgb twin in BOTH themes ───────────── */
-for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
-  const m = css.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
-  if (!m) { fail.push(`Theme block ${block} not found.`); continue; }
-  const body = m[1];
-  for (const v of ['--accent', '--accent2', '--accent3', '--accent4']) {
-    if (body.includes(`${v}:`) && !body.includes(`${v}-rgb:`)) {
-      fail.push(`${block}: ${v} defined without ${v}-rgb — rgba(var(...)) tints will break.`);
+/* ── 5. Theme tokens: one file, both themes, every accent with its -rgb ──── */
+// Tokens moved out of site.css into assets/css/tokens.css. They had been
+// copy-pasted into six files and drifted, which is what produced two live
+// WCAG failures: a contrast fix landed in some copies and not the others.
+// These checks enforce the new shape so that cannot come back.
+const tokensPath = join(root, 'assets/css/tokens.css');
+if (!existsSync(tokensPath)) {
+  fail.push('assets/css/tokens.css is missing — it is the single source of truth for every theme token.');
+} else {
+  const tokens = readFileSync(tokensPath, 'utf8');
+
+  for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
+    const m = tokens.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
+    if (!m) { fail.push(`tokens.css: theme block ${block} not found.`); continue; }
+    const body = m[1];
+    for (const v of ['--accent', '--accent2', '--accent3', '--accent4']) {
+      if (body.includes(`${v}:`) && !body.includes(`${v}-rgb:`)) {
+        fail.push(`tokens.css ${block}: ${v} defined without ${v}-rgb — rgba(var(...)) tints will break.`);
+      }
+    }
+  }
+
+  // An -rgb twin that does not match its own hex is how the open-to-work banner
+  // and the green skill category kept rendering the pre-fix colour after the hex
+  // was corrected. Compare them, per theme.
+  for (const block of ['\\:root', '\\[data-theme="light"\\]']) {
+    const m = tokens.match(new RegExp(`${block}\\s*\\{([\\s\\S]*?)\\}`));
+    if (!m) continue;
+    const body = m[1];
+    for (const v of ['--accent', '--accent2', '--accent3', '--accent4', '--tier-exam', '--tier-common', '--tier-rare', '--tier-epic']) {
+      const hex = body.match(new RegExp(`${v}:\\s*#([0-9a-fA-F]{6})`));
+      const rgb = body.match(new RegExp(`${v}-rgb:\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)`));
+      if (!hex || !rgb) continue;
+      const want = [1, 3, 5].map(i => parseInt(hex[1].slice(i - 1, i + 1), 16));
+      const got = [rgb[1], rgb[2], rgb[3]].map(Number);
+      if (want.join(',') !== got.join(',')) {
+        fail.push(`tokens.css ${block}: ${v} is #${hex[1]} but ${v}-rgb is ${got.join(',')} — should be ${want.join(',')}.`);
+      }
+    }
+  }
+
+  // No page may reintroduce a local token block and start the drift again.
+  // Built from the tree rather than hardcoded, so a writeup added later is
+  // checked without anyone remembering to add it here.
+  const allPages = [
+    'index.html',
+    'badges/index.html', 'certifications/index.html',
+    'projects/index.html', 'writeups/index.html',
+    ...readdirSync(join(root, 'writeups'))
+      .filter(f => f.endsWith('.html') && f !== 'index.html')
+      .map(f => `writeups/${f}`),
+  ];
+  for (const f of allPages) {
+    const t = readFileSync(join(root, f), 'utf8');
+    if (/^[ \t]*:root[ \t]*\{/m.test(t)) {
+      fail.push(`${f} declares its own :root block — theme tokens belong only in assets/css/tokens.css.`);
+    }
+    if (!t.includes('css/tokens.css')) {
+      fail.push(`${f} does not load assets/css/tokens.css — its colours will fall back to nothing.`);
+    }
+  }
+  for (const sheet of ['assets/css/site.css', 'assets/css/hub.css', 'assets/css/writeup.css']) {
+    const t = readFileSync(join(root, sheet), 'utf8');
+    // Only a BARE selector defines tokens. `[data-theme="light"] body { ... }`
+    // and `[data-theme="light"] #net-canvas { ... }` are ordinary themed rules
+    // and must keep working, so the selector has to end at the brace.
+    if (/^[ \t]*(?::root|\[data-theme="[a-z]+"\])[ \t]*\{/m.test(t)) {
+      fail.push(`${sheet} declares theme tokens — they belong only in assets/css/tokens.css.`);
     }
   }
 }
@@ -391,7 +456,7 @@ if (siteBadges) {
       aria: (card.match(/aria-label="([^"]*)"/) || [])[1],
       cls:  (card.match(/class="badge-card ([^"]*)"/) || [])[1],
     };
-    const wantAria = b.aria || `${b.name} badge on TryHackMe`;
+    const wantAria = badgeAria(b);
     if (got.img !== b.img)                fail.push(`badge "${label}": SITE img "${b.img}" vs fallback "${got.img}"`);
     if (norm(got.name) !== norm(b.name))  fail.push(`badge "${label}": SITE name "${b.name}" vs fallback "${got.name}"`);
     if (norm(got.tag)  !== norm(b.tag))   fail.push(`badge "${label}": SITE tag "${b.tag}" vs fallback "${got.tag}"`);
@@ -529,6 +594,50 @@ if (warn.length) {
   console.log(`\n${warn.length} warning(s):`);
   warn.forEach(w => console.log(`  ! ${w}`));
 }
+/* ── Share tags: one value, every page ───────────────────────────────────────
+   The image URL used to be hand-written into eleven pages. The README named the
+   wrong file for months because of it. These checks mean a page that drifts, or
+   loses the tag entirely, fails the commit. */
+{
+  const want = shareImageUrl(SITE);
+  for (const rel of allPages(root)) {
+    const t = readFileSync(join(root, rel), 'utf8');
+    for (const [label, re] of [
+      ['og:image', /<meta\s+property="og:image"\s+content="([^"]*)"/],
+      ['twitter:image', /<meta\s+name="twitter:image"\s+content="([^"]*)"/],
+    ]) {
+      const m = t.match(re);
+      if (!m) { fail.push(`${rel}: ${label} is missing — a shared link will have no preview image.`); continue; }
+      if (m[1] !== want) fail.push(`${rel}: ${label} is "${m[1]}" but SITE.share says "${want}".`);
+    }
+    // Catch the failure mode that nearly shipped: a blank value reads as present.
+    if (/<meta\s+(?:property="og:image"|name="twitter:image")\s+content=""/.test(t)) {
+      fail.push(`${rel}: a share-image tag is present but empty.`);
+    }
+    if (applyShareTags(t, SITE) !== t) {
+      fail.push(`${rel}: share tags differ from what build-fallbacks would write. Run it and commit the result.`);
+    }
+  }
+}
+
+/* ── Every writeup carries its own generated TechArticle block ───────────── */
+for (const w of SITE.writeups) {
+  const rel = `writeups/${w.slug}.html`;
+  const t = readFileSync(join(root, rel), 'utf8');
+  if (!t.includes('application/ld+json')) {
+    fail.push(`${rel}: no JSON-LD. Run node tools/build-fallbacks.mjs.`);
+    continue;
+  }
+  if (applyWriteupJsonLd(t, w, SITE) !== t) {
+    fail.push(`${rel}: JSON-LD region is stale or hand-edited. Run node tools/build-fallbacks.mjs and commit the result.`);
+  }
+  // It is structured data; if it does not parse, it is worse than absent.
+  const m = t.match(/GENERATED:writeup-jsonld start[\s\S]*?<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
+  if (!m) { fail.push(`${rel}: generated JSON-LD markers present but no script block found.`); continue; }
+  try { JSON.parse(m[1]); }
+  catch (e) { fail.push(`${rel}: generated JSON-LD does not parse: ${e.message}`); }
+}
+
 if (fail.length) {
   console.error(`\nFAIL — ${fail.length} consistency problem(s):`);
   fail.forEach(f => console.error(`  ✗ ${f}`));

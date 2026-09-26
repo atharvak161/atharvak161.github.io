@@ -54,6 +54,9 @@ import {
   spliceBetweenMarkers,
   spliceInline,
   spliceHasCredential,
+  applyShareTags,
+  allPages,
+  applyWriteupJsonLd,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -187,3 +190,48 @@ for (const [path, next, fn] of hubResults) {
     process.exit(1);
   }
 }
+
+/* ── Share-image tags on every page, from SITE.share ────────────────────────
+   The URL used to be hand-written into all eleven pages. One value now drives
+   them, so changing the banner is one edit plus a run of this script. */
+let shareChanged = 0;
+for (const rel of allPages(root)) {
+  const abs = join(root, rel);
+  const before = readFileSync(abs, 'utf8');
+  const after = applyShareTags(before, SITE);
+  if (after !== before) {
+    writeFileSync(abs, after);
+    shareChanged++;
+    console.log(`build-fallbacks: ${rel} share tags updated.`);
+  }
+  // Idempotency: a second pass must be a no-op.
+  if (applyShareTags(after, SITE) !== after) {
+    console.error(`build-fallbacks: NOT IDEMPOTENT (share tags, ${rel}).`);
+    process.exit(1);
+  }
+}
+if (shareChanged === 0) console.log('build-fallbacks: share tags already up to date on all pages.');
+
+/* ── Per-writeup TechArticle structured data, from SITE.writeups ─────────────
+   The six writeup pages had no structured data at all. Generated from the same
+   array the cards come from, so a writeup cannot be described one way on its
+   card and another in its own JSON-LD. */
+let jsonLdChanged = 0;
+for (const w of SITE.writeups) {
+  const rel = `writeups/${w.slug}.html`;
+  const abs = join(root, rel);
+  let before;
+  try { before = readFileSync(abs, 'utf8'); }
+  catch { console.error(`build-fallbacks: SITE.writeups has "${w.slug}" but ${rel} does not exist.`); process.exit(1); }
+  const after = applyWriteupJsonLd(before, w, SITE);
+  if (after !== before) {
+    writeFileSync(abs, after);
+    jsonLdChanged++;
+    console.log(`build-fallbacks: ${rel} JSON-LD updated.`);
+  }
+  if (applyWriteupJsonLd(after, w, SITE) !== after) {
+    console.error(`build-fallbacks: NOT IDEMPOTENT (writeup JSON-LD, ${rel}).`);
+    process.exit(1);
+  }
+}
+if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already up to date.');

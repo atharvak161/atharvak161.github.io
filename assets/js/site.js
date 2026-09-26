@@ -8,11 +8,45 @@
    ══════════════════════════════════════════════════════════════════ */
 window.SITE = window.SITE || {};
 
+/* features: on/off switches for anything decorative enough that it might want
+   turning off later without unpicking code. Set a flag to false and the feature
+   does not initialise and leaves no markup showing.
+
+   clock: local London time plus an availability dot in the contact section.
+   Cost is one setInterval at 1Hz updating two text nodes, which is negligible -
+   it is not in the same class as the canvas animation. The dot's pulse is CSS
+   and is already covered by the site's prefers-reduced-motion guard. */
+SITE.features = {
+  clock: true,
+  /* warmup: do real preparation behind the loading screen instead of letting
+     those seconds only count down. See the LOADER WARM-UP block below. Turning
+     it off costs nothing but a slower first scroll and first hub click. */
+  warmup: true
+};
+
 SITE.jobTitle = 'Security Analyst | Offensive Security';
 SITE.knowsAbout = ['Penetration Testing','Ethical Hacking','Red Teaming','Network Security','Active Directory','Web Application Security','OSINT','Digital Forensics','Cryptography','Burp Suite','Nmap','Metasploit','Kali Linux','Python','SQL'];
 
 /* identity: one place for the rotating hero roles + <title> + meta description +
    OG/Twitter social tags. renderIdentity() syncs the live DOM from these. */
+/* share: the Open Graph / Twitter card image, in one place.
+
+   The URL was hand-written into all eleven pages, 22 tags in total. That is the
+   same drift risk that put the wrong filename in the README: it named
+   thumbnail.png as the og:image when every page has always pointed at
+   thumbnail.jpg. Changing the banner used to mean editing eleven files and
+   getting all of them right.
+
+   `node tools/build-fallbacks.mjs` writes these values into every page, and
+   check-consistency.mjs fails the commit if any page disagrees. Change the
+   banner here, run the generator, and all eleven follow. */
+SITE.share = {
+  base:   'https://atharvaxsecurity.com/',
+  image:  'thumbnail.jpg',
+  width:  1200,
+  height: 627
+};
+
 SITE.identity = {
   roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
   title: 'Atharva Kulkarni — Junior Penetration Tester | Offensive Security | CEH V12 | MSc Applied Cyber Security',
@@ -237,7 +271,11 @@ function renderBadges(){
   if(!grid) return;
   grid.innerHTML = SITE.badges.filter(function(b){ return b.featured; }).map(function(b, i){
     var href = b.href || SITE.thmShare(b.slug);
-    var aria = b.aria || (b.name + ' badge on TryHackMe');
+    // Mirrors badgeAria() in tools/ssot.mjs, which is the definition; this file
+    // is a plain script and cannot import it. check-consistency.mjs compares the
+    // two, so a drift between them fails the build rather than shipping.
+    var ariaBase = b.aria || (b.name + ' badge on TryHackMe');
+    var aria = [ariaBase, b.tag, b.desc].filter(Boolean).join(' \u2014 ');
     // Escaped for the same reason as the Node renderer in tools/ssot.mjs:
   // these land inside a class attribute and must not be able to break out.
   var cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
@@ -359,20 +397,82 @@ renderAll();
     loader.classList.add('fade-out');
     setTimeout(function(){ loader.style.display = 'none'; }, 700);
   }
-  // The loading screen is a real loading window, not just decoration: the
-  // deferred GSAP bundle, the fonts and the images all arrive behind it. So
-  // dismiss when the page is genuinely ready rather than on a fixed timer -
-  // 2400ms becomes a MINIMUM so the animation is never cut off mid-beat, and
-  // the wait is only longer than that if something is actually still loading.
-  var loaderShownAt = Date.now(), MIN_SHOW = 2400;
+  // ── LOADER WARM-UP ──────────────────────────────────────────────────────
+  // The loading screen stays, by decision. What changes is that its seconds do
+  // real work instead of only counting down, so the page is genuinely ready
+  // when it lifts rather than merely allowed to appear.
+  //
+  // Two jobs, both chosen because they pay off within seconds of the loader
+  // going and neither blocks anything:
+  //
+  //   1. Decode the images just below the fold. They are loading="lazy", so the
+  //      browser fetches them late and then decodes them during the first
+  //      scroll, which is exactly when the main thread is busiest. Decoding now
+  //      moves that cost into time the visitor is already spending.
+  //   2. Prefetch the four hub pages. They are small HTML and are the most
+  //      likely first click, so the first navigation becomes instant.
+  //
+  // "Only if needed", per the brief: skipped entirely on a metered or slow
+  // connection, and skipped if the visitor asked for reduced data. Prefetch is
+  // speculative, and spending someone's mobile data on a page they may not open
+  // is not a favour.
+  function warmUp(){
+    if(!(window.SITE && SITE.features && SITE.features.warmup)) return Promise.resolve('off');
+
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(c){
+      if(c.saveData) return Promise.resolve('skipped: save-data');
+      if(/(^|-)2g$/.test(c.effectiveType || '')) return Promise.resolve('skipped: slow connection');
+    }
+
+    var jobs = [];
+
+    // 1. Decode what the first scroll will need.
+    var imgs = document.querySelectorAll('.badge-card img, .thm-card-avatar, .hero-avatar, #badges img');
+    Array.prototype.slice.call(imgs, 0, 16).forEach(function(img){
+      if(!img.decode) return;
+      // A lazy image has no bytes yet; asking for them now is the point.
+      if(img.loading === 'lazy') img.loading = 'eager';
+      jobs.push(img.decode().catch(function(){ /* a failed decode is not an error worth surfacing */ }));
+    });
+
+    // 2. Prefetch the hub pages. rel=prefetch is a hint: the browser is free to
+    //    ignore it, which is correct behaviour and needs no handling here.
+    ['badges/', 'certifications/', 'projects/', 'writeups/'].forEach(function(href){
+      var link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = href;
+      link.as = 'document';
+      document.head.appendChild(link);
+    });
+
+    return Promise.all(jobs).then(function(){ return 'done: ' + jobs.length + ' images decoded, 4 pages prefetched'; });
+  }
+
+  // The loading screen is a real loading window, not decoration: the GSAP
+  // bundle, the fonts and the images all arrive behind it, and now the warm-up
+  // runs there too. So dismissal waits on actual readiness - MIN_SHOW is only a
+  // floor so the animation is never cut off mid-beat, and WARM_CAP stops a slow
+  // warm-up from ever holding the page hostage.
+  var loaderShownAt = Date.now(), MIN_SHOW = 2400, WARM_CAP = 1200;
+  var warmDone = false;
+  var warmPromise;
+  try { warmPromise = warmUp(); } catch(e) { warmPromise = Promise.resolve('failed'); }
+  warmPromise.then(function(){ warmDone = true; }, function(){ warmDone = true; });
+  // Hard cap, so a stalled decode cannot add to the wait.
+  setTimeout(function(){ warmDone = true; }, WARM_CAP);
+
   function dismissWhenReady(){
     var waited = Date.now() - loaderShownAt;
     if(waited < MIN_SHOW){ setTimeout(dismissWhenReady, MIN_SHOW - waited); return; }
+    // Past the floor: give the warm-up the remainder of its cap, no longer.
+    if(!warmDone && waited < MIN_SHOW + WARM_CAP){ setTimeout(dismissWhenReady, 80); return; }
     dismissLoader();
   }
   if(document.readyState === 'complete'){ dismissWhenReady(); }
   else { window.addEventListener('load', dismissWhenReady); }
-  // Safety fallback — force dismiss after 5s no matter what
+  // Safety fallback — force dismiss after 5s no matter what. MIN_SHOW plus
+  // WARM_CAP is 3600ms, so this still has headroom and remains a real backstop.
   setTimeout(function(){ if(loader && loader.style.display !== 'none'){ dismissLoader(); } }, 5000);
 })();
 
@@ -387,12 +487,26 @@ function updateProgress(){
 
 // ── SCROLL REVEAL + NAVBAR ────────────────────────────────
 var navbar = document.getElementById('navbar');
-window.addEventListener('scroll', function(){
-  navbar.classList.toggle('scrolled', window.scrollY > 50);
-  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+// Coalesced into one requestAnimationFrame. Previously all four jobs ran on
+// every scroll event, and updateActiveNav() does a querySelectorAll per call,
+// so a fast scroll did far more layout reads than there are frames to paint.
+// One flag means at most one pass per frame no matter how many events fire.
+var scrollQueued = false;
+function onScrollFrame(){
+  scrollQueued = false;
+  var y = window.scrollY;
+  navbar.classList.toggle('scrolled', y > 50);
+  document.getElementById('backToTop').classList.toggle('visible', y > 400);
   updateProgress();
   updateActiveNav();
-});
+}
+window.addEventListener('scroll', function(){
+  if(scrollQueued) return;
+  scrollQueued = true;
+  requestAnimationFrame(onScrollFrame);
+}, { passive: true });
+// Run once at load so a page restored mid-scroll is correct before any event.
+onScrollFrame();
 
 // ── ACTIVE NAV HIGHLIGHT ──────────────────────────────────
 function updateActiveNav(){
@@ -830,14 +944,29 @@ termInput.addEventListener('keydown', function(e){
   if(cmd === 'exit'){ termPrint([{t:'t-out',v:'Goodbye.'}]); setTimeout(closeTerminal, 600); return; }
   if(cmd.indexOf('goto ') === 0 || cmd.indexOf('cd ') === 0){
     var target = cmd.slice(cmd.indexOf(' ') + 1).trim();
-    var sectionMap = {
-      about:'about', skills:'skills', experience:'experience', exp:'experience',
-      projects:'projects', writeups: 'writeups', education:'education', edu:'education',
-      certifications:'certifications', certs:'certifications', cert:'certifications',
-      badges:'badges', badge:'badges',
-      learning:'learning', testimonials:'testimonials', reviews:'testimonials',
-      cv:'cv', resume:'cv', contact:'contact'
+    // Derived from the nav, exactly as updateActiveNav() does, so a new section
+    // works in `goto` the moment it has a nav link. This was a hardcoded
+    // 17-entry literal while the nav highlighter was already derived, so the
+    // next section added would have highlighted correctly in the nav and
+    // returned "section not found" here.
+    var sectionMap = {};
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.nav-links a[href^="#"]'),
+      function(a){
+        var id = a.getAttribute('href').slice(1);
+        if(id && document.getElementById(id)) sectionMap[id] = id;
+      }
+    );
+    // Aliases only. These are shorthands a person might type, not sections, so
+    // they stay a literal - but each resolves to a real id above, and one that
+    // no longer exists simply drops out.
+    var ALIASES = {
+      exp:'experience', edu:'education', certs:'certifications',
+      cert:'certifications', badge:'badges', reviews:'testimonials', resume:'cv'
     };
+    Object.keys(ALIASES).forEach(function(k){
+      if(sectionMap[ALIASES[k]]) sectionMap[k] = ALIASES[k];
+    });
     var id = sectionMap[target];
     if(id){
       termPrint([{t:'t-green', v:'> navigating to ' + target + '...'}]);
@@ -1079,6 +1208,132 @@ function printCV() {
   var p = ['077','68','839','871'].join('');
   var el = document.getElementById('phone-link');
   if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
+  // The copy button gets its value from the same place, so the number is still
+  // assembled in one spot rather than typed into the markup a second time.
+  var cp = document.getElementById('phone-copy');
+  if(cp) cp.setAttribute('data-copy', p.slice(0,5)+' '+p.slice(5));
+})();
+
+// ── LOCAL TIME + AVAILABILITY ─────────────────────────────
+// Gated on SITE.features.clock. Times are formatted in Europe/London
+// explicitly, so a visitor in another timezone sees Atharva's clock rather
+// than their own - which is the only reason to show it at all.
+(function(){
+  var host = document.getElementById('localNow');
+  if(!host) return;
+  if(!(window.SITE && SITE.features && SITE.features.clock)) return;  // flag off: stays hidden
+
+  var timeEl  = document.getElementById('nowTime');
+  var availEl = document.getElementById('nowAvail');
+  var dotEl   = document.getElementById('nowDot');
+
+  var fmt;
+  try {
+    fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  } catch(e) {
+    return;  // no Intl timezone support: leave it hidden rather than show the wrong clock
+  }
+
+  // Parts, so the hour is read from the London value and not the local one.
+  function londonParts(){
+    var p = {};
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', hour: 'numeric', weekday: 'short', hour12: false
+    }).formatToParts(new Date()).forEach(function(x){ p[x.type] = x.value; });
+    return { hour: parseInt(p.hour, 10), weekday: p.weekday };
+  }
+
+  function tick(){
+    var now = new Date();
+    timeEl.textContent = fmt.format(now);
+    timeEl.setAttribute('datetime', now.toISOString());
+
+    var p = londonParts();
+    var weekend = (p.weekday === 'Sat' || p.weekday === 'Sun');
+    var working = !weekend && p.hour >= 9 && p.hour < 21;
+
+    availEl.textContent = working ? 'usually replies today' : 'away, replies next working day';
+    availEl.classList.toggle('off', !working);
+    dotEl.classList.toggle('off', !working);
+  }
+
+  tick();
+  host.hidden = false;
+  setInterval(tick, 1000);
+})();
+
+// ── COPY BUTTONS ──────────────────────────────────────────
+// One handler for all four contacts. Each button carries its own value in
+// data-copy, so adding a fifth contact needs no JavaScript change.
+(function(){
+  var buttons = document.querySelectorAll('.copy-btn');
+  if(!buttons.length) return;
+
+  var status = document.getElementById('copyStatus');
+  var resetTimer = null;
+
+  // Without a clipboard API there is nothing useful the button can do, so hide
+  // it rather than leave a control that silently fails. The address is still
+  // selectable text beside it either way.
+  var canCopy = !!(navigator.clipboard && navigator.clipboard.writeText) || document.queryCommandSupported;
+  if(!canCopy){
+    Array.prototype.forEach.call(buttons, function(b){ b.hidden = true; });
+    return;
+  }
+
+  function say(msg){
+    if(!status) return;
+    status.textContent = msg;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function(){ status.textContent = ''; }, 2600);
+  }
+
+  function mark(btn){
+    Array.prototype.forEach.call(buttons, function(b){ b.classList.remove('copied'); });
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.classList.remove('copied'); }, 2000);
+  }
+
+  // Fallback for browsers without navigator.clipboard, and for the non-secure
+  // contexts where it is undefined even in browsers that have it.
+  function legacyCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  Array.prototype.forEach.call(buttons, function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.getAttribute('data-copy');
+      var label = btn.getAttribute('data-label') || 'Value';
+      if(!text){ say(label + ' is not available yet.'); return; }
+
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          mark(btn); say(label + ' copied.');
+        }, function(){
+          // Permission refused or a non-secure context; try the old way before
+          // telling the visitor it failed.
+          if(legacyCopy(text)){ mark(btn); say(label + ' copied.'); }
+          else { say('Could not copy. Select the text instead.'); }
+        });
+      } else if(legacyCopy(text)){
+        mark(btn); say(label + ' copied.');
+      } else {
+        say('Could not copy. Select the text instead.');
+      }
+    });
+  });
 })();
 
 // ── SECTION-TITLE DECRYPT SCRAMBLE + FLICKER (staggered, repeating) ──

@@ -12,41 +12,9 @@
   @font-face{font-family:'Rajdhani';font-style:normal;font-weight:600;font-display:swap;src:url('../fonts/rajdhani-600.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
   @font-face{font-family:'Rajdhani';font-style:normal;font-weight:700;font-display:swap;src:url('../fonts/rajdhani-700.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
   @font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/share-tech-mono-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-  /* ── THEME VARIABLES ─────────────────────────────────────── */
-  :root {
-    --bg: #080b10; --bg2: #0d1117; --surface: #141c26;
-    --border: #1e2d3d; --accent: #00d4ff; --accent-rgb: 0,212,255; --accent2: #00ff9d; --accent2-rgb: 0,255,157;
-    --accent3: #ff4d6d; --accent3-rgb: 255,77,109; --accent4: #f5a623; --accent4-rgb: 245,166,35;
-    /* thm-green: was a hardcoded lime in five .thm-* rules, so it never adapted
-       for light theme, where it measured 1.44:1 on white. Dark value unchanged,
-       so dark theme renders exactly as before. */
-    --thm-green: #a2ea2a;
-    /* danger: form-notice error text. --accent3 light is #e03050 = 4.46:1 on
-       white, just under AA. A separate token fixes the text without shifting
-       --accent3, which also paints the glitch layer and the red skill category. */
-    --danger: #ff4d6d;
-    --text: #e8edf2; --text2: #8899aa; --text3: #758697; --surface-2: #141a24;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-mono: 'Share Tech Mono', monospace;
-    /* Badge rarity-tier tokens — dark values match the original hardcoded colours exactly. */
-    --tier-exam: #3ecf8e; --tier-exam-rgb: 62,207,142;
-    --tier-common: #8fd6a6; --tier-common-rgb: 143,214,166;
-    --tier-rare: #f5a623; --tier-rare-rgb: 245,166,35;
-    --tier-epic: #d7a1ff; --tier-epic-rgb: 215,161,255;
-  }
-  [data-theme="light"] {
-    --bg: #f0f4f8; --bg2: #e2e8f0; --surface: #ffffff;
-    --border: #cbd5e1; --accent: #0077aa; --accent-rgb: 0,119,170; --accent2: #00704a; --accent2-rgb: 0,135,90;
-    --accent3: #e03050; --accent3-rgb: 224,48,80; --accent4: #b8730f; --accent4-rgb: 184,115,15;
-    --thm-green: #4e7a08;  /* 5.11:1 on white, was 1.44:1 */
-    --danger: #c92645;     /* 5.46:1 on white, was 4.46:1 */
-    --text: #0f172a; --text2: #475569; --text3: #5b6b7f; --surface-2: #ffffff;
-    /* Same hue/saturation as dark, lightness lowered to clear 4.5:1 on a white card. */
-    --tier-exam: #1d764f; --tier-exam-rgb: 29,118,79;
-    --tier-common: #2c7844; --tier-common-rgb: 44,120,68;
-    --tier-rare: #905d07; --tier-rare-rgb: 144,93,7;
-    --tier-epic: #8e00f8; --tier-epic-rgb: 142,0,248;
-  }
+  /* Theme tokens now live in assets/css/tokens.css, loaded before this
+     file on every page. They were duplicated across six files and drifted;
+     see that file for what the drift cost. */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.7; overflow-x: hidden; transition: background .3s, color .3s; }
@@ -167,8 +135,6 @@
   .loader-lines { width: min(480px, 90vw); }
   .loader-line { font-size: .78rem; color: #8899aa; margin-bottom: .4rem; opacity: 0; transform: translateX(-8px); transition: opacity .3s, transform .3s; }
   .loader-line.show { opacity: 1; transform: translateX(0); }
-  .loader-line .ok { color: #00ff9d; }
-  .loader-line .warn { color: #f5a623; }
   .loader-bar-wrap { margin-top: 1.5rem; width: min(480px, 90vw); height: 2px; background: #1e2d3d; border-radius: 2px; overflow: hidden; }
   .loader-bar { height: 100%; width: 0; background: linear-gradient(90deg, #00d4ff, #00ff9d); transition: width .1s linear; }
 
@@ -220,9 +186,9 @@
   @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
-  nav.scrolled { padding: .7rem 3rem; box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
+  nav.scrolled { padding: .7rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
@@ -237,6 +203,12 @@
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
   /* ── HERO ────────────────────────────────────────────────── */
+  /* No width cap here on purpose. #hero is a <section>, so the `section` rule
+     below already gives it max-width:var(--page-max) and margin:0 auto - it was
+     never the element that stranded on a wide screen. Adding a padding-inline
+     cap here computed 680px a side against the 2560px parent, which blew past
+     the 1200px max-width and crushed the content to zero. The nav is the one
+     that genuinely had no cap. */
   #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
@@ -270,9 +242,6 @@
 
   /* ── PLATFORM BADGES ─────────────────────────────────────── */
   .platform-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeSlideUp .7s .8s ease both; opacity: 1; }
-  .platform-badge { display: flex; align-items: center; gap: .6rem; padding: .5rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; text-decoration: none; transition: all .25s; }
-  .platform-badge:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
-  .platform-badge img { width: 20px; height: 20px; object-fit: contain; }
   /* right-hand column: TryHackMe + GitHub stacked beside the LinkedIn card */
   .platform-col { display: flex; flex-direction: column; gap: 1rem; align-self: flex-start; }
   /* TryHackMe anchor — unboxed: no surface, no border, no padding, no hover box */
@@ -308,7 +277,7 @@
   @keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
   /* ── SECTIONS ────────────────────────────────────────────── */
-  section { position: relative; z-index: 2; padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  section { position: relative; z-index: 2; padding: 6rem 3rem; max-width: var(--page-max); margin: 0 auto; }
   .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
   .section-num { font-size: .72rem; color: var(--accent); letter-spacing: .2em; font-weight: 700; }
   h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
@@ -594,7 +563,6 @@
   @media(max-width:600px){.certs-grid{grid-template-columns:1fr}}
 
   /* ── BADGES ─────────────────────────────────────────────── */
-  .badges-intro{color:var(--text-dim);margin:0 0 1.5rem;font-size:.95rem}
   .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
   .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
   .badge-card:hover{transform:translateY(-4px)}
@@ -605,7 +573,7 @@
   .badge-card.exam .badge-tag{color:var(--accent);border-color:rgba(0,212,255,.4)}
   .badge-card.epic{border-color:rgba(199,146,234,.4)}
   .badge-card.epic .badge-tag{color:#c792ea;border-color:rgba(199,146,234,.45)}
-  /* Rarity-tier tag colours — theme tokens (see :root / [data-theme="light"]) so light mode
+  /* Rarity-tier tag colours — theme tokens (see assets/css/tokens.css) so light mode
      meets 4.5:1 contrast instead of inheriting the dark-only literals. */
   .badge-card.t-exam .badge-tag{color:var(--tier-exam);border-color:rgba(var(--tier-exam-rgb),.45);background:rgba(var(--tier-exam-rgb),.08)}
   .badge-card.t-common .badge-tag{color:var(--tier-common);border-color:rgba(var(--tier-common-rgb),.35);background:rgba(var(--tier-common-rgb),.06)}
@@ -659,14 +627,49 @@
   }
   /* ── CONTACT ─────────────────────────────────────────────── */
   #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(var(--accent-rgb),.03))}
-  .contact-inner{max-width:1200px;margin:0 auto}
+  .contact-inner{max-width:var(--page-max);margin:0 auto}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;column-gap:4rem;row-gap:0;align-items:start}
   .contact-info h3{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:1rem;letter-spacing:.08em;text-transform:uppercase}
   .contact-info h3 span{color:var(--accent)}
   .contact-info p{font-size:.85rem;color:var(--text2);line-height:1.8;margin-bottom:2rem;max-width:380px}
+  /* Local time and availability. Starts [hidden] in the markup and is only
+     revealed if SITE.features.clock is on, so turning the feature off leaves no
+     empty row behind. */
+  .local-now{display:flex;align-items:center;gap:.5rem;margin:.9rem 0 0;font-family:var(--font-mono);
+    font-size:.72rem;color:var(--text3);letter-spacing:.04em}
+  .now-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex:none;
+    box-shadow:0 0 0 0 rgba(var(--accent2-rgb),.55);animation:nowPulse 2.4s ease-out infinite}
+  .now-dot.off{background:var(--text3);animation:none;box-shadow:none}
+  @keyframes nowPulse{
+    0%{box-shadow:0 0 0 0 rgba(var(--accent2-rgb),.5)}
+    70%{box-shadow:0 0 0 7px rgba(var(--accent2-rgb),0)}
+    100%{box-shadow:0 0 0 0 rgba(var(--accent2-rgb),0)}
+  }
+  .now-label{color:var(--text3)}
+  .now-time{color:var(--text2);font-variant-numeric:tabular-nums}
+  .now-avail{color:var(--accent2)}
+  .now-avail.off{color:var(--text3)}
   .contact-links{display:flex;flex-direction:column;gap:.8rem}
   .contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text2);padding:.9rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s;font-size:.82rem}
   .contact-link:hover{border-color:var(--accent);color:var(--text);transform:translateX(4px)}
+  /* A row so the copy button can be a sibling of the link rather than inside
+     it - a <button> nested in an <a> is invalid and swallows the click. The
+     link still takes all the spare width, so the layout is unchanged when the
+     button is hidden (no clipboard support). */
+  .contact-row{display:flex;align-items:stretch;gap:.5rem}
+  .contact-row > .contact-link{flex:1 1 auto;min-width:0}
+  .copy-btn{flex:none;display:flex;align-items:center;justify-content:center;width:44px;
+    background:var(--surface);border:1px solid var(--border);border-radius:3px;color:var(--text3);
+    cursor:pointer;transition:border-color .25s,color .25s,background .25s;font-family:var(--font-mono)}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .copy-btn.copied{border-color:var(--accent2);color:var(--accent2);background:rgba(var(--accent2-rgb),.08)}
+  .copy-icon{font-size:.95rem;line-height:1}
+  /* Visible label for assistive tech only. The icon alone would leave the
+     button unnamed, and four identically-named buttons would be useless. */
+  .copy-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+  .copy-status{font-size:.7rem;color:var(--accent2);min-height:1em;margin:.1rem 0 0;font-family:var(--font-mono)}
   .contact-link-icon{width:32px;height:32px;border-radius:4px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
   /* The form is a sibling of .contact-info, not of .contact-links, so it has
      no structural way to align with the email tile. This offset is the
@@ -702,7 +705,7 @@
   .form-notice{font-size:.7rem;color:var(--text3);margin-top:-.3rem}
 
   /* ── FOOTER ──────────────────────────────────────────────── */
-  footer{position:relative;z-index:2;text-align:center;padding:2rem 3rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
+  footer{position:relative;z-index:2;text-align:center;padding:2rem 3rem;padding-inline: max(3rem, calc((100% - var(--page-max)) / 2));border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
   footer span{color:var(--accent)}
 
   /* ── BACK TO TOP ─────────────────────────────────────────── */

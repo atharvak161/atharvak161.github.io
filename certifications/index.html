@@ -6,7 +6,7 @@
      is delivered as a meta tag. These pages load nothing external at all, so the policy is stricter:
      no off-origin scripts, no outbound connections.
      Note: frame-ancestors and report-uri are ignored in meta form. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://atharvak161.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <!-- Outbound links previously sent the full page URL to LinkedIn, GitHub,
      Credly and every other destination. Origin only, cross-origin. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -28,16 +28,14 @@
   <meta name="twitter:title" content="Certifications &mdash; Atharva Kulkarni">
   <meta name="twitter:description" content="All certifications held and in progress by Atharva Kulkarni.">
   <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/hub.css">
     <style>
     /* Self-hosted: previously pulled from fonts.googleapis.com, a
        render-blocking third-party request. Both families are OFL licensed
        and now come from our own origin. */
     @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:400;font-display:swap;src:url('../assets/fonts/barlow-condensed-400.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-    :root{--bg:#080b10;--bg2:#0d1117;--surface:#141c26;--border:#1e2d3d;--accent:#00d4ff; --accent-strong: #00d4ff;--accent2:#00ff9d;--text:#e8edf2;--text2:#8899aa;--text3:#758697;
-      --font-display:'Barlow Condensed',sans-serif;--font-mono:'Share Tech Mono',monospace}
-    [data-theme="light"]{--bg:#f0f4f8;--bg2:#e2e8f0;--surface:#ffffff;--border:#cbd5e1;--accent:#0077aa; --accent-strong: #006699;--accent2:#00875a;--text:#0f172a;--text2:#475569;--text3:#5b6b7f}
-    /* ── Cert cards — copied from index.html's #certifications styles, unchanged. ── */
+            /* ── Cert cards — copied from index.html's #certifications styles, unchanged. ── */
     .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
     .cert-card{position:relative;display:flex;flex-direction:column;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.8rem;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
     .cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cert-accent,var(--accent))}
@@ -66,6 +64,7 @@
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
   </style>
   <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>

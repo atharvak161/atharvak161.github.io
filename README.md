@@ -168,6 +168,32 @@ root on purpose.
 it any more. This file used to name it as the og:image, which was wrong. Before
 moving it, check whether an old shared post still hotlinks it.
 
+## Vendored JavaScript
+
+GSAP and its ScrambleTextPlugin are vendored in `assets/vendor/`, not loaded
+from a CDN. That removes a third-party origin the hero animation would die
+without, and removes it as a supply-chain vector. The cost is that nothing
+tells you which version is sitting there, so a GSAP security fix would never
+arrive. Hence this table.
+
+| File | Version | SHA-256 |
+|---|---|---|
+| `assets/vendor/gsap.min.js` | 3.13.0 | `96c01b81f44a3290e2b4532f55e2c9534b2adc43273a19f3756b2cb41f0fd0b6` |
+| `assets/vendor/ScrambleTextPlugin.min.js` | 3.13.0 | `e9ce04a07d932d8506f21a0db0e394ce526f69b9f1a93c70b64de3b823daa452` |
+
+To refresh: download the new minified builds from gsap.com, replace both
+files, re-hash with `shasum -a 256 assets/vendor/*.js`, and update this table
+in the same commit. Check both files together; the plugin is version-locked to
+the core.
+
+Licensing, recorded so it is not re-derived: 3.13 is the release where the
+formerly Club-only bonus plugins, ScrambleTextPlugin among them, became free
+under the standard licence. Vendoring both is fine.
+
+`runScramble()` in `assets/js/site.js` already degrades gracefully if GSAP is
+absent (`if(!window.gsap){done();return}`), so a failed or removed vendor file
+costs the effect, not the page.
+
 ## Asset conventions
 
 **All badge art lives in `assets/badges/thm/`.** Every badge on the site is a
