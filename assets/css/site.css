@@ -203,7 +203,13 @@
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
 
   /* ── HERO ────────────────────────────────────────────────── */
-  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); overflow: hidden; z-index: 2; }
+  /* No width cap here on purpose. #hero is a <section>, so the `section` rule
+     below already gives it max-width:var(--page-max) and margin:0 auto - it was
+     never the element that stranded on a wide screen. Adding a padding-inline
+     cap here computed 680px a side against the 2560px parent, which blew past
+     the 1200px max-width and crushed the content to zero. The nav is the one
+     that genuinely had no cap. */
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
   @keyframes pulseGlow { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7} }
