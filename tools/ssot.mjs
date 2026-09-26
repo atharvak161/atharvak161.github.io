@@ -170,10 +170,24 @@ export function withBase(path, basePath) {
   return basePath + path;
 }
 
+/* One definition of a badge's accessible name, used by the static generator,
+   the checker, and mirrored in assets/js/site.js.
+
+   aria-label replaces EVERY bit of text inside the link, so the visible
+   .badge-tag and .badge-desc were never announced: sighted visitors got the
+   rarity and the description, screen reader users got neither. Folding them in
+   here keeps the two audiences level.
+
+   It lived in three places before, which is why changing it broke the checker. */
+export function badgeAria(b) {
+  const base = b.aria || (b.name + ' badge on TryHackMe');
+  return [base, b.tag, b.desc].filter(Boolean).join(' \u2014 ');
+}
+
 export function badgeCardHTML(b, i, thmShare, basePath) {
   const rawHref = b.href || thmShare(b.slug);
   const href = withBase(rawHref, basePath);
-  const aria = b.aria || (b.name + ' badge on TryHackMe');
+  const aria = badgeAria(b);
   // tier and cls2 land inside a class attribute, so they need escaping like
   // every other interpolated value - a quote in either breaks out of the
   // attribute. Nobody but Atharva writes SITE.badges, but an unescaped

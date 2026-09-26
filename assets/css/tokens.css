@@ -66,6 +66,14 @@
   /* type */
   --font-display: 'Barlow Condensed', sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
+
+  /* layout: the content column width, shared by the nav, the hero, every
+     section, the contact block, the footer and the hub pages. It was the
+     literal 1200px repeated in four stylesheets; the hero and the nav had no
+     cap at all, which is why on an ultrawide monitor the name pinned to the
+     far left and the badge cards to the far right with a void between them,
+     while the sections below sat in a tidy 1200px column. */
+  --page-max: 1200px;
 }
 
 [data-theme="light"] {

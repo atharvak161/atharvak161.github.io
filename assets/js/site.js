@@ -8,6 +8,18 @@
    ══════════════════════════════════════════════════════════════════ */
 window.SITE = window.SITE || {};
 
+/* features: on/off switches for anything decorative enough that it might want
+   turning off later without unpicking code. Set a flag to false and the feature
+   does not initialise and leaves no markup showing.
+
+   clock: local London time plus an availability dot in the contact section.
+   Cost is one setInterval at 1Hz updating two text nodes, which is negligible -
+   it is not in the same class as the canvas animation. The dot's pulse is CSS
+   and is already covered by the site's prefers-reduced-motion guard. */
+SITE.features = {
+  clock: true
+};
+
 SITE.jobTitle = 'Security Analyst | Offensive Security';
 SITE.knowsAbout = ['Penetration Testing','Ethical Hacking','Red Teaming','Network Security','Active Directory','Web Application Security','OSINT','Digital Forensics','Cryptography','Burp Suite','Nmap','Metasploit','Kali Linux','Python','SQL'];
 
@@ -237,7 +249,11 @@ function renderBadges(){
   if(!grid) return;
   grid.innerHTML = SITE.badges.filter(function(b){ return b.featured; }).map(function(b, i){
     var href = b.href || SITE.thmShare(b.slug);
-    var aria = b.aria || (b.name + ' badge on TryHackMe');
+    // Mirrors badgeAria() in tools/ssot.mjs, which is the definition; this file
+    // is a plain script and cannot import it. check-consistency.mjs compares the
+    // two, so a drift between them fails the build rather than shipping.
+    var ariaBase = b.aria || (b.name + ' badge on TryHackMe');
+    var aria = [ariaBase, b.tag, b.desc].filter(Boolean).join(' \u2014 ');
     // Escaped for the same reason as the Node renderer in tools/ssot.mjs:
   // these land inside a class attribute and must not be able to break out.
   var cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
@@ -1108,6 +1124,132 @@ function printCV() {
   var p = ['077','68','839','871'].join('');
   var el = document.getElementById('phone-link');
   if(el){ el.href='tel:'+p; document.getElementById('phone-display').textContent=p.slice(0,5)+' '+p.slice(5); }
+  // The copy button gets its value from the same place, so the number is still
+  // assembled in one spot rather than typed into the markup a second time.
+  var cp = document.getElementById('phone-copy');
+  if(cp) cp.setAttribute('data-copy', p.slice(0,5)+' '+p.slice(5));
+})();
+
+// ── LOCAL TIME + AVAILABILITY ─────────────────────────────
+// Gated on SITE.features.clock. Times are formatted in Europe/London
+// explicitly, so a visitor in another timezone sees Atharva's clock rather
+// than their own - which is the only reason to show it at all.
+(function(){
+  var host = document.getElementById('localNow');
+  if(!host) return;
+  if(!(window.SITE && SITE.features && SITE.features.clock)) return;  // flag off: stays hidden
+
+  var timeEl  = document.getElementById('nowTime');
+  var availEl = document.getElementById('nowAvail');
+  var dotEl   = document.getElementById('nowDot');
+
+  var fmt;
+  try {
+    fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  } catch(e) {
+    return;  // no Intl timezone support: leave it hidden rather than show the wrong clock
+  }
+
+  // Parts, so the hour is read from the London value and not the local one.
+  function londonParts(){
+    var p = {};
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', hour: 'numeric', weekday: 'short', hour12: false
+    }).formatToParts(new Date()).forEach(function(x){ p[x.type] = x.value; });
+    return { hour: parseInt(p.hour, 10), weekday: p.weekday };
+  }
+
+  function tick(){
+    var now = new Date();
+    timeEl.textContent = fmt.format(now);
+    timeEl.setAttribute('datetime', now.toISOString());
+
+    var p = londonParts();
+    var weekend = (p.weekday === 'Sat' || p.weekday === 'Sun');
+    var working = !weekend && p.hour >= 9 && p.hour < 21;
+
+    availEl.textContent = working ? 'usually replies today' : 'away, replies next working day';
+    availEl.classList.toggle('off', !working);
+    dotEl.classList.toggle('off', !working);
+  }
+
+  tick();
+  host.hidden = false;
+  setInterval(tick, 1000);
+})();
+
+// ── COPY BUTTONS ──────────────────────────────────────────
+// One handler for all four contacts. Each button carries its own value in
+// data-copy, so adding a fifth contact needs no JavaScript change.
+(function(){
+  var buttons = document.querySelectorAll('.copy-btn');
+  if(!buttons.length) return;
+
+  var status = document.getElementById('copyStatus');
+  var resetTimer = null;
+
+  // Without a clipboard API there is nothing useful the button can do, so hide
+  // it rather than leave a control that silently fails. The address is still
+  // selectable text beside it either way.
+  var canCopy = !!(navigator.clipboard && navigator.clipboard.writeText) || document.queryCommandSupported;
+  if(!canCopy){
+    Array.prototype.forEach.call(buttons, function(b){ b.hidden = true; });
+    return;
+  }
+
+  function say(msg){
+    if(!status) return;
+    status.textContent = msg;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function(){ status.textContent = ''; }, 2600);
+  }
+
+  function mark(btn){
+    Array.prototype.forEach.call(buttons, function(b){ b.classList.remove('copied'); });
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.classList.remove('copied'); }, 2000);
+  }
+
+  // Fallback for browsers without navigator.clipboard, and for the non-secure
+  // contexts where it is undefined even in browsers that have it.
+  function legacyCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  Array.prototype.forEach.call(buttons, function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.getAttribute('data-copy');
+      var label = btn.getAttribute('data-label') || 'Value';
+      if(!text){ say(label + ' is not available yet.'); return; }
+
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          mark(btn); say(label + ' copied.');
+        }, function(){
+          // Permission refused or a non-secure context; try the old way before
+          // telling the visitor it failed.
+          if(legacyCopy(text)){ mark(btn); say(label + ' copied.'); }
+          else { say('Could not copy. Select the text instead.'); }
+        });
+      } else if(legacyCopy(text)){
+        mark(btn); say(label + ' copied.');
+      } else {
+        say('Could not copy. Select the text instead.');
+      }
+    });
+  });
 })();
 
 // ── SECTION-TITLE DECRYPT SCRAMBLE + FLICKER (staggered, repeating) ──

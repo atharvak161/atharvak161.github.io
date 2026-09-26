@@ -27,6 +27,7 @@ import {
   HUB_HREF,
   getRegion,
   getHasCredentialText,
+  badgeAria,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -451,7 +452,7 @@ if (siteBadges) {
       aria: (card.match(/aria-label="([^"]*)"/) || [])[1],
       cls:  (card.match(/class="badge-card ([^"]*)"/) || [])[1],
     };
-    const wantAria = b.aria || `${b.name} badge on TryHackMe`;
+    const wantAria = badgeAria(b);
     if (got.img !== b.img)                fail.push(`badge "${label}": SITE img "${b.img}" vs fallback "${got.img}"`);
     if (norm(got.name) !== norm(b.name))  fail.push(`badge "${label}": SITE name "${b.name}" vs fallback "${got.name}"`);
     if (norm(got.tag)  !== norm(b.tag))   fail.push(`badge "${label}": SITE tag "${b.tag}" vs fallback "${got.tag}"`);
