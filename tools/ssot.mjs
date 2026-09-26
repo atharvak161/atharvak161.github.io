@@ -203,7 +203,7 @@ export function certCardHTML(c, i, basePath) {
   }
   return `    <div class="cert-card ${ssotEsc(c.cls)} reveal${revealDelay(i)}">
       <div class="cert-card-top">
-        <div class="cert-card-badge">${c.badge}</div>
+        <div class="cert-card-badge" aria-hidden="true">${c.badge}</div>
         <div class="cert-card-head">
           <span class="cert-card-issuer">${ssotEsc(c.issuer)}</span>
           <div class="cert-card-name">${ssotEsc(c.name)}</div>
@@ -226,7 +226,7 @@ export function projectCardHTML(p) {
     : '';
   const outcomes = `\n      <ul class="project-outcomes">${p.outcomes.map(o => `<li>${o}</li>`).join('')}</ul>`;
   const inner = `
-      <div class="project-icon">${p.icon}</div>
+      <div class="project-icon" aria-hidden="true">${p.icon}</div>
       <div><div class="project-org">${p.org}</div><h3>${p.name}</h3></div>
       <p>${p.desc}</p>${outcomes}${tech}
     `;
@@ -243,7 +243,7 @@ export function writeupCardHTML(w, basePath) {
   const href = (basePath || '') + w.slug + '.html';
   return `    <a href="${ssotEsc(href)}" class="project-card reveal${projectDelayClass(w.delay)}" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-        <div class="project-icon">${w.icon}</div>
+        <div class="project-icon" aria-hidden="true">${w.icon}</div>
       </div>
       <div><div class="project-org">${w.org}</div><h3>${w.name}</h3></div>
       <p>${w.desc}</p>

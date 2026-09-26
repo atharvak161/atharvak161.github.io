@@ -225,7 +225,7 @@ function renderCerts(){
       foot = '<span class="cert-pill">'+(c.pill ? ssotEsc(c.pill.text) : '')+'</span>';
     }
     return '<div class="cert-card '+ssotEsc(c.cls)+' reveal'+revealDelay(i)+'">'
-      + '<div class="cert-card-top"><div class="cert-card-badge">'+c.badge+'</div>'
+      + '<div class="cert-card-top"><div class="cert-card-badge" aria-hidden="true">'+c.badge+'</div>'
       + '<div class="cert-card-head"><span class="cert-card-issuer">'+ssotEsc(c.issuer)+'</span>'
       + '<div class="cert-card-name">'+ssotEsc(c.name)+'</div></div></div>'
       + '<div class="cert-card-foot">'+foot+'</div></div>';
@@ -256,7 +256,7 @@ function projectCardHTML(p, i){
   var delayCls = p.delay ? ' reveal-delay-' + p.delay : '';
   var tech = p.techStack ? '<div class="tech-stack">' + p.techStack.map(function(t){ return '<span class="tech-badge">'+t+'</span>'; }).join('') + '</div>' : '';
   var outcomes = '<ul class="project-outcomes">' + p.outcomes.map(function(o){ return '<li>'+o+'</li>'; }).join('') + '</ul>';
-  var inner = '<div class="project-icon">'+p.icon+'</div>'
+  var inner = '<div class="project-icon" aria-hidden="true">'+p.icon+'</div>'
     + '<div><div class="project-org">'+p.org+'</div><h3>'+p.name+'</h3></div>'
     + '<p>'+p.desc+'</p>' + outcomes + tech;
   return p.href
@@ -273,7 +273,7 @@ function renderProjects(){
 function writeupCardHTML(w, i, basePath){
   var href = (basePath || '') + w.slug + '.html';
   return '<a href="'+ssotEsc(href)+'" class="project-card reveal'+(w.delay ? ' reveal-delay-'+w.delay : '')+'" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">'
-    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;"><div class="project-icon">'+w.icon+'</div></div>'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;"><div class="project-icon" aria-hidden="true">'+w.icon+'</div></div>'
     + '<div><div class="project-org">'+w.org+'</div><h3>'+w.name+'</h3></div>'
     + '<p>'+w.desc+'</p>'
     + '<div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">'+w.refs+'</div>'
@@ -324,8 +324,10 @@ function renderThm(){
 }
 
 function renderAll(){
-  renderThm();
-  try { renderCerts(); renderBadges(); renderProjects(); renderWriteups(); renderIdentity(); renderJsonLd(); }
+  // renderThm() used to sit outside this try. A throw there halted the whole
+  // script before the loading screen's failsafe timer was registered, leaving
+  // a permanent black screen instead of a degraded page.
+  try { renderThm(); renderCerts(); renderBadges(); renderProjects(); renderWriteups(); renderIdentity(); renderJsonLd(); }
   catch(e){ console.error('[SSOT] render failed:', e); }
 }
 renderAll();
@@ -546,8 +548,8 @@ function handleFormSubmit(){
   var email = document.getElementById('femail').value.trim();
   var msg = document.getElementById('fmsg').value.trim();
   var notice = document.getElementById('formNotice');
-  if(!name||!email||!msg){ notice.style.color='var(--accent3)'; notice.textContent='Please fill in all fields.'; return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ notice.style.color='var(--accent3)'; notice.textContent='Please enter a valid email.'; return; }
+  if(!name||!email||!msg){ notice.style.color='var(--danger)'; notice.textContent='Please fill in all fields.'; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ notice.style.color='var(--danger)'; notice.textContent='Please enter a valid email.'; return; }
   window.location.href = 'mailto:atharvak161@gmail.com?subject=' + encodeURIComponent('Enquiry from '+name) + '&body=' + encodeURIComponent('Hi Atharva,\n\n'+msg);
   document.getElementById('fname').value = '';
   document.getElementById('femail').value = '';
@@ -913,8 +915,28 @@ function triggerGlitch(el) {
 
 // ── PRINT CV ──────────────────────────────────────────────
 function printCV() {
-  var win = window.open('Atharva_Kulkarni_Resume.pdf', '_blank', 'noopener');
-  if(win) win.addEventListener('load', function(){ setTimeout(function(){ win.print(); }, 500); });
+  // Print the CV that is already embedded on this page. #cvFrame is same-origin,
+  // so its document can be printed directly and the browser's real print dialog
+  // opens without leaving the page.
+  //
+  // The old code called window.open(url, '_blank', 'noopener'), which returns
+  // null by spec, so its win.print() was dead and this button only ever opened
+  // a tab - exactly what the "Full Screen" button beside it already does. Two
+  // buttons, one behaviour.
+  var frame = document.getElementById('cvFrame');
+  try {
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+      return;
+    }
+  } catch (e) {
+    // Some PDF viewers refuse a scripted print(); fall through to the fallback.
+  }
+  // Fallback: the frame is loading="lazy" so it may not be ready yet, or the
+  // viewer blocked print(). Opening the file hands the job to the viewer's own
+  // print control rather than failing silently.
+  window.open('Atharva_Kulkarni_Resume.pdf', '_blank', 'noopener');
 }
 
 

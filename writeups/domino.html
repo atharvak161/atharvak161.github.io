@@ -38,15 +38,17 @@
     .wr-phase { margin-bottom: 3rem; scroll-margin-top: 5rem; }
     .wr-table { width: 100%; border-collapse: collapse; margin: .8rem 0 1.5rem; font-size: .8rem; display: block; overflow-x: auto; }
   </style>
-  <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to content</a>
   <div class="wr-header">
     <a href="../#writeups" class="wr-back">&larr; Portfolio</a>
     <a href="index.html" class="wr-back wr-hub">&larr; All Writeups</a>
     <span class="wr-header-title">CTF Writeup</span>
   </div>
 
+  <main id="main" tabindex="-1">
   <div class="wr-hero">
     <span class="wr-platform-tag">TryHackMe</span>
     <h1 class="wr-title">Domino</h1>
@@ -280,8 +282,6 @@ print(plaintext)</div>
         <p class="wr-p"><strong>Two things to explain here:</strong></p>
         <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>The trailing <span class="wr-inline-code">\x0e</span> bytes are not an error &mdash; this is PKCS7 padding.</strong> Block ciphers like AES can only encrypt data in fixed-size chunks (16 bytes for AES). If your actual data isn't a perfect multiple of 16 bytes, padding bytes get added to fill out the last block before encryption. PKCS7 padding has a clever rule: the <em>value</em> of each padding byte equals the <em>number</em> of padding bytes added. Here, <span class="wr-inline-code">\x0e</span> in hexadecimal equals <span class="wr-inline-code">14</span> in decimal &mdash; meaning 14 bytes of padding were added, which we can see matches the count. This is expected and harmless; the real data (the JSON) is unaffected.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>What we actually learned:</strong> a Linux system username, <span class="wr-inline-code">devops</span>. Not a password &mdash; just confirmation that a <span class="wr-inline-code">devops</span> account exists on the actual server. This became directly useful much later in the room.</li>
         </ol>
         <p class="wr-p"><strong>Side note on why ECB mode itself is considered weak (not exploited directly in this room, but worth understanding):</strong> because ECB encrypts identical blocks of input into identical blocks of output every time, patterns in the original data can sometimes still be visible in the encrypted version (the classic example is an ECB-encrypted image where you can still make out the outline of the original picture). Modern applications should use modes like CBC or GCM instead, which incorporate randomness so identical inputs never produce identical outputs.</p>
@@ -608,23 +608,11 @@ ls -la /etc/cron.d/ /etc/cron.daily/</div>
         <h2 class="wr-phase-title">13. Key Lessons for Beginners</h2>
         <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Recon before tools.</strong> Manually browsing and reading page source found real, working leads (usernames, endpoint paths, a hardcoded key) before any automated scanner was even run.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Read every error message carefully.</strong> Multiple pivots in this room came directly from paying close attention to <em>exactly</em> what an error said &mdash; <span class="wr-inline-code">"Access denied: path must be within /var/www/html/"</span> told us local paths were restricted, but implicitly, remote ones weren't even mentioned, which is exactly what we then tested and confirmed.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong><span class="wr-inline-code">ls -la</span> output is not just a formality &mdash; parse it every time.</strong> The final root privesc was sitting in plain sight in permission bits (<span class="wr-inline-code">rwxrwxr--</span>, group <span class="wr-inline-code">devops</span>) well before it was actually exploited.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Static checks alone aren't enough for privilege escalation.</strong> <span class="wr-inline-code">/etc/crontab</span> and <span class="wr-inline-code">/etc/cron.d/</span> looked completely clean; only live process monitoring (<span class="wr-inline-code">pspy</span>) revealed the actual scheduled task, because it was registered somewhere the static checks didn't cover.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Verify a tool's exact requirements before running it at scale.</strong> The Hydra brute-force attempt was wasted twice &mdash; once by using a slightly wrong failure string, once by using an impractically huge wordlist &mdash; both avoidable by spending 30 extra seconds confirming inputs first.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Shell stabilization (<span class="wr-inline-code">pty.spawn</span> → <span class="wr-inline-code">Ctrl+Z</span> → <span class="wr-inline-code">stty raw -echo; fg</span> → <span class="wr-inline-code">export TERM=xterm</span>) is universal.</strong> This sequence applies to essentially every raw reverse shell you will ever catch, regardless of the specific vulnerability that got you there &mdash; it's worth memorizing completely, not re-deriving each time.</li>
-        </ol>
-        <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
           <li style="margin-bottom:.35rem"><strong>Small, "boring" bugs are often the real doorway.</strong> A hardcoded key in a JS comment and a slightly-too-permissive file weren't flashy exploits &mdash; they were the actual hinge points of the entire chain. Professional penetration testing is frequently exactly this: patiently finding and connecting several unremarkable-looking weaknesses, not one dramatic single exploit.</li>
         </ol>
       </div>
@@ -635,6 +623,8 @@ ls -la /etc/cron.d/ /etc/cron.daily/</div>
       <a class="wr-pager-link" href="flagvault2.html" rel="next">Flag Vault 2 &rarr;</a>
     </nav>
 
+
+  </main>
 
   <div class="wr-footer"><a href="../#writeups">&larr; atharvaxsecurity.com</a></div>
 </body>
