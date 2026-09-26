@@ -193,13 +193,13 @@ export function badgeCardHTML(b, i, thmShare, basePath) {
   const rawHref = b.href || thmShare(b.slug);
   const href = withBase(rawHref, basePath);
   const aria = badgeAria(b);
-  // tier and cls2 land inside a class attribute, so they need escaping like
+  // tier lands inside a class attribute, so it needs escaping like
   // every other interpolated value - a quote in either breaks out of the
   // attribute. Nobody but Atharva writes SITE.badges, but an unescaped
   // interpolation is a latent correctness bug the moment a value contains a
   // quote or an ampersand, and both renderers would corrupt identically so
   // the consistency checker would still pass.
-  const cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
+  const cls = 'badge-card ' + ssotEsc(b.tier) + ' reveal' + revealDelay(i);
   return `    <a class="${cls}" href="${ssotEsc(href)}" target="_blank" rel="noopener noreferrer" aria-label="${ssotEsc(aria)}">
       <img src="${ssotEsc(withBase(b.img, basePath))}" alt="${ssotEsc(b.name)} badge" loading="lazy">
       <span class="badge-name">${ssotEsc(b.name)}</span>
@@ -239,7 +239,7 @@ export function projectDelayClass(delay) {
   return delay ? ' reveal-delay-' + delay : '';
 }
 
-export function projectCardHTML(p) {
+export function projectCardHTML(p, i) {
   const tech = p.techStack
     ? `\n      <div class="tech-stack">${p.techStack.map(t => `<span class="tech-badge">${t}</span>`).join('')}</div>`
     : '';
@@ -249,7 +249,10 @@ export function projectCardHTML(p) {
       <div><div class="project-org">${p.org}</div><h3>${p.name}</h3></div>
       <p>${p.desc}</p>${outcomes}${tech}
     `;
-  const cls = `project-card reveal${projectDelayClass(p.delay)}`;
+  // Stagger from position, not a typed field. A hand-set delay cannot survive a
+  // reorder: every one would have pointed at the wrong column the moment the
+  // array moved. Same derivation badges and certs already use.
+  const cls = `project-card reveal${revealDelay(i)}`;
   return p.href
     ? `    <a href="${ssotEsc(p.href)}" target="_blank" rel="noopener noreferrer" class="${cls}" style="text-decoration:none;color:inherit;">${inner}</a>`
     : `    <div class="${cls}">${inner}</div>`;
@@ -258,9 +261,9 @@ export function projectCardHTML(p) {
 /** basePath is prepended to the writeup's own href ("<slug>.html"): '' on the
  *  writeups hub itself (already inside /writeups/), 'writeups/' from the home
  *  page one level up. */
-export function writeupCardHTML(w, basePath) {
+export function writeupCardHTML(w, i, basePath) {
   const href = (basePath || '') + w.slug + '.html';
-  return `    <a href="${ssotEsc(href)}" class="project-card reveal${projectDelayClass(w.delay)}" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+  return `    <a href="${ssotEsc(href)}" class="project-card reveal${revealDelay(i)}" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">${w.icon}</div>
       </div>
@@ -280,11 +283,11 @@ export function certsGridInner(certs, basePath) {
 }
 
 export function projectsGridInner(projects) {
-  return projects.map(p => projectCardHTML(p)).join('\n');
+  return projects.map((p, i) => projectCardHTML(p, i)).join('\n');
 }
 
 export function writeupsGridInner(writeups, basePath) {
-  return writeups.map(w => writeupCardHTML(w, basePath)).join('\n');
+  return writeups.map((w, i) => writeupCardHTML(w, i, basePath)).join('\n');
 }
 
 /** The home-page "See all N <label> »" link — empty string when every item

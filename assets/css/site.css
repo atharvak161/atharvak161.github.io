@@ -17,7 +17,7 @@
      see that file for what the drift cost. */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.7; overflow-x: hidden; transition: background .3s, color .3s; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); line-height: 1.7; overflow-x: hidden; transition: background var(--t-base) var(--ease), color var(--t-base) var(--ease); }
 
   /* scanlines — dark only */
   [data-theme="dark"] body::before {
@@ -127,16 +127,16 @@
   #loader {
     position: fixed; inset: 0; background: #020408; z-index: 99999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: var(--font-mono); transition: opacity .6s ease;
+    font-family: var(--font-mono); transition: opacity var(--t-slow) var(--ease);
   }
   #loader.fade-out { opacity: 0; pointer-events: none; }
   .loader-logo { font-family: var(--font-display); font-size: 4rem; font-weight: 800; color: #00d4ff; letter-spacing: .1em; margin-bottom: 2rem; text-transform: uppercase; }
   .loader-logo span { color: #00ff9d; }
   .loader-lines { width: min(480px, 90vw); }
-  .loader-line { font-size: .78rem; color: #8899aa; margin-bottom: .4rem; opacity: 0; transform: translateX(-8px); transition: opacity .3s, transform .3s; }
+  .loader-line { font-size: .78rem; color: #8899aa; margin-bottom: .4rem; opacity: 0; transform: translateX(-8px); transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
   .loader-line.show { opacity: 1; transform: translateX(0); }
   .loader-bar-wrap { margin-top: 1.5rem; width: min(480px, 90vw); height: 2px; background: #1e2d3d; border-radius: 2px; overflow: hidden; }
-  .loader-bar { height: 100%; width: 0; background: linear-gradient(90deg, #00d4ff, #00ff9d); transition: width .1s linear; }
+  .loader-bar { height: 100%; width: 0; background: linear-gradient(90deg, #00d4ff, #00ff9d); transition: width var(--t-fast) linear; }
 
   /* ── PROGRESS INDICATOR ──────────────────────────────────── */
   #progress-track {
@@ -145,12 +145,12 @@
   }
   #progress-fill {
     width: 100%; height: 0%; background: linear-gradient(180deg, var(--accent), var(--accent2));
-    transition: height .1s linear; box-shadow: 0 0 8px var(--accent);
+    transition: height var(--t-fast) linear; box-shadow: 0 0 8px var(--accent);
   }
   #progress-dot {
     position: absolute; right: -3px; width: 9px; height: 9px; border-radius: 50%;
     background: var(--accent2); box-shadow: 0 0 10px var(--accent2);
-    transform: translateX(0); transition: top .1s linear;
+    transform: translateX(0); transition: top var(--t-fast) linear;
     top: 0;
   }
 
@@ -167,40 +167,40 @@
       repeating-radial-gradient(ellipse at 65% 28%, transparent 0, transparent 18px, rgba(0,135,90,.14) 19px, transparent 20px);
     background-attachment: fixed;
   }
-  .depth-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(8,11,16,0.35) 100%); pointer-events: none; z-index: 1; transition: background .3s; }
+  .depth-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(8,11,16,0.35) 100%); pointer-events: none; z-index: 1; transition: background var(--t-base) var(--ease); }
   [data-theme="light"] .depth-vignette { background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(240,244,248,0.75) 100%); }
 
   /* ── THEME TOGGLE ────────────────────────────────────────── */
   #theme-toggle {
     width: 36px; height: 36px; border-radius: 50%;
     background: var(--surface); border: 1px solid var(--border);
-    cursor: pointer; transition: all .3s;
+    cursor: pointer; transition: all var(--t-base) var(--ease);
     display: flex; align-items: center; justify-content: center;
     padding: 0; flex-shrink: 0; margin-left: .5rem;
   }
   #theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,212,255,.3); transform: rotate(20deg); }
-  #theme-toggle svg { width: 17px; height: 17px; transition: all .3s; }
+  #theme-toggle svg { width: 17px; height: 17px; transition: all var(--t-base) var(--ease); }
   /* Group the toggle with the hamburger wherever the hamburger is showing. This
    was scoped to 900px while the hamburger band later grew to 1299px, which left
    the toggle stranded mid-navbar across 399px of widths. */
   @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all .3s; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all var(--t-base) var(--ease); }
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
   nav.scrolled { padding: .7rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color .2s; }
-  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width .3s; }
+  .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color var(--t-base) var(--ease); }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width var(--t-base) var(--ease); }
   .nav-links a.active { color: var(--accent); }
   .nav-links a.active::after { width: 100%; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after { width: 100%; }
   .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
-  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all .3s; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text2); transition: all var(--t-base) var(--ease); }
 
   /* ── HERO ────────────────────────────────────────────────── */
   /* No width cap here on purpose. #hero is a <section>, so the `section` rule
@@ -216,7 +216,7 @@
   .hero-content { max-width: 800px; min-width: 0; position: relative; z-index: 2; }
   /* ── HERO BADGES (right column stack — holds Credly + any future badges) ── */
   .hero-badges { position: relative; z-index: 2; flex-shrink: 0; align-self: flex-start; margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; animation: fadeSlideUp .7s .6s ease both; }
-  .hero-badge-card { padding: .85rem; display: flex; align-items: center; justify-content: center; transition: transform .25s; }
+  .hero-badge-card { padding: .85rem; display: flex; align-items: center; justify-content: center; transition: transform var(--t-base) var(--ease); }
   .hero-badge-card:hover { transform: translateY(-2px); }
   .hero-badge-card > a { border-radius: 6px; overflow: hidden; line-height: 0; display: inline-block; }
   /* object-fit keeps non-square badge art (league badges are ~443x500) in proportion
@@ -228,7 +228,7 @@
   .role-cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); margin-left: 3px; vertical-align: middle; animation: blink .8s step-end infinite; }
   .hero-tagline { font-size: .9rem; color: var(--text2); max-width: 500px; line-height: 1.8; animation: fadeSlideUp .7s .3s ease both; margin-bottom: 2.5rem; border-left: 2px solid var(--accent); padding-left: 1rem; }
   .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeSlideUp .7s .4s ease both; }
-  .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.8rem; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: all .25s; cursor: pointer; border: none; }
+  .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.8rem; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: all var(--t-base) var(--ease); cursor: pointer; border: none; }
   .btn-primary { background: var(--accent); color: var(--bg); font-weight: 700; border: 1px solid var(--accent); }
   .btn-primary:hover { background: transparent; color: var(--accent); box-shadow: 0 0 20px rgba(0,212,255,.3); }
   .btn-secondary { background: transparent; color: var(--text2); border: 1px solid var(--border); }
@@ -245,12 +245,12 @@
   /* right-hand column: TryHackMe + GitHub stacked beside the LinkedIn card */
   .platform-col { display: flex; flex-direction: column; gap: 1rem; align-self: flex-start; }
   /* TryHackMe anchor — unboxed: no surface, no border, no padding, no hover box */
-  .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all .25s; }
+  .thm-link { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; background: transparent; border: none; padding: 0; border-radius: 0; text-decoration: none; transition: all var(--t-base) var(--ease); }
   .thm-link:hover { transform: none; box-shadow: none; border-color: transparent; }
-  .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 100%; max-width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+  .thm-card { display: flex; flex-direction: column; gap: .7rem; width: 100%; max-width: 360px; max-width: 100%; box-sizing: border-box; padding: .9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all var(--t-base) var(--ease); }
   .thm-card:hover { border-color: var(--thm-green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
   .thm-card-head { display: flex; align-items: center; gap: .75rem; }
-  .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center 20%; border: 2px solid var(--border); transition: border-color .25s; }
+  .thm-card-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; object-fit: cover; object-position: center 20%; border: 2px solid var(--border); transition: border-color var(--t-base) var(--ease); }
   .thm-card:hover .thm-card-avatar { border-color: var(--thm-green); }
   .thm-card-info { display: flex; flex-direction: column; min-width: 0; }
   .thm-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
@@ -265,9 +265,9 @@
   .thm-pts-icon { width: 14px; height: 14px; vertical-align: -1px; margin-right: .4rem; color: var(--thm-green); }
   .thm-card-pts small { margin-left: .35rem; }
   /* GitHub card — self-contained, matches the boxed-card look */
-  .gh-card { display: flex; align-items: center; gap: .75rem; width: 100%; max-width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+  .gh-card { display: flex; align-items: center; gap: .75rem; width: 100%; max-width: 360px; height: 96px; max-width: 100%; box-sizing: border-box; padding: 0 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all var(--t-base) var(--ease); }
   .gh-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.3); }
-  .gh-card svg { width: 28px; height: 28px; color: var(--text); flex-shrink: 0; transition: color .25s; }
+  .gh-card svg { width: 28px; height: 28px; color: var(--text); flex-shrink: 0; transition: color var(--t-base) var(--ease); }
   .gh-card:hover svg { color: var(--accent); }
   .gh-card-info { display: flex; flex-direction: column; min-width: 0; }
   .gh-card-name { font-size: .65rem; color: var(--text3); letter-spacing: .1em; text-transform: uppercase; }
@@ -289,7 +289,7 @@
      page shows (see tools/build-fallbacks.mjs). Quiet by design: same size
      as .section-num, sits after the fade line so it never competes with the
      title. Absent entirely (not just hidden) when every item already fits. */
-  .section-see-all { flex-shrink: 0; font-family: var(--font-mono); font-size: .72rem; color: var(--text2); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; padding: .3rem .15rem; border-radius: 2px; transition: color .2s; }
+  .section-see-all { flex-shrink: 0; font-family: var(--font-mono); font-size: .72rem; color: var(--text2); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; white-space: nowrap; padding: .3rem .15rem; border-radius: 2px; transition: color var(--t-base) var(--ease); }
   .section-see-all:hover { color: var(--accent); }
   /* Below ~600px the num+title+line+link no longer fit one nowrap row (the
      link's own text can't shrink) — wrap it onto its own line instead of
@@ -302,7 +302,7 @@
   .about-text p { color: var(--text2); font-size: .88rem; line-height: 1.9; margin-bottom: 1.2rem; }
   .about-text p strong { color: var(--accent); font-weight: 700; }
   .about-highlights { display: flex; flex-direction: column; gap: 1rem; }
-  .highlight-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; transition: all .25s; }
+  .highlight-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; transition: all var(--t-base) var(--ease); }
   .highlight-card:hover { border-left-color: var(--accent2); background: rgba(var(--accent-rgb),.04); transform: translateX(4px); }
   .highlight-card h4, .highlight-card h3 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
   .highlight-card p { font-size: .78rem; color: var(--text2); line-height: 1.6; }
@@ -310,7 +310,7 @@
   /* ── SKILLS ──────────────────────────────────────────────── */
   #skills { border-top: 1px solid var(--border); }
   .skills-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(270px,1fr)); gap: 1.5rem; }
-  .skill-category { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color .25s; position: relative; overflow: hidden; }
+  .skill-category { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.8rem; transition: border-color var(--t-base) var(--ease); position: relative; overflow: hidden; }
   .skill-category::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
   /* Category colour is bound to MEANING, not DOM position — red team = offence,
      blue team = defence (industry convention). Set data-team on the category;
@@ -325,7 +325,7 @@
   .skill-category:hover{border-color:var(--cat)}
   .skill-category h3{font-family:var(--font-display);font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem;color:var(--cat)}
   .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
-  .skill-tag{font-size:.72rem;padding:.3rem .7rem;border-radius:2px;letter-spacing:.05em;border:1px solid;transition:all .2s}
+  .skill-tag{font-size:.72rem;padding:.3rem .7rem;border-radius:2px;letter-spacing:.05em;border:1px solid;transition: all var(--t-base) var(--ease)}
   .skill-tag:hover{transform:translateY(-2px)}
   .skill-category .skill-tag{border-color:rgba(var(--cat-rgb),.25);color:rgba(var(--cat-rgb),.8);background:rgba(var(--cat-rgb),.05)}
   .skill-category .skill-tag:hover{background:rgba(var(--cat-rgb),.12);border-color:var(--cat);color:var(--cat)}
@@ -336,7 +336,7 @@
   .learning-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
   .learning-block h3{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
   .goal-list{display:flex;flex-direction:column;gap:.8rem}
-  .goal-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s}
+  .goal-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition: all var(--t-base) var(--ease)}
   .goal-item:hover{border-color:var(--accent2);transform:translateX(4px)}
   .goal-icon{width:36px;height:36px;border-radius:50%;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:.1rem}
   .goal-info h4{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
@@ -437,7 +437,7 @@
     display: inline-flex; align-items: center; gap: .4rem;
     padding: .4rem .9rem; font-family: var(--font-mono); font-size: .72rem;
     letter-spacing: .08em; text-transform: uppercase; border-radius: 2px;
-    cursor: pointer; transition: all .2s; text-decoration: none;
+    cursor: pointer; transition: all var(--t-base) var(--ease); text-decoration: none;
   }
   .cv-btn-primary { background: var(--accent); color: var(--bg); border: 1px solid var(--accent); font-weight: 700; }
   .cv-btn-primary:hover { background: transparent; color: var(--accent); }
@@ -463,7 +463,7 @@
   .testi-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 4px; padding: 2rem; display: flex;
-    flex-direction: column; gap: 1.2rem; transition: all .3s; position: relative;
+    flex-direction: column; gap: 1.2rem; transition: all var(--t-base) var(--ease); position: relative;
   }
   .testi-card::before {
     content: '\201C'; position: absolute; top: .8rem; left: 1.2rem;
@@ -487,8 +487,8 @@
   /* ── EXPERIENCE ──────────────────────────────────────────── */
   #experience{border-top:1px solid var(--border)}
   .exp-list{display:flex;flex-direction:column;gap:2rem}
-  .exp-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem 2.5rem;display:grid;grid-template-columns:200px 1fr;gap:2rem;transition:all .25s;position:relative;overflow:hidden}
-  .exp-card::after{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--border);transition:background .25s}
+  .exp-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem 2.5rem;display:grid;grid-template-columns:200px 1fr;gap:2rem;transition: all var(--t-base) var(--ease);position:relative;overflow:hidden}
+  .exp-card::after{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--border);transition: background var(--t-base) var(--ease)}
   .exp-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
   .exp-card:hover::after{background:var(--accent)}
   .exp-meta{padding-top:.2rem}
@@ -502,14 +502,14 @@
   .exp-achievements li::before{content:'\25B8';position:absolute;left:0;color:var(--accent2);font-size:.7rem}
   .exp-achievements li strong{color:var(--accent2)}
   .tech-stack{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
-  .tech-badge{font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--text3);letter-spacing:.06em;background:rgba(255,255,255,.02);transition:all .2s;position:relative;z-index:2}
+  .tech-badge{font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--text3);letter-spacing:.06em;background:rgba(255,255,255,.02);transition: all var(--t-base) var(--ease);position:relative;z-index:2}
   .tech-badge:hover{border-color:var(--accent);color:var(--accent)}
 
   /* ── PROJECTS ────────────────────────────────────────────── */
   #projects{border-top:1px solid var(--border)}
   .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem}
-  .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:all .3s;position:relative;overflow:hidden}
-  .project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+  .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition: all var(--t-base) var(--ease);position:relative;overflow:hidden}
+  .project-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05) 0%,transparent 60%);opacity:0;transition: opacity var(--t-base) var(--ease);pointer-events:none}
   .project-card:hover{border-color:rgba(0,212,255,.35);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
   .project-card:hover::before{opacity:1}
   .project-icon{width:44px;height:44px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(0,212,255,.06)}
@@ -535,7 +535,7 @@
   /* ── CERTIFICATIONS (dedicated section) ─────────────────── */
   #certifications{border-top:1px solid var(--border)}
   .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
-  .cert-card{position:relative;display:flex;flex-direction:column;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.8rem;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s}
+  .cert-card{position:relative;display:flex;flex-direction:column;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.8rem;overflow:hidden;transition: border-color var(--t-base) var(--ease), transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease)}
   .cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cert-accent,var(--accent))}
   .cert-card:hover{transform:translateY(-4px);border-color:var(--cert-accent,var(--accent));box-shadow:0 18px 40px rgba(0,0,0,.4)}
   .cert-card.ceh{--cert-accent:var(--accent2)}
@@ -551,7 +551,7 @@
   /* The credential ID becomes an <a> when the cert has a downloadable
      certificate. Keep it looking identical to the non-linked <div>, and only
      signal interactivity on hover. */
-  a.cert-card-id{display:block;text-decoration:none;transition:color .2s}
+  a.cert-card-id{display:block;text-decoration:none;transition: color var(--t-base) var(--ease)}
   a.cert-card-id:hover{color:var(--accent)}
   a.cert-card-id:hover .val{text-decoration:underline}
   a.cert-card-id:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
@@ -564,15 +564,11 @@
 
   /* ── BADGES ─────────────────────────────────────────────── */
   .badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.1rem}
-  .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
+  .badge-card{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem .9rem;text-decoration:none;transition: transform var(--t-base) var(--ease), border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease)}
   .badge-card:hover{transform:translateY(-4px)}
   .badge-card img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
   .badge-name{font-size:.82rem;font-weight:600;color:var(--text);line-height:1.3}
   .badge-tag{font-size:.66rem;letter-spacing:.08em;text-transform:none;font-weight:700;color:var(--text-dim);background:var(--surface-2,rgba(255,255,255,.05));border:1px solid var(--border);border-radius:20px;padding:.12rem .55rem}
-  .badge-card.exam{border-color:rgba(0,212,255,.35)}
-  .badge-card.exam .badge-tag{color:var(--accent);border-color:rgba(0,212,255,.4)}
-  .badge-card.epic{border-color:rgba(199,146,234,.4)}
-  .badge-card.epic .badge-tag{color:#c792ea;border-color:rgba(199,146,234,.45)}
   /* Rarity-tier tag colours — theme tokens (see assets/css/tokens.css) so light mode
      meets 4.5:1 contrast instead of inheriting the dark-only literals. */
   .badge-card.t-exam .badge-tag{color:var(--tier-exam);border-color:rgba(var(--tier-exam-rgb),.45);background:rgba(var(--tier-exam-rgb),.08)}
@@ -588,10 +584,10 @@
   .badge-card.t-rare:hover{box-shadow:0 9px 24px -8px rgba(245,166,35,.7)}
   .badge-card.t-epic{border-color:rgba(215,161,255,.48);box-shadow:0 0 17px -5px rgba(215,161,255,.62)}
   .badge-card.t-epic:hover{box-shadow:0 9px 26px -8px rgba(215,161,255,.8)}
-  .badge-desc{position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(5px);width:max-content;max-width:196px;background:var(--surface-2,#141a24);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.7rem;font-weight:500;line-height:1.45;text-align:center;box-shadow:0 10px 26px -10px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;z-index:20}
+  .badge-desc{position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(5px);width:max-content;max-width:196px;background:var(--surface-2,#141a24);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.7rem;font-weight:500;line-height:1.45;text-align:center;box-shadow:0 10px 26px -10px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--ease);z-index:20}
   .badge-desc::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border)}
   .badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{opacity:1;transform:translateX(-50%) translateY(0)}
-  @media(prefers-reduced-motion:reduce){.badge-desc{transition:opacity .22s ease;transform:translateX(-50%)}.badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{transform:translateX(-50%)}}
+  @media(prefers-reduced-motion:reduce){.badge-desc{transition: opacity var(--t-base) var(--ease);transform:translateX(-50%)}.badge-card:hover .badge-desc,.badge-card:focus-visible .badge-desc{transform:translateX(-50%)}}
   @media(max-width:600px){.badges-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem}.badge-card img{width:76px;height:76px}.badge-desc{max-width:150px}}
 
   /* ── GLITCH HEADING EFFECT ──────────────────────────────── */
@@ -650,7 +646,7 @@
   .now-avail{color:var(--accent2)}
   .now-avail.off{color:var(--text3)}
   .contact-links{display:flex;flex-direction:column;gap:.8rem}
-  .contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text2);padding:.9rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition:all .25s;font-size:.82rem}
+  .contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--text2);padding:.9rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;transition: all var(--t-base) var(--ease);font-size:.82rem}
   .contact-link:hover{border-color:var(--accent);color:var(--text);transform:translateX(4px)}
   /* A row so the copy button can be a sibling of the link rather than inside
      it - a <button> nested in an <a> is invalid and swallows the click. The
@@ -660,7 +656,7 @@
   .contact-row > .contact-link{flex:1 1 auto;min-width:0}
   .copy-btn{flex:none;display:flex;align-items:center;justify-content:center;width:44px;
     background:var(--surface);border:1px solid var(--border);border-radius:3px;color:var(--text3);
-    cursor:pointer;transition:border-color .25s,color .25s,background .25s;font-family:var(--font-mono)}
+    cursor:pointer;transition: border-color var(--t-base) var(--ease), color var(--t-base) var(--ease), background var(--t-base) var(--ease);font-family:var(--font-mono)}
   .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
   .copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .copy-btn.copied{border-color:var(--accent2);color:var(--accent2);background:rgba(var(--accent2-rgb),.08)}
@@ -697,10 +693,10 @@
   }
   .form-group{display:flex;flex-direction:column;gap:.4rem}
   .form-group label{font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase}
-  .form-group input,.form-group textarea{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.8rem 1rem;color:var(--text);font-family:var(--font-mono);font-size:.82rem;outline:none;transition:border-color .2s;resize:none}
+  .form-group input,.form-group textarea{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.8rem 1rem;color:var(--text);font-family:var(--font-mono);font-size:.82rem;outline:none;transition: border-color var(--t-base) var(--ease);resize:none}
   .form-group input:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.08)}
   .form-group textarea{height:120px}
-  .form-submit{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.8rem;background:var(--accent);color:var(--bg);font-family:var(--font-mono);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--accent);border-radius:2px;cursor:pointer;transition:all .25s;width:fit-content}
+  .form-submit{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.8rem;background:var(--accent);color:var(--bg);font-family:var(--font-mono);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--accent);border-radius:2px;cursor:pointer;transition: all var(--t-base) var(--ease);width:fit-content}
   .form-submit:hover{background:transparent;color:var(--accent);box-shadow:0 0 20px rgba(0,212,255,.25)}
   .form-notice{font-size:.7rem;color:var(--text3);margin-top:-.3rem}
 
@@ -709,19 +705,19 @@
   footer span{color:var(--accent)}
 
   /* ── BACK TO TOP ─────────────────────────────────────────── */
-  #backToTop{position:fixed;bottom:2rem;right:1.2rem;width:40px;height:40px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:all .3s;z-index:500}
+  #backToTop{position:fixed;bottom:2rem;right:1.2rem;width:40px;height:40px;background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition: all var(--t-base) var(--ease);z-index:500}
   #backToTop.visible{opacity:1;transform:translateY(0)}
   #backToTop:hover{border-color:var(--accent);color:var(--accent)}
 
   /* ── MOBILE MENU ─────────────────────────────────────────── */
-  .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,11,16,.97);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:2rem;opacity:0;pointer-events:none;transition:opacity .3s;overflow-y:auto;visibility:hidden}
+  .mobile-menu{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,11,16,.97);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:2rem;opacity:0;pointer-events:none;transition: opacity var(--t-base) var(--ease);overflow-y:auto;visibility:hidden}
   .mobile-menu.open{opacity:1;visibility:visible;pointer-events:auto;z-index:1001}
-  .mobile-menu a{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--text2);text-decoration:none;transition:color .2s}
+  .mobile-menu a{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--text2);text-decoration:none;transition: color var(--t-base) var(--ease)}
   .mobile-menu a:hover{color:var(--accent)}
   .mobile-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--text2);font-size:1.5rem;cursor:pointer;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-8px -15px 0 0}
 
   /* ── TERMINAL EASTER EGG ─────────────────────────────────── */
-  #terminal-overlay{position:fixed;inset:0;background:rgba(2,4,8,.92);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);visibility:hidden}
+  #terminal-overlay{position:fixed;inset:0;background:rgba(2,4,8,.92);z-index:99998;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition: opacity var(--t-base) var(--ease);backdrop-filter:blur(4px);visibility:hidden}
   #terminal-overlay.open{opacity:1;visibility:visible;pointer-events:auto}
   .terminal-window{width:min(720px,92vw);background:#0a0f15;border:1px solid #00d4ff44;border-radius:4px;font-family:var(--font-mono);overflow:hidden;box-shadow:0 0 60px rgba(0,212,255,.15)}
   .terminal-titlebar{background:#111820;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2d3d}
@@ -729,7 +725,7 @@
   .terminal-dot{width:10px;height:10px;border-radius:50%}
   .td-r{background:#ff5f57}.td-y{background:#febc2e}.td-g{background:#28c840}
   .terminal-title{font-size:.72rem;color:#556677;letter-spacing:.1em}
-  .terminal-close-btn{background:none;border:none;color:#556677;cursor:pointer;font-size:.9rem;padding:0;transition:color .2s;position:relative}
+  .terminal-close-btn{background:none;border:none;color:#556677;cursor:pointer;font-size:.9rem;padding:0;transition: color var(--t-base) var(--ease);position:relative}
   .terminal-close-btn:hover{color:#ff4d6d}
   /* Touch target. The glyph is ~14px; Apple HIG and WCAG 2.5.5 both want 44px.
      An absolutely-positioned ::after is used rather than padding or a negative
@@ -759,15 +755,15 @@
   .form-group input:focus-visible,.form-group textarea:focus-visible{outline:none}
   #terminal-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media (prefers-reduced-motion: reduce){
-    .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+    .reveal{opacity:1 !important;transform:none !important;transition: none !important}
     *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
   }
-  .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+  .reveal{opacity:0;transform:translateY(30px);transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease)}
   .reveal.visible{opacity:1;transform:translateY(0)}
   .reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}.reveal-delay-4{transition-delay:.4s}.reveal-delay-5{transition-delay:.5s}
 
   /* ── LINKEDIN BADGE ─────────────────────────────────────── */
-  .li-badge{display:flex;flex-direction:column;width:220px;border-radius:8px;overflow:hidden;text-decoration:none;flex-shrink:0;align-self:flex-start;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1d2226;box-shadow:0 0 0 1px #38434f;transition:transform .2s,box-shadow .2s}
+  .li-badge{display:flex;flex-direction:column;width:220px;border-radius:8px;overflow:hidden;text-decoration:none;flex-shrink:0;align-self:flex-start;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1d2226;box-shadow:0 0 0 1px #38434f;transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease)}
   [data-theme="light"] .li-badge{background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 2px 10px rgba(0,0,0,.08)}
   .li-badge:hover{transform:translateY(-2px);box-shadow:0 0 0 1.5px rgba(10,102,194,.7),0 8px 22px rgba(0,0,0,.35)}
   [data-theme="light"] .li-badge:hover{box-shadow:0 0 0 1.5px rgba(10,102,194,.7),0 8px 22px rgba(0,0,0,.14)}
@@ -794,7 +790,7 @@
   .li-badge-item svg{flex-shrink:0;opacity:.75}
   /* CTA — full-width solid blue pill, same as LinkedIn */
   .li-badge-ft{padding:.7rem .85rem .9rem}
-  .li-badge-cta{display:block;text-align:center;background:#0a66c2;color:#fff;font-size:.78rem;font-weight:600;padding:.52rem 0;border-radius:20px;letter-spacing:.01em;transition:background .15s}
+  .li-badge-cta{display:block;text-align:center;background:#0a66c2;color:#fff;font-size:.78rem;font-weight:600;padding:.52rem 0;border-radius:20px;letter-spacing:.01em;transition: background var(--t-fast) var(--ease)}
   .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */

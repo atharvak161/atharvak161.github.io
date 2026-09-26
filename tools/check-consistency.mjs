@@ -489,7 +489,7 @@ checkFeaturedField('projects', siteProjects);
 if (siteProjects) {
   siteProjects.forEach((p, i) => {
     const label = p.name || `project ${i}`;
-    if (typeof p.delay !== 'number') fail.push(`project "${label}": missing numeric "delay" field (reveal-stagger digit)`);
+    if ('delay' in p) fail.push(`project "${label}": has a hand-typed "delay" field. The reveal stagger is derived from position now; a typed delay points at the wrong column as soon as the array is reordered.`);
     if (!Array.isArray(p.outcomes) || !p.outcomes.length) fail.push(`project "${label}": "outcomes" must be a non-empty array`);
   });
 }
@@ -502,7 +502,7 @@ if (siteWriteups) {
     if (!w.slug) fail.push(`writeup "${label}": missing "slug"`);
     else if (!existsSync(join(root, 'writeups', `${w.slug}.html`)))
       fail.push(`writeup "${label}": writeups/${w.slug}.html not on disk`);
-    if (typeof w.delay !== 'number') fail.push(`writeup "${label}": missing numeric "delay" field (reveal-stagger digit)`);
+    if ('delay' in w) fail.push(`writeup "${label}": has a hand-typed "delay" field. The reveal stagger is derived from position now; a typed delay points at the wrong column as soon as the array is reordered.`);
   });
 }
 
