@@ -49,7 +49,7 @@ SITE.share = {
 
 SITE.identity = {
   roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
-  title: 'Atharva Kulkarni — Junior Penetration Tester | Offensive Security | CEH V12 | MSc Applied Cyber Security',
+  title: 'Atharva Kulkarni — Junior Pentester | CEH V12 | London',
   metaDescription: 'Atharva Kulkarni — CEH V12 Certified, GCHQ-accredited MSc Applied Cyber Security graduate. Security Analyst transitioning into offensive security and penetration testing. London, UK.',
   ogTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
   ogDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into offensive security and penetration testing. Portfolio of security projects and experience.',
@@ -80,7 +80,7 @@ SITE.thmShare = function(slug){ return 'https://tryhackme.com/AtharvaK911/badges
    CURATION RULE: only high-signal badges ship here — exam/cert badges, League
    1st-place wins, offensive-box + tooling badges, and the top streak. Beginner
    module badges and low-signal ones are deliberately omitted.
-   tier=glow class; cls2=exam/epic extra class; href OR slug (→ share link). */
+   tier=glow class; href OR slug (→ share link). */
 /* thm: the seven TryHackMe figures, in ONE place. They were previously typed
    directly into the card markup with no array, no generator and no check, so
    nothing noticed when they went stale - streak and rank both drifted within
@@ -117,21 +117,21 @@ SITE.thmDisplay = function (t) {
 };
 
 SITE.badges = [
-  { id:'sec1',       featured:true ,   tier:'t-exam',   cls2:'exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
-  { id:'sec0',       featured:true ,   tier:'t-exam',   cls2:'exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
-  { id:'ruby',       featured:true ,   tier:'t-epic',   cls2:'epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.webp', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
-  { id:'sapphire',   featured:true ,   tier:'t-epic',   cls2:'epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.webp', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
-  { id:'platinum',   featured:true ,   tier:'t-epic',   cls2:'epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.webp', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
+  { id:'sec1',       featured:true ,   tier:'t-exam', name:'Cyber Security 101 (SEC1)', img:'assets/badges/thm/cyber-security-101-sec1.webp', tag:'Exam',   desc:'TryHackMe Cyber Security 101 certification',            href:'https://www.credly.com/badges/a10b2144-1101-410d-ba41-e22180d04801/public_url', aria:'Cyber Security 101 (SEC1) — verify on Credly' },
+  { id:'sec0',       featured:true ,   tier:'t-exam', name:'Pre Security (SEC0)', img:'assets/badges/thm/pre-security-sec0.webp', tag:'Exam',          desc:'TryHackMe Pre Security certification',                  href:'https://www.credly.com/badges/c8062133-aeff-4ab2-bc9f-86c6039210bd/public_url', aria:'Pre Security (SEC0) — verify on Credly' },
+  { id:'ruby',       featured:true ,   tier:'t-epic', name:'Ruby League', img:'assets/badges/thm/ruby-league.webp', tag:'epic: 0.2%',            desc:'Ruby League 1st place',                                 slug:'ruby-league',          aria:'Ruby League — 1st place on TryHackMe' },
+  { id:'sapphire',   featured:true ,   tier:'t-epic', name:'Sapphire League', img:'assets/badges/thm/sapphire-league.webp', tag:'epic: 0.4%',    desc:'Sapphire League 1st place',                             slug:'sapphire-league',      aria:'Sapphire League — 1st place on TryHackMe' },
+  { id:'platinum',   featured:true ,   tier:'t-epic', name:'Platinum League', img:'assets/badges/thm/platinum-league.webp', tag:'epic: 0.5%',    desc:'Platinum League 1st place',                             slug:'platinum-league',      aria:'Platinum League — 1st place on TryHackMe' },
   { id:'pipeline',   featured:true ,   tier:'t-epic',   name:'Security in the Pipeline', img:'assets/badges/thm/security-in-the-pipeline.webp', tag:'epic: 0.7%',   desc:'TryHackMe Security in the Pipeline module', slug:'security-in-the-pipeline' },
-  { id:'authstriker', featured:true ,  tier:'t-epic',   cls2:'epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.webp', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker', aria:'Authentication Striker — view badge on TryHackMe' },
+  { id:'authstriker', featured:true ,  tier:'t-epic', name:'Authentication Striker', img:'assets/badges/thm/authentication-striker.webp', tag:'epic: 0.8%',  desc:'Used the Hammer to bypass authentication',            slug:'authentication-striker', aria:'Authentication Striker — view badge on TryHackMe' },
   { id:'million3',   featured:true ,   tier:'t-rare',   name:'3 Million Legend', img:'assets/badges/thm/3-million-legend.webp', tag:'rare: 1.2%',    desc:'Awarded to members of the 3 millionth cohort', slug:'3-million-legend' },
-  { id:'streak90',   featured:true ,   tier:'t-rare',   cls2:'',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.webp', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak', aria:'90 Day Streak badge on TryHackMe' },
-  { id:'ice',        featured:true ,   tier:'t-rare',   cls2:'',     name:'Ice', img:'assets/badges/thm/ice.webp', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice', aria:'Ice badge on TryHackMe' },
-  { id:'shield',     featured:true ,   tier:'t-rare',   cls2:'',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.webp', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice', aria:'Shield Apprentice — view badge on TryHackMe' },
-  { id:'sword',      featured:true ,   tier:'t-rare',   cls2:'',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.webp', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge', aria:'Sword Apprentice badge on TryHackMe' },
-  { id:'metasploit', featured:false,   tier:'t-common',   cls2:'',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.webp', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable', aria:'Metasploitable badge on TryHackMe' },
-  { id:'blue',       featured:false,   tier:'t-common',   cls2:'',     name:'Blue', img:'assets/badges/thm/blue.webp', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue', aria:'Blue badge on TryHackMe' },
-  { id:'owasp10',    featured:false,  tier:'t-common', cls2:'',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.webp', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10', aria:'OWASP Top 10 — view badge on TryHackMe' },
+  { id:'streak90',   featured:true ,   tier:'t-rare',     name:'90 Day Streak', img:'assets/badges/thm/streak-90.webp', tag:'rare: 3%',            desc:'Hacking for 90 days in a row',                             slug:'90-day-streak', aria:'90 Day Streak badge on TryHackMe' },
+  { id:'ice',        featured:true ,   tier:'t-rare',     name:'Ice', img:'assets/badges/thm/ice.webp', tag:'rare: 3.1%',                            desc:'Exploiting Windows via a media server',                 slug:'ice', aria:'Ice badge on TryHackMe' },
+  { id:'shield',     featured:true ,   tier:'t-rare',     name:'Shield Apprentice', img:'assets/badges/thm/shield-apprentice.webp', tag:'rare: 3.1%',         desc:'Completing the FlareVM room',                        slug:'shieldapprentice', aria:'Shield Apprentice — view badge on TryHackMe' },
+  { id:'sword',      featured:true ,   tier:'t-rare',     name:'Sword Apprentice', img:'assets/badges/thm/sword-apprentice.webp', tag:'rare: 3.7%',  desc:'Completing the SQLMap room',                            slug:'swordapprenticebadge', aria:'Sword Apprentice badge on TryHackMe' },
+  { id:'metasploit', featured:false,   tier:'t-common',     name:'Metasploitable', img:'assets/badges/thm/metasploitable.webp', tag:'common: 12.2%',      desc:'Contains the knowledge to use Metasploit',                   slug:'metasploitable', aria:'Metasploitable badge on TryHackMe' },
+  { id:'blue',       featured:false,   tier:'t-common',     name:'Blue', img:'assets/badges/thm/blue.webp', tag:'common: 12.8%',                          desc:'Hacking into Windows via EternalBlue',                  slug:'blue', aria:'Blue badge on TryHackMe' },
+  { id:'owasp10',    featured:false,  tier:'t-common',     name:'OWASP Top 10', img:'assets/badges/thm/owasp-top-10.webp', tag:'common: 13%',           desc:'Understanding every OWASP vulnerability',                slug:'owasp-10', aria:'OWASP Top 10 — view badge on TryHackMe' },
 ];
 
 /* projects: one entry → #projects card (home, featured only) + projects/index.html
@@ -141,67 +141,67 @@ SITE.badges = [
    stagger pattern is irregular (grouped by row, not a clean cycle) and this is the only
    way to reproduce it byte-for-byte. New entries can pick any delay 0-3.
    href is null for the five academic/CTF write-ups that render as a plain (non-link)
-   card; the six 2026 builds link out. techStack is null for the two cards that never
+   card; the six 2026 builds link out. Every card carries a techStack array; the
    had a tech-stack strip (Blueprint, Finance Dashboard). name/org/desc/outcomes carry
    trusted hand-authored HTML entities (&mdash;, &amp;, embedded <span>) and are NOT
    re-escaped by the renderer — same trust model ssot.mjs already documents for
    index.html itself. */
 SITE.projects = [
-  { id:'ctf-labs', featured:false, delay:0, href:null, icon:'&#x1F3AF;',
-    org:'Ongoing &middot; TryHackMe &amp; HackTheBox', name:'CTF &amp; Penetration Testing Labs',
-    desc:'Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.',
-    outcomes:['Active on Junior Penetration Testing path on TryHackMe','Practising manual exploit identification and vulnerability chaining','Developing recon, web app testing, and post-exploitation techniques'],
-    techStack:['Nmap','Burp Suite','Metasploit','Linux','Web Exploitation'] },
-  { id:'puf-ml', featured:false, delay:1, href:null, icon:'&#x1F916;',
-    org:'Queen&#39;s University Belfast &middot; 2023', name:'ML Attacks on Physical Unclonable Functions',
-    desc:'MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.',
-    outcomes:['Demonstrated measurable PUF vulnerability through GAN-synthesised datasets','Evaluated attack success rates and proposed countermeasures','Advanced hardware-level threat research across ML and cryptography'],
-    techStack:['Python','GANs','Machine Learning','Cryptography','PUFs'] },
-  { id:'honey-encryption', featured:false, delay:2, href:null, icon:'&#x1F510;',
-    org:'Queen&#39;s University Belfast &middot; 2023', name:'Honey Encryption: Brute-Force Resistant Security',
-    desc:'Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.',
-    outcomes:['Designed a developer API for web and cloud application integration','Applied DTE encoding to passwords, PINs, and biometrics','Mapped use cases across internet banking and cloud security'],
-    techStack:['Python','Encryption','DTE','API Design','Cloud Security'] },
-  { id:'ntfs-forensics', featured:false, delay:3, href:null, icon:'&#x1F50E;',
-    org:'Queen&#39;s University Belfast &middot; 2023', name:'NTFS Digital Forensics: File Recovery on Windows 10',
-    desc:'Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.',
-    outcomes:['Analysed MFT entries, slack space, and disk imaging for artifact recovery','Compared CLI tools and recovery software for forensic soundness','Documented best practices for evidence preservation and breach analysis'],
-    techStack:['NTFS','Disk Imaging','MFT Analysis','Windows Forensics','CLI Tools'] },
-  { id:'airs', featured:false, delay:0, href:null, icon:'&#x1F6E1;',
-    org:'Queen&#39;s University Belfast &middot; 2023', name:'Automated Network Intrusion Response System (AIRS)',
-    desc:'Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.',
-    outcomes:['Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations','Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT','Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment'],
-    techStack:['IDS/IPS','IRS','Network Security','Threat Mitigation','Anomaly Detection'] },
-  { id:'claude-org-framework', featured:true, delay:0, href:'https://github.com/atharvak161/claude-org-framework', icon:'&#x1F3DB;',
-    org:'2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span>', name:'Claude Org Framework &mdash; AI Agent Orchestration',
-    desc:'A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.',
-    outcomes:['89 role-scoped agents with enforced separation between building, reviewing and shipping','Mandatory security and QA sign-off gates before anything reaches production','Git hooks and a consistency checker that block policy violations mechanically, not by convention'],
-    techStack:['Claude Code','Multi-Agent Systems','Bash','Git Hooks','Process Design'] },
-  { id:'cybersec-toolkit', featured:true, delay:1, href:'https://atharvaxsecurity.com/cybersec-toolkit/', icon:'&#x1F9F0;',
+  { id:'cybersec-toolkit', featured:true, href:'https://atharvaxsecurity.com/cybersec-toolkit/', icon:'&#x1F9F0;',
     org:'2026 &middot; Client-Side Security Toolkit &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-toolkit</span>', name:'Cybersec Toolkit',
     desc:'A client-side cybersecurity utilities toolkit &mdash; encoding/decoding, hashing, JWT/AES/RSA tools, a CyberChef-style recipe chainer, and OSINT lookups. Nothing ever leaves the browser except a few clearly-disclosed public API calls.',
     outcomes:['Encoding, hashing, and JWT/AES/RSA tooling with a CyberChef-style recipe chainer','OSINT lookup utilities alongside classic encode/decode and crypto tools','Fully client-side &mdash; no data leaves the browser except disclosed public API calls'],
     techStack:['JavaScript','Web Crypto API','JWT','OSINT','Client-Side Security'] },
-  { id:'cybersec-vault', featured:true, delay:2, href:'https://atharvaxsecurity.com/cybersec-vault/', icon:'&#x1F5C4;',
+  { id:'cybersec-vault', featured:true, href:'https://atharvaxsecurity.com/cybersec-vault/', icon:'&#x1F5C4;',
     org:'2026 &middot; Cybersecurity Knowledge Base &middot; <span style="color:var(--accent2);">github.com/atharvak161/cybersec-vault</span>', name:'The Vault',
     desc:'A fast, fully client-side knowledge base for 248 cybersecurity notes &mdash; cloud, GRC, OSCP, and red-team &mdash; with an Obsidian-style reader: instant full-text search, a command palette, wiki-style cross-links, an interactive link graph, and backlinks. No backend, nothing leaves the browser.',
     outcomes:['248 interlinked notes across four tracks with full-text search and a &#x2318;K command palette','Wiki-links, backlinks, an interactive link graph, and a scroll-spy table of contents','Fully static and client-side &mdash; HTML sanitised with DOMPurify, all assets vendored, zero external calls'],
     techStack:['JavaScript','Markdown','Full-Text Search','Graph View','Client-Side'] },
-  { id:'jobscope', featured:true, delay:1, href:'https://github.com/atharvak161/jobscope', icon:'&#x1F50E;',
+  { id:'claude-org-framework', featured:true, href:'https://github.com/atharvak161/claude-org-framework', icon:'&#x1F3DB;',
+    org:'2026 &middot; Multi-Agent Orchestration &middot; <span style="color:var(--accent2);">github.com/atharvak161/claude-org-framework</span>', name:'Claude Org Framework &mdash; AI Agent Orchestration',
+    desc:'A production-grade multi-agent operating system built on Claude Code. 89 role-scoped agents across a full org chart &mdash; engineering, security, QA, DevOps, product &mdash; each with its own remit, escalation path and sign-off gates. Clone it and run your own AI-powered organisation.',
+    outcomes:['89 role-scoped agents with enforced separation between building, reviewing and shipping','Mandatory security and QA sign-off gates before anything reaches production','Git hooks and a consistency checker that block policy violations mechanically, not by convention'],
+    techStack:['Claude Code','Multi-Agent Systems','Bash','Git Hooks','Process Design'] },
+  { id:'ctf-labs', featured:false, href:null, icon:'&#x1F3AF;',
+    org:'Ongoing &middot; TryHackMe &amp; HackTheBox', name:'CTF &amp; Penetration Testing Labs',
+    desc:'Active CTF competitor building offensive skills across enumeration, exploitation, and privilege escalation. Currently active on the Junior Penetration Testing path on TryHackMe.',
+    outcomes:['Active on Junior Penetration Testing path on TryHackMe','Practising manual exploit identification and vulnerability chaining','Developing recon, web app testing, and post-exploitation techniques'],
+    techStack:['Nmap','Burp Suite','Metasploit','Linux','Web Exploitation'] },
+  { id:'puf-ml', featured:false, href:null, icon:'&#x1F916;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'ML Attacks on Physical Unclonable Functions',
+    desc:'MSc dissertation weaponising GANs against PUF-based hardware authentication. Synthesised challenge-response pairs to train ML attack models against hardware security mechanisms.',
+    outcomes:['Demonstrated measurable PUF vulnerability through GAN-synthesised datasets','Evaluated attack success rates and proposed countermeasures','Advanced hardware-level threat research across ML and cryptography'],
+    techStack:['Python','GANs','Machine Learning','Cryptography','PUFs'] },
+  { id:'honey-encryption', featured:false, href:null, icon:'&#x1F510;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'Honey Encryption: Brute-Force Resistant Security',
+    desc:'Researched Honey Encryption returning fake plausible plaintext on incorrect decryption, blinding brute-force attacks. Proposed a developer API for real-world integration.',
+    outcomes:['Designed a developer API for web and cloud application integration','Applied DTE encoding to passwords, PINs, and biometrics','Mapped use cases across internet banking and cloud security'],
+    techStack:['Python','Encryption','DTE','API Design','Cloud Security'] },
+  { id:'ntfs-forensics', featured:false, href:null, icon:'&#x1F50E;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'NTFS Digital Forensics: File Recovery on Windows 10',
+    desc:'Forensic investigation into deleted file recovery using MFT analysis, slack space, disk imaging, and CLI tools. Applicable to cybercrime investigation and incident response.',
+    outcomes:['Analysed MFT entries, slack space, and disk imaging for artifact recovery','Compared CLI tools and recovery software for forensic soundness','Documented best practices for evidence preservation and breach analysis'],
+    techStack:['NTFS','Disk Imaging','MFT Analysis','Windows Forensics','CLI Tools'] },
+  { id:'airs', featured:false, href:null, icon:'&#x1F6E1;',
+    org:'Queen&#39;s University Belfast &middot; 2023', name:'Automated Network Intrusion Response System (AIRS)',
+    desc:'Research into automated self-defence for enterprise networks &mdash; integrating IDS/IPS detection with an Intrusion Response System (IRS) that delivers pre-configured active and passive countermeasures to contain attackers and restore system health.',
+    outcomes:['Classified IRS response models &mdash; notification, manual, and automatic (expert, adaptive, associative) &mdash; and mapped active vs passive mitigations','Evaluated agent-based IDS/IRS architectures: CSM, EMERALD, JiNao, and NetSTAT','Assessed weaknesses (false positives, scalability, alert flooding) and future directions in real-time response and risk assessment'],
+    techStack:['IDS/IPS','IRS','Network Security','Threat Mitigation','Anomaly Detection'] },
+  { id:'jobscope', featured:true, href:'https://github.com/atharvak161/jobscope', icon:'&#x1F50E;',
     org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/jobscope</span>', name:'JobScope &mdash; UK Job Aggregator',
     desc:'UK job aggregator that filters listings by visa sponsorship status and security clearance requirements &mdash; built for candidates who need to know eligibility before they apply. Resume parsing powered by Claude AI.',
     outcomes:['Filters roles by visa sponsorship and security clearance eligibility','Claude AI resume parsing for automated candidate-to-role matching','IDOR, SSRF, and prompt-injection defences built in from the ground up'],
     techStack:['Next.js 16','TypeScript','PostgreSQL','Prisma 7','Claude AI'] },
-  { id:'blueprint', featured:true, delay:2, href:'https://atharvaxsecurity.com/Blueprint/', icon:'&#x1F4CB;',
+  { id:'blueprint', featured:true, href:'https://atharvaxsecurity.com/Blueprint/', icon:'&#x1F4CB;',
     org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/Blueprint</span>', name:'Blueprint &mdash; Project Management Tool',
     desc:'A project management dashboard for tracking tasks, milestones, and team progress. Built as a single-page app with a clean kanban-style interface.',
     outcomes:['Visual project and task tracking with status columns','Milestone management with progress indicators','Deployed via GitHub Actions to GitHub Pages'],
-    techStack:null, techStack:['TypeScript','Python','GitHub Actions','GitHub Pages'] },
-  { id:'finance-dashboard', featured:true, delay:3, href:'https://github.com/atharvak161/finance-dashboard', icon:'&#x1F4B7;',
+    techStack:['TypeScript','Python','GitHub Actions','GitHub Pages'] },
+  { id:'finance-dashboard', featured:true, href:'https://github.com/atharvak161/finance-dashboard', icon:'&#x1F4B7;',
     org:'2026 &middot; Full-Stack &middot; <span style="color:var(--accent2);">github.com/atharvak161/finance-dashboard</span>', name:'Finance Dashboard &mdash; Personal Finance Tracker',
     desc:'Comprehensive personal finance tracker for NRI/UK professionals. Tracks income, expenses, investments, debts, and goals across GBP and INR. Includes ROAI analytics, envelope budgeting, bill calendar, SMS transaction parsing, and OLED dark mode.',
     outcomes:['Cross-currency portfolio tracking with real-time ROAI metrics','SMS and CSV bank import with auto-categorisation','Privacy mode, keyboard shortcuts, and OLED dark mode'],
-    techStack:null, techStack:['JavaScript','HTML','CSS','LocalStorage'] }
+    techStack:['JavaScript','HTML','CSS','LocalStorage'] }
 ];
 
 /* writeups: one entry → #writeups card (home, featured only) + writeups/index.html
@@ -213,22 +213,22 @@ SITE.projects = [
    9.8/A01); the home page previously hand-duplicated the pre-correction numbers,
    which is exactly the drift this SSOT exists to make impossible. */
 SITE.writeups = [
-  { id:'domino', featured:true, delay:0, slug:'domino', icon:'&#x1F3B4;', org:'TryHackMe', name:'Domino',
+  { id:'domino', featured:true, slug:'domino', icon:'&#x1F3B4;', org:'TryHackMe', name:'Domino',
     desc:'Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.',
     refs:'CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732' },
-  { id:'flagvault2', featured:true, delay:1, slug:'flagvault2', icon:'&#x1F9F5;', org:'TryHackMe', name:'Flag Vault 2',
+  { id:'flagvault2', featured:true, slug:'flagvault2', icon:'&#x1F9F5;', org:'TryHackMe', name:'Flag Vault 2',
     desc:'Exploited a format string vulnerability (CWE-134) in printf() to leak a flag from stack memory &mdash; no buffer overflow needed.',
     refs:'CWE-134 &middot; CWE-125 &middot; A03:2021' },
-  { id:'flagvault', featured:true, delay:2, slug:'flagvault', icon:'&#x1F4BE;', org:'TryHackMe', name:'Flag Vault',
+  { id:'flagvault', featured:true, slug:'flagvault', icon:'&#x1F4BE;', org:'TryHackMe', name:'Flag Vault',
     desc:'Exploited a stack buffer overflow (CWE-121) via gets() to overwrite an adjacent stack variable and bypass authentication.',
     refs:'CWE-121 &middot; CWE-676 &middot; A04:2021' },
-  { id:'capture', featured:true, delay:0, slug:'capture', icon:'&#x1F510;', org:'TryHackMe', name:'Capture!',
+  { id:'capture', featured:true, slug:'capture', icon:'&#x1F510;', org:'TryHackMe', name:'Capture!',
     desc:'Built a custom Python script to enumerate valid usernames via differential error messages and solve math-based CAPTCHAs programmatically.',
     refs:'CWE-307 &middot; CWE-204 &middot; A07:2021' },
-  { id:'simplectf', featured:true, delay:1, slug:'simplectf', icon:'&#x1F3F3;', org:'TryHackMe', name:'Simple CTF',
+  { id:'simplectf', featured:true, slug:'simplectf', icon:'&#x1F3F3;', org:'TryHackMe', name:'Simple CTF',
     desc:'Exploited CVE-2019-9053 (time-based blind SQLi, CVSSv3.0 8.1) in CMS Made Simple to extract credentials, then escalated to root via vim sudo misconfiguration.',
     refs:'CVE-2019-9053 &middot; CWE-89 &middot; A03:2021' },
-  { id:'picklerick', featured:true, delay:2, slug:'picklerick', icon:'&#x1F952;', org:'TryHackMe', name:'Pickle Rick',
+  { id:'picklerick', featured:true, slug:'picklerick', icon:'&#x1F952;', org:'TryHackMe', name:'Pickle Rick',
     desc:'Retrieved credentials via information disclosure in HTML comments and robots.txt, then achieved RCE and root escalation through a misconfigured sudo policy.',
     refs:'CWE-540 &middot; CWE-284 &middot; A01:2021' }
 ];
@@ -278,7 +278,7 @@ function renderBadges(){
     var aria = [ariaBase, b.tag, b.desc].filter(Boolean).join(' \u2014 ');
     // Escaped for the same reason as the Node renderer in tools/ssot.mjs:
   // these land inside a class attribute and must not be able to break out.
-  var cls = 'badge-card ' + ssotEsc(b.tier) + (b.cls2 ? ' ' + ssotEsc(b.cls2) : '') + ' reveal' + revealDelay(i);
+  var cls = 'badge-card ' + ssotEsc(b.tier) + ' reveal' + revealDelay(i);
     return '<a class="'+cls+'" href="'+ssotEsc(href)+'" target="_blank" rel="noopener noreferrer" aria-label="'+ssotEsc(aria)+'">'
       + '<img src="'+ssotEsc(b.img)+'" alt="'+ssotEsc(b.name)+' badge" loading="lazy">'
       + '<span class="badge-name">'+ssotEsc(b.name)+'</span>'
@@ -291,7 +291,9 @@ function renderBadges(){
 // &mdash;/&amp;/embedded <span>), not user input — rendered raw, not ssotEsc'd.
 // Same trust model as c.badge above and the module comment in tools/ssot.mjs.
 function projectCardHTML(p, i){
-  var delayCls = p.delay ? ' reveal-delay-' + p.delay : '';
+  // Mirrors projectCardHTML() in tools/ssot.mjs: stagger from position, not a
+  // typed field, so a reorder cannot leave a card on the wrong column.
+  var delayCls = revealDelay(i);
   var tech = p.techStack ? '<div class="tech-stack">' + p.techStack.map(function(t){ return '<span class="tech-badge">'+t+'</span>'; }).join('') + '</div>' : '';
   var outcomes = '<ul class="project-outcomes">' + p.outcomes.map(function(o){ return '<li>'+o+'</li>'; }).join('') + '</ul>';
   var inner = '<div class="project-icon" aria-hidden="true">'+p.icon+'</div>'
@@ -310,7 +312,7 @@ function renderProjects(){
 
 function writeupCardHTML(w, i, basePath){
   var href = (basePath || '') + w.slug + '.html';
-  return '<a href="'+ssotEsc(href)+'" class="project-card reveal'+(w.delay ? ' reveal-delay-'+w.delay : '')+'" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">'
+  return '<a href="'+ssotEsc(href)+'" class="project-card reveal'+revealDelay(i)+'" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">'
     + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;"><div class="project-icon" aria-hidden="true">'+w.icon+'</div></div>'
     + '<div><div class="project-org">'+w.org+'</div><h3>'+w.name+'</h3></div>'
     + '<p>'+w.desc+'</p>'
@@ -941,7 +943,10 @@ termInput.addEventListener('keydown', function(e){
   termHistory.unshift(cmd); termHistIdx = -1;
   termPromptLine(cmd);
   if(cmd === 'clear'){ termBody.innerHTML = ''; return; }
-  if(cmd === 'exit'){ termPrint([{t:'t-out',v:'Goodbye.'}]); setTimeout(closeTerminal, 600); return; }
+  // Prints the 'exit' entry from termResponses rather than a second, hardcoded
+  // string. There used to be two wordings for one command and only this path ran,
+  // so the table's "Closing terminal..." was never seen. One wording now.
+  if(cmd === 'exit'){ termPrint(termResponses['exit']); setTimeout(closeTerminal, 600); return; }
   if(cmd.indexOf('goto ') === 0 || cmd.indexOf('cd ') === 0){
     var target = cmd.slice(cmd.indexOf(' ') + 1).trim();
     // Derived from the nav, exactly as updateActiveNav() does, so a new section
