@@ -74,6 +74,21 @@
      far left and the badge cards to the far right with a void between them,
      while the sections below sat in a tidy 1200px column. */
   --page-max: 1200px;
+
+  /* motion: one curve and a three-step scale.
+
+     The site previously specified almost no easing at all, so every transition
+     ran on the browser default, which is symmetrical and reads as mechanical.
+     It also used seven different durations (.1 .15 .2 .22 .25 .3 .6) picked in
+     isolation across 51 declarations, which is why movements happening near
+     each other felt unrelated.
+
+     One curve, starting fast and settling soft, and three durations with a job
+     each. Changing the feel of the whole site is now two values, not fifty. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: .18s;   /* colour, border, opacity on small elements */
+  --t-base: .28s;   /* hovers, transforms, anything that moves */
+  --t-slow: .6s;    /* scroll reveals, the one deliberately unhurried step */
 }
 
 [data-theme="light"] {
