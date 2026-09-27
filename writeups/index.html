@@ -12,7 +12,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CTF Writeups &mdash; Atharva Kulkarni</title>
-  <meta name="description" content="Six detailed TryHackMe walkthroughs covering web exploitation, SQLi, format string bugs, CAPTCHA bypass and privilege escalation. Every command explained.">
+  <meta name="description" content="Seven detailed TryHackMe walkthroughs covering web exploitation, SQLi, format string bugs, CAPTCHA bypass and privilege escalation. Every command explained.">
   <link rel="canonical" href="https://atharvaxsecurity.com/writeups/">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -20,19 +20,19 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://atharvaxsecurity.com/writeups/">
   <meta property="og:title" content="CTF Writeups &mdash; Atharva Kulkarni">
-  <meta property="og:description" content="Six detailed TryHackMe walkthroughs covering chained web exploitation, format string vulnerabilities, SQL injection, CAPTCHA bypass and privilege escalation.">
+  <meta property="og:description" content="Seven detailed TryHackMe walkthroughs covering chained web exploitation, format string vulnerabilities, SQL injection, CAPTCHA bypass and privilege escalation.">
   <meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="627">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://atharvaxsecurity.com/writeups/">
   <meta name="twitter:title" content="CTF Writeups &mdash; Atharva Kulkarni">
-  <meta name="twitter:description" content="Six detailed TryHackMe walkthroughs. Every command explained.">
+  <meta name="twitter:description" content="Seven detailed TryHackMe walkthroughs. Every command explained.">
   <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage",
    "name":"CTF Writeups","url":"https://atharvaxsecurity.com/writeups/",
-   "description":"Six detailed TryHackMe walkthroughs by Atharva Kulkarni.",
+   "description":"Seven detailed TryHackMe walkthroughs by Atharva Kulkarni.",
    "author":{"@type":"Person","name":"Atharva Kulkarni","url":"https://atharvaxsecurity.com/"},
    "hasPart":[
      {"@type":"TechArticle","name":"Domino","url":"https://atharvaxsecurity.com/writeups/domino.html"},
@@ -72,11 +72,20 @@
   <main id="main" tabindex="-1" class="hub">
     <h1 class="hub-title">CTF Writeups</h1>
     <p class="hub-sub">Documented security research &mdash; vulnerability analysis, exploitation methodology, and remediation. Every command is explained, not just listed.</p>
-    <div class="hub-count"><!-- GENERATED:count-writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->6 writeups &middot; TryHackMe<!-- GENERATED:count-writeups end --></div>
+    <div class="hub-count"><!-- GENERATED:count-writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->7 writeups &middot; TryHackMe<!-- GENERATED:count-writeups end --></div>
     <h2 class="sr-only">All writeups</h2>
     <div class="projects-grid">
       <!-- GENERATED:writeups start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
-    <a href="domino.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="tomghost.html" class="project-card reveal" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div class="project-icon" aria-hidden="true">&#x1F431;</div>
+      </div>
+      <div><div class="project-org">TryHackMe</div><h3>tomghost</h3></div>
+      <p>Chained an unpatched Tomcat AJP connector into root &mdash; Ghostcat (CVE-2020-1938) unauthenticated file read, a credential leaked in web.xml, a cracked PGP passphrase, then a sudo/zip GTFOBins misconfiguration.</p>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2020-1938 &middot; CWE-538 &middot; CWE-522 &middot; CWE-269</div>
+      <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
+    </a>
+    <a href="domino.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F3B4;</div>
       </div>
@@ -85,7 +94,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
-    <a href="flagvault2.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="flagvault2.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F9F5;</div>
       </div>
@@ -94,7 +103,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-134 &middot; CWE-125 &middot; A03:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
-    <a href="flagvault.html" class="project-card reveal reveal-delay-2" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="flagvault.html" class="project-card reveal reveal-delay-3" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F4BE;</div>
       </div>
@@ -103,7 +112,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-121 &middot; CWE-676 &middot; A04:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
-    <a href="capture.html" class="project-card reveal reveal-delay-3" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="capture.html" class="project-card reveal reveal-delay-4" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F510;</div>
       </div>
@@ -112,7 +121,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CWE-307 &middot; CWE-204 &middot; A07:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
-    <a href="simplectf.html" class="project-card reveal reveal-delay-4" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="simplectf.html" class="project-card reveal reveal-delay-5" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F3F3;</div>
       </div>
@@ -121,7 +130,7 @@
       <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text3);margin:.4rem 0 .6rem;letter-spacing:.04em;">CVE-2019-9053 &middot; CWE-89 &middot; A03:2021</div>
       <span style="color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;">Read Writeup &rarr;</span>
     </a>
-    <a href="picklerick.html" class="project-card reveal reveal-delay-5" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
+    <a href="picklerick.html" class="project-card reveal reveal-delay-1" style="text-decoration:none;color:inherit;border-left:3px solid var(--accent2);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
         <div class="project-icon" aria-hidden="true">&#x1F952;</div>
       </div>

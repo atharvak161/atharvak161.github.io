@@ -213,6 +213,9 @@ SITE.projects = [
    9.8/A01); the home page previously hand-duplicated the pre-correction numbers,
    which is exactly the drift this SSOT exists to make impossible. */
 SITE.writeups = [
+  { id:'tomghost', featured:true, slug:'tomghost', icon:'&#x1F431;', org:'TryHackMe', name:'tomghost',
+    desc:'Chained an unpatched Tomcat AJP connector into root &mdash; Ghostcat (CVE-2020-1938) unauthenticated file read, a credential leaked in web.xml, a cracked PGP passphrase, then a sudo/zip GTFOBins misconfiguration.',
+    refs:'CVE-2020-1938 &middot; CWE-538 &middot; CWE-522 &middot; CWE-269' },
   { id:'domino', featured:true, slug:'domino', icon:'&#x1F3B4;', org:'TryHackMe', name:'Domino',
     desc:'Chained seven weaknesses into a root shell and all 5 flags &mdash; user enumeration, IDOR, blind XSS session hijack, JWT alg:none forgery, RFI to RCE, password reuse, then a group-writable cron script.',
     refs:'CWE-203 &middot; CWE-639 &middot; CWE-79 &middot; CWE-347 &middot; CWE-98 &middot; CWE-522 &middot; CWE-732' },

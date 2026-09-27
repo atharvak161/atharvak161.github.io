@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+<!-- Content Security Policy. GitHub Pages cannot send response headers, so this
+     is delivered as a meta tag. These pages load nothing external at all, so the policy is stricter:
+     no off-origin scripts, no outbound connections.
+     Note: frame-ancestors and report-uri are ignored in meta form. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://atharvak161.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<!-- Outbound links previously sent the full page URL to LinkedIn, GitHub,
+     Credly and every other destination. Origin only, cross-origin. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TryHackMe &mdash; tomghost &mdash; Atharva Kulkarni</title>
+  <meta name="description" content="Chaining Tomcat AJP Ghostcat (CVE-2020-1938) file read, a leaked web.xml credential and a sudo/zip GTFOBins misconfiguration to root. TryHackMe writeup.">
+  <link rel="canonical" href="https://atharvaxsecurity.com/writeups/tomghost.html">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://atharvaxsecurity.com/writeups/tomghost.html">
+  <meta property="og:title" content="TryHackMe &mdash; tomghost &mdash; Atharva Kulkarni">
+  <meta property="og:description" content="Ghostcat (CVE-2020-1938) AJP file read, a web.xml credential leak, a cracked PGP passphrase and a sudo/zip GTFOBins privilege escalation to root.">
+  <meta property="og:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://atharvaxsecurity.com/writeups/tomghost.html">
+  <meta name="twitter:title" content="TryHackMe &mdash; tomghost &mdash; Atharva Kulkarni">
+  <meta name="twitter:description" content="Ghostcat (CVE-2020-1938) AJP file read, a web.xml credential leak, a cracked PGP passphrase and a sudo/zip GTFOBins privilege escalation to root.">
+  <meta name="twitter:image" content="https://atharvaxsecurity.com/thumbnail.jpg">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/writeup.css">
+    <style>
+    .wr-badge.hard { background: rgba(255,77,109,.1); color: var(--accent3); border: 1px solid rgba(255,77,109,.2); }
+    .wr-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; }
+    .wr-flag { color: var(--accent2); letter-spacing: .05em; word-break: break-all; }
+    .wr-toc { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.5rem; margin-bottom: 2.5rem; }
+    .wr-toc-title { color: var(--accent); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .6rem; }
+    .wr-toc ol { margin: 0 0 0 1.1rem; padding-left: .4rem; font-size: .8rem; }
+    .wr-toc a:hover { color: var(--accent) !important; }
+    .wr-phase { margin-bottom: 3rem; scroll-margin-top: 5rem; }
+    .wr-table { width: 100%; border-collapse: collapse; margin: .8rem 0 1.5rem; font-size: .8rem; display: block; overflow-x: auto; }
+    /* Which machine a command runs on. This box moves between the attacker box
+       and two users on the target, and the commands are only followable if the
+       prompt is unambiguous - a scp run from the wrong side is one of the
+       lessons below. */
+    .wr-where { display: inline-block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; padding: .15rem .55rem; border-radius: 2px; margin-bottom: -.3rem; }
+    .wr-where.attack { background: rgba(0,212,255,.1); color: var(--accent); border: 1px solid rgba(0,212,255,.2); }
+    .wr-where.target { background: rgba(0,255,157,.08); color: var(--accent2); border: 1px solid rgba(0,255,157,.18); }
+    .wr-where.root { background: rgba(255,77,109,.1); color: var(--accent3); border: 1px solid rgba(255,77,109,.2); }
+  </style>
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})()</script>
+  <script data-goatcounter="https://atharvak161.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<!-- GENERATED:writeup-jsonld start — produced by tools/build-fallbacks.mjs from SITE.writeups. Do not hand-edit; edit SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "tomghost — TryHackMe walkthrough",
+  "name": "tomghost",
+  "url": "https://atharvaxsecurity.com/writeups/tomghost.html",
+  "description": "Chained an unpatched Tomcat AJP connector into root — Ghostcat (CVE-2020-1938) unauthenticated file read, a credential leaked in web.xml, a cracked PGP passphrase, then a sudo/zip GTFOBins misconfiguration.",
+  "author": {
+    "@type": "Person",
+    "name": "Atharva Kulkarni",
+    "url": "https://atharvaxsecurity.com/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Atharva Kulkarni",
+    "url": "https://atharvaxsecurity.com/"
+  },
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "CollectionPage",
+    "name": "CTF Writeups",
+    "url": "https://atharvaxsecurity.com/writeups/"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "Penetration testing walkthrough"
+  }
+}
+</script>
+<!-- GENERATED:writeup-jsonld end -->
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div class="wr-header">
+    <a href="../#writeups" class="wr-back">&larr; Portfolio</a>
+    <a href="index.html" class="wr-back wr-hub">&larr; All Writeups</a>
+    <span class="wr-header-title">CTF Writeup</span>
+  </div>
+
+  <main id="main" tabindex="-1">
+  <div class="wr-hero">
+    <span class="wr-platform-tag">TryHackMe</span>
+    <h1 class="wr-title">tomghost</h1>
+    <div class="wr-meta">
+      <span class="wr-badge hard">Chained Exploitation</span>
+      <span class="wr-badge category">Tomcat</span>
+      <span class="wr-badge category">AJP / Ghostcat</span>
+      <span class="wr-badge category">Arbitrary File Read</span>
+      <span class="wr-badge category">PGP Crack</span>
+      <span class="wr-badge category">GTFOBins</span>
+      <span class="wr-badge category">Privilege Escalation</span>
+    </div>
+    <div class="wr-summary">
+      <div class="wr-summary-row"><span class="wr-summary-key">Target</span><span class="wr-summary-val">tomghost &mdash; <span class="wr-inline-code">10.129.182.160</span></span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Room type</span><span class="wr-summary-val">Beginner Linux boot-to-root &mdash; service exploitation to privilege escalation</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Result</span><span class="wr-summary-val">Root shell &middot; 2/2 flags</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Chain</span><span class="wr-summary-val">Recon &rarr; AJP Ghostcat file read &rarr; web.xml cred leak &rarr; SSH foothold &rarr; PGP passphrase crack &rarr; lateral to merlin &rarr; sudo/zip GTFOBins privesc &rarr; root</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">References</span><span class="wr-summary-val"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-1938" target="_blank" rel="noopener noreferrer" class="wr-ref">CVE-2020-1938</a> &middot; <a href="https://cwe.mitre.org/data/definitions/538.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-538</a> &middot; <a href="https://cwe.mitre.org/data/definitions/522.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-522</a> &middot; <a href="https://cwe.mitre.org/data/definitions/269.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-269</a> &middot; <a href="https://gtfobins.github.io/gtfobins/zip/" target="_blank" rel="noopener noreferrer" class="wr-ref">GTFOBins: zip</a></span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Tools</span><span class="wr-summary-val">nmap &middot; searchsploit &middot; Ghostcat PoC &middot; ssh &middot; scp &middot; gpg2john &middot; John the Ripper &middot; gpg &middot; GTFOBins</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 1 &mdash; user</span><span class="wr-summary-val wr-flag">THM{flag for question #1}</span></div>
+      <div class="wr-summary-row"><span class="wr-summary-key">Flag 2 &mdash; root</span><span class="wr-summary-val wr-flag">THM{flag for question #2}</span></div>
+    </div>
+    <div class="wr-toc">
+      <div class="wr-toc-title">Contents</div>
+      <ol>
+          <li style="margin-bottom:.3rem"><a href="#environment" style="color:var(--text2);text-decoration:none">Environment</a></li>
+          <li style="margin-bottom:.3rem"><a href="#phase-1-network-recon" style="color:var(--text2);text-decoration:none">Phase 1: Network Recon</a></li>
+          <li style="margin-bottom:.3rem"><a href="#phase-2-the-ajp-vulnerability" style="color:var(--text2);text-decoration:none">Phase 2: The AJP Vulnerability (Ghostcat)</a></li>
+          <li style="margin-bottom:.3rem"><a href="#phase-3-ghostcat-file-read" style="color:var(--text2);text-decoration:none">Phase 3: Ghostcat File Read &rarr; web.xml</a></li>
+          <li style="margin-bottom:.3rem"><a href="#flag-1-ssh-foothold" style="color:var(--text2);text-decoration:none">Flag 1: SSH Foothold + user.txt</a></li>
+          <li style="margin-bottom:.3rem"><a href="#phase-4-pgp-crack" style="color:var(--text2);text-decoration:none">Phase 4: PGP Crack &rarr; Lateral to merlin</a></li>
+          <li style="margin-bottom:.3rem"><a href="#flag-2-sudo-zip-privesc" style="color:var(--text2);text-decoration:none">Flag 2: sudo/zip Privesc to Root</a></li>
+          <li style="margin-bottom:.3rem"><a href="#full-attack-chain-summary" style="color:var(--text2);text-decoration:none">Full Attack Chain Summary</a></li>
+          <li style="margin-bottom:.3rem"><a href="#key-lessons" style="color:var(--text2);text-decoration:none">Key Lessons</a></li>
+      </ol>
+    </div>
+  </div>
+  <div class="wr-body">
+      <div class="wr-phase">
+  <p class="wr-p"><strong>Target:</strong> tomghost (<span class="wr-inline-code">10.129.182.160</span>) &nbsp;<strong>Room type:</strong> beginner boot-to-root &mdash; an outdated Apache Tomcat AJP connector chained into a Linux privilege-escalation misconfiguration. <strong>Final result:</strong> root shell, both flags.</p>
+  <p class="wr-p">This writeup explains not just <em>what</em> was run, but <em>why</em> &mdash; every command is broken down piece by piece, and every vulnerability is explained conceptually so the logic is followable, not just the keystrokes. The whole box hinges on one idea worth internalising: <strong>a single unpatched service (Tomcat 9.0.30) leaks a credential, and from there the box is a chain of "one secret unlocks the next user."</strong></p>
+      </div>
+      <div class="wr-phase" id="environment">
+        <h2 class="wr-phase-title">1. Environment</h2>
+  <p class="wr-p">No <span class="wr-inline-code">/etc/hosts</span> entry is needed here &mdash; the room is driven entirely by IP from the TryHackMe AttackBox. Two machines are in play:</p>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><strong>Attacker (AttackBox):</strong> <span class="wr-inline-code">10.129.73.186</span></li>
+    <li style="margin-bottom:.35rem"><strong>Target (tomghost):</strong> <span class="wr-inline-code">10.129.182.160</span></li>
+  </ul>
+  <p class="wr-p">Everything in an <span class="wr-where attack">AttackBox</span> block runs on your machine; everything in a <span class="wr-where target">Target</span> block runs inside the compromised shell.</p>
+      </div>
+      <div class="wr-phase" id="phase-1-network-recon">
+        <h2 class="wr-phase-title">2. Phase 1: Network Recon</h2>
+  <h3 class="wr-h3">Full port sweep first</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nmap -p- --min-rate 5000 -T4 10.129.182.160 -oN ports.txt</div>
+  <p class="wr-p"><strong>Why this shape, and not <span class="wr-inline-code">-A -T5 -p-</span> in one go:</strong> the common beginner habit is to fire a single heavyweight scan (version detection, OS detection and NSE scripts) across all 65,535 ports at the most aggressive timing. That is both slow and <em>unreliable</em> over a VPN &mdash; <span class="wr-inline-code">-T5</span> shrinks timeouts so aggressively that packets get dropped and real ports get missed. The professional pattern is two passes: a fast sweep to find <em>which</em> ports are open, then targeted enumeration on only those.</p>
+  <p class="wr-p"><strong>Command breakdown:</strong></p>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">nmap</span> &mdash; Network Mapper, the industry-standard port and service discovery tool.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-p-</span> &mdash; scan <strong>all 65,535 TCP ports</strong>, not just Nmap's default ~1,000. Vulnerable services love hiding on non-standard ports.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">--min-rate 5000</span> &mdash; send at least 5,000 packets per second. This is what actually makes the scan fast, and it is <em>more</em> reliable than <span class="wr-inline-code">-T5</span> because it controls send-rate rather than blindly collapsing timeouts.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-oN ports.txt</span> &mdash; save normal-format output to a file, so you have a permanent record.</li>
+  </ul>
+  <p class="wr-p"><strong>Result:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">PORT     STATE SERVICE
+22/tcp   open  ssh
+53/tcp   open  domain
+8009/tcp open  ajp13
+8080/tcp open  http-proxy</div>
+  <h3 class="wr-h3">Targeted service and script scan</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">nmap -p 22,53,8009,8080 -sV -sC 10.129.182.160 -oN tomghost.txt</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-p 22,53,8009,8080</span> &mdash; only the ports we already found open, so this pass is fast.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-sV</span> &mdash; <strong>version detection</strong>. This is the key output; we need Tomcat's exact build number.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-sC</span> &mdash; default NSE scripts, which give <span class="wr-inline-code">ssh-hostkey</span>, <span class="wr-inline-code">ajp-methods</span> and <span class="wr-inline-code">http-title</span>.</li>
+  </ul>
+  <p class="wr-p"><strong>Result (trimmed):</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+53/tcp   open  tcpwrapped
+8009/tcp open  ajp13   Apache Jserv (Protocol v1.3)
+8080/tcp open  http    Apache Tomcat 9.0.30
+|_http-title: Apache Tomcat/9.0.30</div>
+  <p class="wr-p"><strong>What the output tells us, read like a pentester:</strong></p>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">53 tcpwrapped</span> &mdash; DNS responding to the handshake but revealing nothing usable. Dead end; ignore it.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">8080 Apache Tomcat 9.0.30</span> &mdash; the version <em>is</em> the vulnerability. The AJP fix landed in <strong>9.0.31</strong>, so this build is one release below the patch.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">8009 ajp13</span> exposed to the network &mdash; the AJP connector should normally be bound to localhost. Its exposure is the misconfiguration; the version is the flaw. Port 8080's web UI is a rabbit hole &mdash; the door is 8009.</li>
+  </ul>
+      </div>
+      <div class="wr-phase" id="phase-2-the-ajp-vulnerability">
+        <h2 class="wr-phase-title">3. Phase 2: The AJP Vulnerability &mdash; Ghostcat (CVE-2020-1938)</h2>
+  <p class="wr-p"><strong>What it is.</strong> AJP (Apache JServ Protocol) is a binary protocol Tomcat uses to talk to a front-end web server. Tomcat <em>implicitly trusts</em> AJP requests more than it trusts HTTP ones, including request <em>attributes</em> that control internal servlet routing. Ghostcat abuses three of those attributes &mdash; <span class="wr-inline-code">javax.servlet.include.request_uri</span>, <span class="wr-inline-code">path_info</span> and <span class="wr-inline-code">servlet_path</span> &mdash; to make Tomcat serve any file under the webapp root as if it were a plain static resource.</p>
+  <p class="wr-p"><strong>Why it matters.</strong> That gives an <strong>unauthenticated arbitrary file read</strong> of anything inside the deployed app, most importantly <span class="wr-inline-code">WEB-INF/web.xml</span>, the deployment descriptor, which is exactly where secrets tend to live. If an attacker can <em>also</em> get a file uploaded into the webapp, the same primitive escalates to remote code execution &mdash; not needed on this box. NVD scores it <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-1938" target="_blank" rel="noopener noreferrer" class="wr-ref">CVSS 3.1 9.8 CRITICAL</a>.</p>
+  <p class="wr-p"><strong>How attackers use it.</strong> Point a Ghostcat PoC at the AJP port (8009) and request <span class="wr-inline-code">WEB-INF/web.xml</span>. No login, no web-app interaction &mdash; the AJP connector hands the protected file straight over.</p>
+  <p class="wr-p"><strong>How defenders detect and prevent it.</strong> Patch Tomcat to 9.0.31 or later, disable the AJP connector if it is not used, or bind it to loopback with a <span class="wr-inline-code">secret / requiredSecret</span>. Detection: AJP connections from non-loopback source IPs, or IDS signatures matching the Ghostcat attribute strings.</p>
+  <p class="wr-p"><strong>Real-world relevance.</strong> Ghostcat hit an enormous install base in 2020 because AJP was frequently left network-exposed by default. It remains a staple internal-network finding wherever legacy Tomcat lingers behind a load balancer.</p>
+  <h3 class="wr-h3">Confirm a public exploit exists</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">searchsploit ghostcat</div>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Apache Tomcat - AJP &#39;Ghostcat File Read/Inclusion&#39;             | multiple/webapps/48143.py
+Apache Tomcat - AJP &#39;Ghostcat&#39; File Read/Inclusion (Metasploit) | multiple/webapps/49039.rb</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">48143.py</span> &mdash; the standalone Python AJP file-read PoC. This is the one we want, because running it manually teaches the mechanics.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">49039.rb</span> &mdash; the Metasploit module. Ignore it here; we are doing this by hand.</li>
+  </ul>
+      </div>
+      <div class="wr-phase" id="phase-3-ghostcat-file-read">
+        <h2 class="wr-phase-title">4. Phase 3: Ghostcat File Read &rarr; web.xml</h2>
+  <p class="wr-p"><strong>Snag worth noting:</strong> <span class="wr-inline-code">searchsploit -m 48143</span> is supposed to mirror the exploit into the current directory, but it silently did not land here. Rather than fight it, locate the source copy directly. On this AttackBox it lives under <span class="wr-inline-code">/opt/exploitdb/</span>, not the older <span class="wr-inline-code">/usr/share/exploitdb/</span> path many guides assume.</p>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block"># find the PoC, then copy it local
+find / -name &quot;48143.py&quot; 2&gt;/dev/null
+cp /opt/exploitdb/exploits/multiple/webapps/48143.py .
+python2 48143.py 10.129.182.160</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">find / -name "48143.py" 2>/dev/null</span> &mdash; search the whole filesystem for the file; <span class="wr-inline-code">2>/dev/null</span> discards the permission-denied noise so only real hits print.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">python2 48143.py &lt;target&gt;</span> &mdash; the PoC was written for Python 2 (old <span class="wr-inline-code">print</span> statements and socket handling). The AttackBox has <span class="wr-inline-code">python2</span>, so run it there rather than porting to Python 3. The script opens an AJP13 connection to 8009 and requests <span class="wr-inline-code">WEB-INF/web.xml</span> by default via the Ghostcat attribute trick, so no arguments are needed beyond the IP.</li>
+  </ul>
+  <p class="wr-p"><strong>Result &mdash; the leaked descriptor:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">Getting resource at ajp13://10.129.182.160:8009/asdf
+----------------------------
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+...
+  &lt;display-name&gt;Welcome to Tomcat&lt;/display-name&gt;
+  &lt;description&gt;
+     Welcome to GhostCat
+     skyfuck:redacted
+  &lt;/description&gt;
+&lt;/web-app&gt;</div>
+  <p class="wr-p">The <span class="wr-inline-code">&lt;description&gt;</span> block hands over a <span class="wr-inline-code">username:password</span> pair for the <strong>skyfuck</strong> account. That is the foothold credential.</p>
+  <p class="wr-p"><strong>Observe here:</strong> why would valid SSH credentials sit in a web deployment descriptor? They would not, in a sane deployment &mdash; this is the CTF handing you the pivot. In a real engagement, <span class="wr-inline-code">web.xml</span> more commonly leaks database connection strings, API keys or LDAP bind credentials. The <em>class</em> of finding, secrets in a protected config file that is now readable, is entirely real; only the neatness is contrived.</p>
+      </div>
+      <div class="wr-phase" id="flag-1-ssh-foothold">
+        <h2 class="wr-phase-title">5. Flag 1: SSH Foothold (skyfuck) + user.txt</h2>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">ssh skyfuck@10.129.182.160
+# accept the host key (type yes), then paste the password from web.xml</div>
+  <p class="wr-p">Once the prompt reads <span class="wr-inline-code">skyfuck@ubuntu:~$</span>, orient yourself and grab the user flag:</p>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where target">Target &mdash; skyfuck</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">id
+ls -la
+cat /home/merlin/user.txt</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">id</span> &mdash; confirm which user and groups you landed as (<span class="wr-inline-code">uid=1002(skyfuck)</span>).</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">ls -la</span> &mdash; skyfuck's home holds two files that matter: <span class="wr-inline-code">credential.pgp</span> (an encrypted message) and <span class="wr-inline-code">tryhackme.asc</span> (a PGP private key). Note them; they are the pivot to merlin.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">cat /home/merlin/user.txt</span> &mdash; the flag lives in merlin's home but is world-readable, so skyfuck can read it.</li>
+  </ul>
+  <p class="wr-p"><strong>Result:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">THM{flag for question #1}</div>
+  <p class="wr-p"><strong>&rarr; Flag 1 (user.txt) captured. Task 1 (+50).</strong></p>
+      </div>
+      <div class="wr-phase" id="phase-4-pgp-crack">
+        <h2 class="wr-phase-title">6. Phase 4: PGP Key Crack &rarr; Lateral Movement to merlin</h2>
+  <p class="wr-p"><strong>The reasoning a pentester applies:</strong> an encrypted message (<span class="wr-inline-code">credential.pgp</span>) sitting right next to a private key (<span class="wr-inline-code">tryhackme.asc</span>) is a self-contained puzzle. We cannot read the message directly, and the private key is itself passphrase-protected. So the chain is: <strong>crack the key's passphrase offline, import the key, decrypt the message, read the next user's credentials.</strong></p>
+  <h3 class="wr-h3">Pull both files back to the AttackBox</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">scp skyfuck@10.129.182.160:/home/skyfuck/tryhackme.asc .
+scp skyfuck@10.129.182.160:/home/skyfuck/credential.pgp .</div>
+  <p class="wr-p"><strong>Direction matters with <span class="wr-inline-code">scp</span>.</strong> <span class="wr-inline-code">scp user@target:/remote/path .</span> only makes sense when <em>you</em> are the client and the target is remote to you, so run it from the <strong>AttackBox</strong>, not from inside the target's shell. Running it from inside the box tells the target to copy from itself to itself, which is pointless. A classic mix-up that wastes a minute if you are not watching your prompt.</p>
+  <h3 class="wr-h3">Convert the private key to a crackable hash, then crack it</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">gpg2john tryhackme.asc &gt; key.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt key.hash</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">gpg2john</span> &mdash; extracts the S2K (string-to-key) hash that protects the private key into a format John understands. The output header confirms it: <span class="wr-inline-code">gpg, OpenPGP / GnuPG Secret Key</span>, SHA1 S2K, AES256 cipher.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">john --wordlist=&hellip;</span> &mdash; dictionary attack with rockyou. Cracks in under a second.</li>
+  </ul>
+  <p class="wr-p"><strong>Result:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">redacted        (tryhackme)
+1g 0:00:00:00 DONE ...</div>
+  <p class="wr-p"><strong>Critical distinction:</strong> what John recovered is the <strong>passphrase for the PGP key</strong>, <em>not</em> merlin's login password. The <span class="wr-inline-code">(tryhackme)</span> suffix is just the key's user-ID label, not part of the secret. We use the passphrase in the next step to decrypt the message, and <em>that</em> decrypted output is merlin's actual password. Confusing these two is the most common place people get stuck on this box.</p>
+  <h3 class="wr-h3">Import the key and decrypt the message</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where attack">AttackBox</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">gpg --import tryhackme.asc      # enter the cracked passphrase
+gpg --decrypt credential.pgp    # enter the cracked passphrase</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">gpg --import</span> &mdash; loads the private key into your keyring so gpg can use it. pinentry will prompt for the passphrase to unlock the <em>secret</em> key.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">gpg --decrypt</span> &mdash; decrypts the message with that now-unlocked key.</li>
+  </ul>
+  <p class="wr-p">Two expected quirks: a cosmetic <span class="wr-inline-code">WARNING: cipher algorithm CAST5 not found in recipient preferences</span> (decryption still succeeds), and if pinentry misbehaves in a headless terminal, force an inline prompt with <span class="wr-inline-code">gpg --pinentry-mode loopback --decrypt credential.pgp</span>.</p>
+  <p class="wr-p"><strong>Result:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">gpg: encrypted with elg1024 key, ID 61E104A66184FBCC ...
+merlin:redacted</div>
+  <h3 class="wr-h3">Switch to merlin</h3>
+  <p class="wr-p">Do this <em>on the box</em> from your existing skyfuck session. You are already there, and in real engagements you frequently only have a shell as one user with no SSH for the next, so <span class="wr-inline-code">su</span> is the reliable pivot.</p>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where target">Target &mdash; skyfuck to merlin</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">su merlin        # password: the decrypted merlin value
+id</div>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">uid=1000(merlin) gid=1000(merlin) groups=1000(merlin),4(adm),24(cdrom),...</div>
+      </div>
+      <div class="wr-phase" id="flag-2-sudo-zip-privesc">
+        <h2 class="wr-phase-title">7. Flag 2: Privilege Escalation (sudo + zip) to Root</h2>
+  <p class="wr-p">First move on any new user is always the same: enumerate sudo rights.</p>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where target">Target &mdash; merlin</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">sudo -l</div>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">User merlin may run the following commands on ubuntu:
+    (root : root) NOPASSWD: /usr/bin/zip</div>
+  <p class="wr-p">merlin can run <span class="wr-inline-code">zip</span> as root, with no password. That is game over.</p>
+  <p class="wr-p"><strong>What it is.</strong> <span class="wr-inline-code">zip</span> is not a "safe" binary. It has a <span class="wr-inline-code">-TT</span> option that specifies an external command to <em>test</em> an archive after it is built. When <span class="wr-inline-code">zip</span> runs as root via this sudo grant, that test command executes as root too &mdash; a textbook <a href="https://gtfobins.github.io/gtfobins/zip/" target="_blank" rel="noopener noreferrer" class="wr-ref">GTFOBins</a> abuse.</p>
+  <p class="wr-p"><strong>Why it matters.</strong> The vulnerability is not in <span class="wr-inline-code">zip</span>'s code, it is in the <em>sudoers policy</em>. Any binary that can shell out or run a sub-command becomes an instant root shell the moment it is granted passwordless sudo. <span class="wr-inline-code">zip</span>, <span class="wr-inline-code">vim</span>, <span class="wr-inline-code">find</span>, <span class="wr-inline-code">tar</span>, <span class="wr-inline-code">awk</span> and dozens more are all on that list.</p>
+  <p class="wr-p"><strong>How defenders detect and prevent it.</strong> Never <span class="wr-inline-code">NOPASSWD</span> a GTFOBins-listed binary. If merlin genuinely needs to zip something, scope it far more tightly or wrap it in a controlled script. Detection: sudo logs showing <span class="wr-inline-code">zip &hellip; -TT</span>, or a root shell whose parent process is <span class="wr-inline-code">zip</span>.</p>
+  <p class="wr-p"><strong>Real-world relevance.</strong> Over-broad sudoers entries are one of the most common Linux privesc findings in professional engagements, usually introduced for convenience during deployment and never tightened.</p>
+  <h3 class="wr-h3">The GTFOBins zip escalation</h3>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where target">Target &mdash; merlin</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">TF=$(mktemp -u)
+sudo zip $TF /etc/hosts -T -TT &#39;sh #&#39;</div>
+  <ul style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">TF=$(mktemp -u)</span> &mdash; generate a random <em>unused</em> filename (<span class="wr-inline-code">-u</span> produces the name only, it does not create the file). Just a throwaway name for the archive.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">sudo zip $TF /etc/hosts</span> &mdash; build an archive containing any readable file; <span class="wr-inline-code">/etc/hosts</span> is a convenient one.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-T</span> &mdash; after building, test the archive's integrity.</li>
+    <li style="margin-bottom:.35rem"><span class="wr-inline-code">-TT &#39;sh #&#39;</span> &mdash; override the test command with <span class="wr-inline-code">sh</span>. The trailing <span class="wr-inline-code">#</span> comments out the archive filename that <span class="wr-inline-code">zip</span> would otherwise append, so only <span class="wr-inline-code">sh</span> runs &mdash; and because the whole line is sudo'd, that shell spawns as <strong>root</strong>.</li>
+  </ul>
+  <p class="wr-p"><strong>Result:</strong></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">  adding: etc/hosts (deflated 31%)
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# whoami
+root</div>
+  <p style="margin:1rem 0 .1rem"><span class="wr-where root">Target &mdash; root</span></p>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">cat /root/root.txt</div>
+  <div class="wr-code" tabindex="0" role="region" aria-label="Code block">THM{flag for question #2}</div>
+  <p class="wr-p"><strong>&rarr; Flag 2 (root.txt) captured. Task 2 (+100). Box complete.</strong></p>
+      </div>
+      <div class="wr-phase" id="full-attack-chain-summary">
+        <h2 class="wr-phase-title">8. Full Attack Chain Summary</h2>
+  <table class="wr-table">
+    <thead><tr>
+<th>#</th>
+<th>Stage</th>
+<th>Vulnerability Class</th>
+<th>Technique Used</th>
+</tr></thead>
+    <tbody>
+      <tr><td>&mdash;</td><td>Recon</td><td>&mdash;</td><td><span class="wr-inline-code">nmap -p- --min-rate 5000</span>, then targeted <span class="wr-inline-code">-sV -sC</span></td></tr>
+      <tr><td>&mdash;</td><td>Service enum</td><td>Outdated software (Tomcat 9.0.30)</td><td>Version detection flags a Ghostcat-vulnerable build</td></tr>
+      <tr><td>1</td><td>Unauth file read</td><td>AJP request-attribute injection &mdash; <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-1938" target="_blank" rel="noopener noreferrer" class="wr-ref">CVE-2020-1938</a></td><td>Ghostcat PoC reads <span class="wr-inline-code">WEB-INF/web.xml</span></td></tr>
+      <tr><td>1</td><td>Credential access</td><td>Secrets in config file (<a href="https://cwe.mitre.org/data/definitions/538.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-538</a>)</td><td>skyfuck creds leaked in the <span class="wr-inline-code">&lt;description&gt;</span> block</td></tr>
+      <tr><td>1</td><td>Foothold</td><td>Valid-account reuse</td><td>SSH as skyfuck, then world-readable <span class="wr-inline-code">user.txt</span></td></tr>
+      <tr><td>&mdash;</td><td>Lateral movement</td><td>Cracked PGP passphrase (<a href="https://cwe.mitre.org/data/definitions/522.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-522</a>)</td><td><span class="wr-inline-code">gpg2john</span> and John, decrypt <span class="wr-inline-code">credential.pgp</span>, <span class="wr-inline-code">su merlin</span></td></tr>
+      <tr><td>2</td><td>Privilege escalation</td><td>Over-broad sudoers entry (<a href="https://cwe.mitre.org/data/definitions/269.html" target="_blank" rel="noopener noreferrer" class="wr-ref">CWE-269</a> / GTFOBins)</td><td><span class="wr-inline-code">sudo zip -TT &#39;sh #&#39;</span> spawns a root shell</td></tr>
+    </tbody>
+  </table>
+  <p class="wr-p">No single flaw alone reached root. The chain moved from an unpatched service, to a leaked credential, to a cracked key, to a misconfigured sudo grant &mdash; each link handing over exactly what the next one needed.</p>
+      </div>
+      <div class="wr-phase" id="key-lessons">
+        <h2 class="wr-phase-title">9. Key Lessons</h2>
+  <ol style="margin:.2rem 0 1.1rem 1.1rem;padding-left:.6rem;font-size:.85rem;color:var(--text2);line-height:1.8">
+    <li style="margin-bottom:.35rem"><strong>Version strings are vulnerabilities.</strong> Tomcat <span class="wr-inline-code">9.0.30</span> on the <span class="wr-inline-code">-sV</span> output was the entire finding, one release below the Ghostcat patch. Always map exact versions against known CVEs before touching anything else.</li>
+    <li style="margin-bottom:.35rem"><strong>Split your scans.</strong> A fast <span class="wr-inline-code">--min-rate</span> sweep to find open ports, then targeted <span class="wr-inline-code">-sV -sC</span> on only those, is faster <em>and</em> more reliable than one heavyweight <span class="wr-inline-code">-A -T5 -p-</span> pass that drops packets over a VPN.</li>
+    <li style="margin-bottom:.35rem"><strong>The exposed port is often the misconfiguration.</strong> AJP on 8009 should have been localhost-only. Whenever a service meant to be internal is reachable from your position, that exposure is worth investigating before the version even matters.</li>
+    <li style="margin-bottom:.35rem"><strong>A key next to a ciphertext is a puzzle to solve, not two random files.</strong> An encrypted blob and its passphrase-protected private key sitting together is a standard crack-then-decrypt-then-pivot pattern.</li>
+    <li style="margin-bottom:.35rem"><strong>Track exactly what each secret unlocks.</strong> The value John cracked was the <em>key passphrase</em>, not merlin's password &mdash; merlin's password came from the decrypted message. Conflating the two is the top stall point on this box.</li>
+    <li style="margin-bottom:.35rem"><strong>Watch your prompt with <span class="wr-inline-code">scp</span>.</strong> <span class="wr-inline-code">user@target:/path .</span> only makes sense run from the attacker box. If your prompt says <span class="wr-inline-code">skyfuck@ubuntu</span>, you are on the target and telling it to copy from itself, a silent time-waster.</li>
+    <li style="margin-bottom:.35rem"><strong><span class="wr-inline-code">sudo -l</span> is the first thing you run as any new user.</strong> One line, <span class="wr-inline-code">NOPASSWD: /usr/bin/zip</span>, ended this box. Any sudo-granted binary that can execute a sub-command is a root shell, and GTFOBins tells you exactly how.</li>
+  </ol>
+      </div>
+  </div>
+    <nav class="wr-pager" aria-label="More writeups">
+    <!-- GENERATED:pager start — produced by tools/build-fallbacks.mjs from SITE.writeups order. Do not hand-edit; reorder SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->
+      <span></span>
+      <a class="wr-pager-hub" href="index.html">All writeups</a>
+      <a class="wr-pager-link" href="domino.html" rel="next">Domino &rarr;</a>
+    <!-- GENERATED:pager end -->
+    </nav>
+
+
+  </main>
+
+  <div class="wr-footer"><a href="../#writeups">&larr; atharvaxsecurity.com</a></div>
+</body>
+</html>
