@@ -306,6 +306,58 @@ export const HUB_HREF = {
 };
 
 
+/* ── The sibling row at the foot of every hub ──────────────────────────────
+
+   The four hub pages linked back to the home page and nowhere else: zero links
+   between them, in all twelve directions. These pages exist so a crawler has
+   something to index and send people to, so every one of them was a cul-de-sac
+   for the visitor most likely to land there.
+
+   HUB_ORDER is the order the home page lists the sections in, and the single
+   place the row is driven from. A fifth section page is added here and to
+   HUB_HREF/HUB_LABEL, and `node tools/build-fallbacks.mjs` puts it in the row
+   on every other hub with nothing hand-edited.
+
+   The count beside each label comes from the same SITE array the target hub
+   builds its own cards from, so the number cannot disagree with the page it
+   points at - the reason the badges hub's own count is generated rather than
+   typed. It is the SITE key too: a hub listed here with no SITE array behind it
+   throws rather than render "0". */
+export const HUB_ORDER = ['projects', 'writeups', 'certs', 'badges'];
+
+export const HUB_LABEL = {
+  badges: 'Badges',
+  certs: 'Certifications',
+  projects: 'Projects',
+  writeups: 'Writeups',
+};
+
+export const HUBNAV_START = '<!-- GENERATED:hubnav start \u2014 produced by tools/build-fallbacks.mjs from HUB_ORDER in tools/ssot.mjs. Do not hand-edit; edit HUB_ORDER and run `node tools/build-fallbacks.mjs` instead. -->';
+export const HUBNAV_END = '<!-- GENERATED:hubnav end -->';
+
+/** The links to the OTHER hubs, for the foot of the hub named by currentKey.
+ *  Root-absolute hrefs, so the same markup is correct whatever directory depth
+ *  a page sits at, and static rather than rendered at runtime - these pages load
+ *  no site.js, and a crawler following a search result is the whole audience. */
+export function hubNavHTML(currentKey, SITE) {
+  if (!HUB_ORDER.includes(currentKey)) throw new Error(`hubNavHTML: unknown hub "${currentKey}"`);
+  const others = HUB_ORDER.filter(k => k !== currentKey);
+  if (!others.length) throw new Error(`hubNavHTML: no sibling hubs for "${currentKey}"`);
+  return others.map(k => {
+    const n = (SITE[k] || []).length;
+    if (!n) throw new Error(`hubNavHTML: SITE.${k} is empty or missing. Refusing to write a zero count.`);
+    const href = HUB_HREF[k];
+    const label = HUB_LABEL[k];
+    if (!href || !label) throw new Error(`hubNavHTML: HUB_HREF/HUB_LABEL missing an entry for "${k}"`);
+    return `      <a href="/${ssotEsc(href)}">${ssotEsc(label)} <span class="hub-sib-n">${n}</span></a>`;
+  }).join('\n');
+}
+
+export function applyHubNav(html, currentKey, SITE) {
+  return spliceBetweenMarkers(html, HUBNAV_START, HUBNAV_END, hubNavHTML(currentKey, SITE));
+}
+
+
 /* SITE.thm formatting. Duplicated from SITE.thmDisplay in assets/js/site.js
    deliberately: this runs in Node with no DOM, and check-consistency.mjs
    compares the two outputs, so a divergence fails the commit rather than
