@@ -100,6 +100,13 @@
      One curve, starting fast and settling soft, and three durations with a job
      each. Changing the feel of the whole site is now two values, not fifty. */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Progress indicators only. They track a real quantity - how far down the page
+     you are, how far through the loader - so they must follow it tightly rather
+     than easing toward it. Collapsing them onto --t-fast in the motion rewrite
+     slowed them from .1s to .18s, which put 80ms of lag between the scroll and
+     the bar that reports it. Separate token so the scale can move without
+     dragging them with it. */
+  --t-instant: .1s;
   --t-fast: .18s;   /* colour, border, opacity on small elements */
   --t-base: .28s;   /* hovers, transforms, anything that moves */
   --t-slow: .6s;    /* scroll reveals, the one deliberately unhurried step */
