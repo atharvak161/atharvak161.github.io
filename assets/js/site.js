@@ -815,13 +815,32 @@ function buildLsProjects(){
   return lines;
 }
 
+/* The SSOT holds hand-authored HTML fragments, so its strings carry entities:
+   &amp;, &#39;, &mdash; and so on. The terminal prints with textContent, which
+   does no decoding, so anything not handled here reaches the screen literally -
+   "CTF &amp; Penetration Testing Labs" was showing exactly like that.
+
+   Each caller used to unescape its own two or three entities by hand, which is
+   why the list was always one short. This decodes all of them the way the
+   browser would, by letting the browser do it. Input is our own markup, never a
+   visitor's, and the result goes to textContent, so there is no injection path. */
+function decodeEntities(str){
+  var t = document.createElement('textarea');
+  t.innerHTML = String(str == null ? '' : str);
+  return t.value;
+}
+
+function plainFromSsot(str){
+  return decodeEntities(String(str == null ? '' : str).replace(/<[^>]*>/g, '')).trim();
+}
+
 function buildProjectsTxt(){
   // Full set from the SSOT - see buildCertsTxt above for why.
   if(window.SITE && SITE.projects && SITE.projects.length){
     var out = [];
     SITE.projects.forEach(function(p){
-      var org = (p.org || '').replace(/<[^>]*>/g, '').replace(/&middot;/g, '\u00b7').trim();
-      out.push({ t:'t-green', v:'[*] ' + p.name.replace(/&mdash;/g, '\u2014') + (org ? '  (' + org + ')' : '') });
+      var org = plainFromSsot(p.org);
+      out.push({ t:'t-green', v:'[*] ' + plainFromSsot(p.name) + (org ? '  (' + org + ')' : '') });
       if(p.href){ out.push({ t:'t-out', v:'   ', url: p.href, linkText: projectLinkLabel(p.href) }); }
     });
     return out;
