@@ -363,6 +363,16 @@ export function spliceBetweenMarkers(html, startMarker, endMarker, newInner) {
 
 /** Like spliceBetweenMarkers but for a single-line/inline region (e.g. a
  *  hub's ".hub-count" text) — no injected newlines or indentation. */
+/* The badges hub's own description carried a hand-typed count. It said 13 while
+   SITE.badges held 15 and the home page's own "See all 15 badges" link said 15,
+   so the number a search result showed for that page was wrong. Generated from
+   the array now, like every other count on the site. */
+export function applyBadgeCountTags(html, SITE) {
+  const n = (SITE.badges || []).length;
+  if (!n) throw new Error('applyBadgeCountTags: SITE.badges is empty. Refusing to write a zero count.');
+  return html.replace(/All \d+ TryHackMe badges/g, `All ${n} TryHackMe badges`);
+}
+
 /* F8: per-writeup TechArticle structured data.
 
    Only the home page and the writeups index carried JSON-LD. The six writeup
