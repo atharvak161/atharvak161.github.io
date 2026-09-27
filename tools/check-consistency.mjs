@@ -34,6 +34,8 @@ import {
   allPages,
   applyIdentityTags,
   applyBadgeCountTags,
+  applyHubJsonLd,
+  HUB_JSONLD,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -712,6 +714,102 @@ for (const rel of allPages(root)) {
   if (!m) { fail.push(`${rel}: no meta description.`); continue; }
   const text = m[1].replace(/&mdash;/g, '\u2014').replace(/&amp;/g, '&').replace(/&middot;/g, '\u00b7');
   if (text.length > 158) fail.push(`${rel}: meta description is ${text.length} characters; Google shows about 155, so it will truncate.`);
+}
+
+/* ── The three hubs carry generated, parseable CollectionPage structured data ──
+   certifications/, projects/ and badges/ had none while writeups/ did. The
+   expected hasPart counts below are stated from SITE directly, not taken from
+   the generator, so a generator that quietly started dropping entries still
+   fails here rather than agreeing with itself.
+
+   This block must stay ABOVE the "if (fail.length)" verdict — a check appended
+   after it runs and its failures are never reported. */
+{
+  const hubJsonLd = [
+    ['certs', 'certifications/index.html', 'EducationalOccupationalCredential',
+      (SITE.certs || []).filter(c => c.earned).length],
+    ['projects', 'projects/index.html', null,
+      (SITE.projects || []).filter(p => p.href).length],
+    ['badges', 'badges/index.html', 'CreativeWork',
+      (SITE.badges || []).length],
+  ];
+  for (const [key, rel, itemType, wantCount] of hubJsonLd) {
+    const mk = HUB_JSONLD[key];
+    const t = readFileSync(join(root, rel), 'utf8');
+    const occurrences = t.split(mk.start).length - 1;
+    if (occurrences === 0) {
+      fail.push(`${rel}: no generated CollectionPage JSON-LD. Run node tools/build-fallbacks.mjs.`);
+      continue;
+    }
+    if (occurrences > 1) {
+      fail.push(`${rel}: GENERATED:${key}-jsonld start marker appears ${occurrences} times — two structured-data blocks describe the same page.`);
+    }
+    if (applyHubJsonLd(t, key, SITE) !== t) {
+      fail.push(`${rel}: CollectionPage JSON-LD is stale or hand-edited. Run node tools/build-fallbacks.mjs and commit the result.`);
+    }
+    const region = getRegion(t, mk.start, mk.end);
+    if (region === null) {
+      fail.push(`${rel}: GENERATED:${key}-jsonld start marker without a matching end marker.`);
+      continue;
+    }
+    const m = region.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
+    if (!m) { fail.push(`${rel}: GENERATED:${key}-jsonld markers present but no ld+json script inside them.`); continue; }
+    // It is structured data; if it does not parse it is worse than absent.
+    let parsed;
+    try { parsed = JSON.parse(m[1]); }
+    catch (e) { fail.push(`${rel}: CollectionPage JSON-LD does not parse: ${e.message}`); continue; }
+    if (parsed['@type'] !== 'CollectionPage') {
+      fail.push(`${rel}: generated block is @type "${parsed['@type']}", expected CollectionPage.`);
+    }
+    const wantUrl = `${SITE.share.base}${HUB_HREF[key]}`;
+    if (parsed.url !== wantUrl) fail.push(`${rel}: CollectionPage url is "${parsed.url}" but the hub is at "${wantUrl}".`);
+    if (!Array.isArray(parsed.hasPart) || parsed.hasPart.length === 0) {
+      fail.push(`${rel}: CollectionPage hasPart is missing or empty — the block describes nothing.`);
+      continue;
+    }
+    if (parsed.hasPart.length !== wantCount) {
+      fail.push(`${rel}: CollectionPage lists ${parsed.hasPart.length} items but SITE.${key === 'certs' ? 'certs (earned)' : key === 'projects' ? 'projects (with href)' : 'badges'} holds ${wantCount}.`);
+    }
+    parsed.hasPart.forEach((p, i) => {
+      if (itemType && p['@type'] !== itemType) fail.push(`${rel}: hasPart[${i}] is @type "${p['@type']}", expected ${itemType}.`);
+      if (!p.name) fail.push(`${rel}: hasPart[${i}] has no name.`);
+      if (/&(?:amp|mdash|ndash|middot|quot|#39);/.test(JSON.stringify(p))) {
+        fail.push(`${rel}: hasPart[${i}] ("${p.name}") still contains an HTML entity. JSON-LD is read as text, so it will be shown literally.`);
+      }
+    });
+    if (key === 'certs') {
+      // The point of this block: the six credentials must be machine-readable
+      // on the page someone opens to check them.
+      const names = parsed.hasPart.map(p => p.name);
+      for (const c of (SITE.certs || []).filter(c => c.earned)) {
+        const want = c.jsonLdName || c.name;
+        if (!names.includes(want)) fail.push(`${rel}: earned credential "${want}" is missing from the CollectionPage hasPart.`);
+        if (!parsed.hasPart.some(p => p.name === want && p.recognizedBy && p.recognizedBy.name === c.issuer)) {
+          fail.push(`${rel}: credential "${want}" does not name "${c.issuer}" as recognizedBy.`);
+        }
+      }
+      if (parsed.hasPart.some(p => (SITE.certs || []).some(c => !c.earned && (c.jsonLdName || c.name) === p.name))) {
+        fail.push(`${rel}: an in-progress credential is listed as an earned EducationalOccupationalCredential.`);
+      }
+    }
+    if (key === 'projects') {
+      const urls = parsed.hasPart.map(p => p.url);
+      for (const p of (SITE.projects || []).filter(p => p.href)) {
+        if (!urls.includes(p.href)) fail.push(`${rel}: project "${p.name}" (${p.href}) is missing from the CollectionPage hasPart.`);
+      }
+      parsed.hasPart.forEach((p, i) => {
+        if (!p.url) fail.push(`${rel}: hasPart[${i}] ("${p.name}") has no url.`);
+        if (!['SoftwareSourceCode', 'CreativeWork'].includes(p['@type'])) {
+          fail.push(`${rel}: hasPart[${i}] is @type "${p['@type']}", expected SoftwareSourceCode or CreativeWork.`);
+        }
+      });
+    }
+    if (key === 'badges') {
+      parsed.hasPart.forEach((p, i) => {
+        if (!/^https:\/\//.test(p.url || '')) fail.push(`${rel}: hasPart[${i}] ("${p.name}") has no absolute url.`);
+      });
+    }
+  }
 }
 
 if (fail.length) {
