@@ -41,6 +41,11 @@ import {
   hubNavHTML,
   HUBNAV_START,
   HUBNAV_END,
+  writeupPagerHTML,
+  WRITEUP_PAGER_START,
+  WRITEUP_PAGER_END,
+  applyWriteupCountWords,
+  numWord,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -632,6 +637,11 @@ if (warn.length) {
 /* ── Every writeup carries its own generated TechArticle block ───────────── */
 for (const w of SITE.writeups) {
   const rel = `writeups/${w.slug}.html`;
+  // A slug with no page is reported by the writeups block below. Reading it
+  // here would crash the whole checker with an ENOENT stack trace before that
+  // block ever runs, which is exactly what happened when a writeup was added
+  // to the SSOT before its page existed.
+  if (!existsSync(join(root, rel))) continue;
   const t = readFileSync(join(root, rel), 'utf8');
   if (!t.includes('application/ld+json')) {
     fail.push(`${rel}: no JSON-LD. Run node tools/build-fallbacks.mjs.`);
@@ -868,6 +878,87 @@ for (const rel of allPages(root)) {
       const re = new RegExp(`<a[^>]+href="(?:/|\\.\\./)${href.replace(/\//g, '\\/')}"`);
       if (!re.test(hubHtml)) {
         fail.push(`${rel}: no link anywhere on the page to /${href} (${HUB_LABEL[other]}). A hub a visitor cannot leave sideways is why this check exists.`);
+      }
+    }
+  }
+}
+
+/* ── Writeups: every entry has a page, every page has an entry, the pager
+      chain is intact, and the spelled-out count is right ───────────────────
+
+   Adding a writeup touches the SSOT, a new page, both neighbouring pagers, the
+   sitemap and four description strings. These checks make a half-done addition
+   fail the commit rather than ship a page nothing links to, or a pager that
+   skips over the new one.
+
+   This block must stay ABOVE the "if (fail.length)" verdict — a check appended
+   after it runs and its failures are never reported. */
+{
+  const writeups = SITE.writeups || [];
+  if (!writeups.length) fail.push('SITE.writeups is empty.');
+
+  // Entry -> page
+  const slugs = new Set();
+  for (const w of writeups) {
+    if (!w.slug) { fail.push(`SITE.writeups entry "${w.name || w.id}" has no slug.`); continue; }
+    if (slugs.has(w.slug)) fail.push(`SITE.writeups has two entries with slug "${w.slug}".`);
+    slugs.add(w.slug);
+    if (!existsSync(join(root, `writeups/${w.slug}.html`))) {
+      fail.push(`SITE.writeups names "${w.slug}" but writeups/${w.slug}.html does not exist.`);
+    }
+  }
+
+  // Page -> entry
+  for (const f of readdirSync(join(root, 'writeups')).filter(f => f.endsWith('.html') && f !== 'index.html')) {
+    const slug = f.replace(/\.html$/, '');
+    if (!slugs.has(slug)) {
+      fail.push(`writeups/${f} exists but no SITE.writeups entry names it. Nothing on the site links to it.`);
+    }
+  }
+
+  // Pager chain
+  writeups.forEach((w, i) => {
+    if (!w.slug) return;
+    const rel = `writeups/${w.slug}.html`;
+    const abs = join(root, rel);
+    if (!existsSync(abs)) return;
+    const pageHtml = readFileSync(abs, 'utf8');
+    const region = getRegion(pageHtml, WRITEUP_PAGER_START, WRITEUP_PAGER_END);
+    if (region === null) {
+      fail.push(`${rel}: GENERATED:pager markers are missing. Every writeup carries the prev/next pager.`);
+      return;
+    }
+    let want;
+    try {
+      want = writeupPagerHTML(i, writeups);
+    } catch (e) {
+      fail.push(`${rel}: cannot build the pager \u2014 ${e.message}`);
+      return;
+    }
+    if (region.trim() !== want.trim()) {
+      fail.push(`${rel}: pager has drifted from the SITE.writeups order. Run \`node tools/build-fallbacks.mjs\`.`);
+    }
+    if (region.includes(`href="${w.slug}.html"`)) {
+      fail.push(`${rel}: pager links to itself.`);
+    }
+  });
+
+  // The spelled-out count in the hub's four description strings
+  {
+    const rel = 'writeups/index.html';
+    const before = readFileSync(join(root, rel), 'utf8');
+    if (applyWriteupCountWords(before, SITE) !== before) {
+      fail.push(`${rel}: a description still spells a stale writeup count. SITE.writeups holds ${writeups.length} (${numWord(writeups.length)}). Run \`node tools/build-fallbacks.mjs\`.`);
+    }
+  }
+
+  // Sitemap covers every writeup
+  {
+    const sm = readFileSync(join(root, 'sitemap.xml'), 'utf8');
+    for (const w of writeups) {
+      if (!w.slug) continue;
+      if (!sm.includes(`/writeups/${w.slug}.html`)) {
+        fail.push(`sitemap.xml has no entry for writeups/${w.slug}.html. Run \`node tools/build-sitemap.mjs\`.`);
       }
     }
   }

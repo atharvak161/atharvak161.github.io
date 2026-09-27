@@ -61,6 +61,8 @@ import {
   applyBadgeCountTags,
   applyHubJsonLd,
   applyHubNav,
+  applyWriteupPager,
+  applyWriteupCountWords,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -324,4 +326,42 @@ if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already u
     }
   }
   if (hubNavChanged === 0) console.log('build-fallbacks: hub sibling nav already up to date.');
+}
+
+/* ── Writeup prev/next pagers, from the SITE.writeups order ─────────────────
+   Adding a writeup used to mean editing three pages by hand. Now the order in
+   SITE.writeups is the chain, and every page re-links itself. */
+{
+  let pagerChanged = 0;
+  const writeups = SITE.writeups || [];
+  if (!writeups.length) { console.error('build-fallbacks: SITE.writeups is empty.'); process.exit(1); }
+  writeups.forEach((w, i) => {
+    const rel = `writeups/${w.slug}.html`;
+    const abs = join(root, rel);
+    const before = readFileSync(abs, 'utf8');
+    const after = applyWriteupPager(before, i, SITE);
+    if (after !== before) { writeFileSync(abs, after); pagerChanged++; console.log(`build-fallbacks: ${rel} pager updated.`); }
+    if (applyWriteupPager(after, i, SITE) !== after) {
+      console.error(`build-fallbacks: NOT IDEMPOTENT (pager, ${rel}).`);
+      process.exit(1);
+    }
+  });
+  if (pagerChanged === 0) console.log('build-fallbacks: writeup pagers already up to date.');
+}
+
+/* ── The spelled-out writeup count in the hub's description strings ────────
+   "Six detailed TryHackMe walkthroughs" appears in the meta description, the
+   og and twitter descriptions and the CollectionPage JSON-LD. Four hand-typed
+   copies of a number is how the badges hub came to advertise 13 of 15. */
+{
+  const rel = 'writeups/index.html';
+  const abs = join(root, rel);
+  const before = readFileSync(abs, 'utf8');
+  const after = applyWriteupCountWords(before, SITE);
+  if (after !== before) { writeFileSync(abs, after); console.log(`build-fallbacks: ${rel} writeup count words updated.`); }
+  else console.log('build-fallbacks: writeup count words already correct.');
+  if (applyWriteupCountWords(after, SITE) !== after) {
+    console.error('build-fallbacks: NOT IDEMPOTENT (writeup count words).');
+    process.exit(1);
+  }
 }
