@@ -659,6 +659,30 @@ for (const w of SITE.writeups) {
   }
 }
 
+/* ── The canonical and the sitemap must name the identical URL ──────────────
+   index.html's canonical said https://atharvaxsecurity.com while the sitemap
+   said https://atharvaxsecurity.com/ . Google usually reconciles that, but the
+   two files disagreeing about the site's own address is the kind of small
+   inconsistency that shows up later as a canonical or redirect report and costs
+   an afternoon to trace. */
+{
+  const idx = readFileSync(join(root, 'index.html'), 'utf8');
+  const map = readFileSync(join(root, 'sitemap.xml'), 'utf8');
+  const canon = (idx.match(/rel="canonical"\s+href="([^"]*)"/) || [])[1];
+  const homeLoc = (map.match(/<loc>(https:\/\/[^<]*?)<\/loc>/) || [])[1];
+  if (!canon) fail.push('index.html has no canonical link.');
+  else if (!homeLoc) fail.push('sitemap.xml has no <loc> entries.');
+  else if (canon !== homeLoc) {
+    fail.push(`index.html canonical is "${canon}" but the sitemap's first entry is "${homeLoc}". They must be byte-identical.`);
+  }
+  // Every sitemap entry must be absolute and on this origin.
+  for (const m of map.matchAll(/<loc>([^<]*)<\/loc>/g)) {
+    if (!m[1].startsWith('https://atharvaxsecurity.com/')) {
+      fail.push(`sitemap.xml entry "${m[1]}" is not an absolute URL on this origin.`);
+    }
+  }
+}
+
 if (fail.length) {
   console.error(`\nFAIL — ${fail.length} consistency problem(s):`);
   fail.forEach(f => console.error(`  ✗ ${f}`));
