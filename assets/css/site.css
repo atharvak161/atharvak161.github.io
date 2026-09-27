@@ -195,14 +195,18 @@
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
   nav.scrolled { padding: .7rem var(--gutter); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; transition: text-shadow var(--t-base) var(--ease); }
-  /* Order matters here: equal specificity, so the later rule wins. Hover alone,
-     then the scroll-spy state, then both together as the brightest.
-     The glow now comes from --accent-rgb rather than a hardcoded cyan, so it is
-     the right colour in light theme too - the old .active rule was always the
-     dark-theme cyan regardless of which theme was on. */
-  .nav-logo:hover { text-shadow: 0 0 10px rgba(var(--accent-rgb),.4); }
+  /* Hover is written for BOTH states in one rule, because at the top of the page
+     the logo already carries the .active glow, and that is exactly where a
+     visitor's pointer is. A first attempt went 12px/50% to 16px/62% and the
+     difference was invisible: the hover has to clear the resting glow by a wide
+     margin to read as a hover at all. Two layers now, a tight bright core and a
+     wide soft halo.
+     Colour comes from --accent-rgb, not a hardcoded cyan. The old .active rule
+     painted the dark-theme cyan in light mode too, where the accent is #0077aa,
+     so the glow was the wrong colour on half the site. */
+  .nav-logo:hover,
+  .nav-logo.active:hover { text-shadow: 0 0 22px rgba(var(--accent-rgb),.95), 0 0 42px rgba(var(--accent-rgb),.5); }
   .nav-logo.active { text-shadow: 0 0 12px rgba(var(--accent-rgb),.5); }
-  .nav-logo.active:hover { text-shadow: 0 0 16px rgba(var(--accent-rgb),.62); }
   .nav-logo span { color: var(--text2); }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { font-size: .78rem; color: var(--text2); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color var(--t-base) var(--ease); }
