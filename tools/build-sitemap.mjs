@@ -5,6 +5,7 @@
 //   node tools/build-sitemap.mjs --check  # exit 1 if it is stale
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { loadSite, readSiteJs } from './ssot.mjs';
 
 const SITEMAP = 'sitemap.xml';
 const ORIGIN = 'https://atharvaxsecurity.com';
@@ -36,6 +37,39 @@ const lastCommitDate = (file) => {
 let xml = readFileSync(SITEMAP, 'utf8');
 const original = xml;
 const missing = [];
+
+/* Add any writeup that SITE.writeups declares and the sitemap does not yet
+   carry. This file only refreshed <lastmod>, so a new writeup was published,
+   linked from four surfaces, and still absent from the sitemap - the one
+   remaining hand-edited step in adding one, and the easiest to forget because
+   nothing on the site looks wrong without it.
+
+   Inserted after the last existing writeup entry so the file keeps its order,
+   and only ever appended to: an entry already present is left exactly as it is,
+   dates included. */
+{
+  const SITE = loadSite(readSiteJs());
+  const added = [];
+  for (const w of (SITE.writeups || [])) {
+    const loc = `${ORIGIN}/writeups/${w.slug}.html`;
+    if (xml.includes(`<loc>${loc}</loc>`)) continue;
+    if (!existsSync(`writeups/${w.slug}.html`)) {
+      console.error(`sitemap: SITE.writeups names ${w.slug} but writeups/${w.slug}.html does not exist.`);
+      process.exit(1);
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    const entry = `  <url><loc>${loc}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+    const lastWriteup = xml.lastIndexOf(`${ORIGIN}/writeups/`);
+    const lineEnd = xml.indexOf('\n', lastWriteup);
+    if (lastWriteup === -1 || lineEnd === -1) {
+      console.error('sitemap: could not find an existing writeup entry to insert after.');
+      process.exit(1);
+    }
+    xml = xml.slice(0, lineEnd + 1) + entry + '\n' + xml.slice(lineEnd + 1);
+    added.push(w.slug);
+  }
+  if (added.length) console.log(`sitemap.xml: added ${added.length} writeup(s) — ${added.join(', ')}`);
+}
 
 xml = xml.replace(/<url>\s*<loc>(.*?)<\/loc>\s*<lastmod>(.*?)<\/lastmod>/gs, (whole, loc, old) => {
   if (EXTERNAL.has(loc)) return whole;   // another repo owns it; leave its date alone
