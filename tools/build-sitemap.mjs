@@ -9,6 +9,16 @@ import { execFileSync } from 'node:child_process';
 const SITEMAP = 'sitemap.xml';
 const ORIGIN = 'https://atharvaxsecurity.com';
 
+// Served from this domain but built from other repositories, so there is no
+// local file to stat and no commit here to date them from. They are declared in
+// the sitemap on purpose: Google finds them through the portfolio's links, and
+// without a declaration that shows up as "Discovered, currently not indexed".
+const EXTERNAL = new Set([
+  `${ORIGIN}/cybersec-toolkit/`,
+  `${ORIGIN}/cybersec-vault/`,
+  `${ORIGIN}/Blueprint/`,
+]);
+
 const fileFor = (loc) => {
   const p = loc.replace(ORIGIN, '').replace(/^\//, '');
   if (p === '') return 'index.html';
@@ -28,6 +38,7 @@ const original = xml;
 const missing = [];
 
 xml = xml.replace(/<url>\s*<loc>(.*?)<\/loc>\s*<lastmod>(.*?)<\/lastmod>/gs, (whole, loc, old) => {
+  if (EXTERNAL.has(loc)) return whole;   // another repo owns it; leave its date alone
   const file = fileFor(loc);
   if (!existsSync(file)) { missing.push(`${loc} -> ${file}`); return whole; }
   return whole.replace(`<lastmod>${old}</lastmod>`, `<lastmod>${lastCommitDate(file)}</lastmod>`);
