@@ -75,6 +75,20 @@
      while the sections below sat in a tidy 1200px column. */
   --page-max: 1200px;
 
+  /* gutter: the inline padding every section carries INSIDE the --page-max
+     column. It matters that this is a token and not a repeated 3rem, because
+     the nav and footer are full-bleed and have to line their content up with
+     it by formula:
+
+       section text starts at   max(0, (100% - page-max)/2) + gutter
+       so nav padding must be   max(gutter, (100% - page-max)/2 + gutter)
+
+     Getting that wrong is not subtle. Capping the nav to the same WIDTH as the
+     sections but forgetting their inner padding left the AK.SEC logo sitting
+     48px to the left of the hero text it sits above, at every width over
+     1296px. Expressed as a formula off one token, the two cannot drift. */
+  --gutter: 3rem;
+
   /* motion: one curve and a three-step scale.
 
      The site previously specified almost no easing at all, so every transition
