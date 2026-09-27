@@ -58,6 +58,7 @@ import {
   allPages,
   applyWriteupJsonLd,
   applyIdentityTags,
+  applyBadgeCountTags,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -254,4 +255,15 @@ if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already u
     console.error('build-fallbacks: NOT IDEMPOTENT (identity tags).');
     process.exit(1);
   }
+}
+
+/* ── The badges hub's own count, from SITE.badges ───────────────────────────
+   It said 13 against an array of 15. A wrong number in your own search snippet
+   is a credibility problem, not a cosmetic one. */
+{
+  const before = readFileSync(badgesHubPath, 'utf8');
+  const after = applyBadgeCountTags(before, SITE);
+  if (after !== before) { writeFileSync(badgesHubPath, after); console.log('build-fallbacks: badges/index.html badge count updated.'); }
+  else console.log('build-fallbacks: badge count already correct.');
+  if (applyBadgeCountTags(after, SITE) !== after) { console.error('build-fallbacks: NOT IDEMPOTENT (badge count).'); process.exit(1); }
 }

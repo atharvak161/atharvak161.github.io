@@ -33,6 +33,7 @@ import {
   applyWriteupJsonLd,
   allPages,
   applyIdentityTags,
+  applyBadgeCountTags,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -681,6 +682,36 @@ for (const w of SITE.writeups) {
       fail.push(`sitemap.xml entry "${m[1]}" is not an absolute URL on this origin.`);
     }
   }
+}
+
+/* ── Any count stated in prose must match the array it counts ───────────────
+   The badges hub said "All 13 TryHackMe badges" against an array of 15, while
+   the home page's own see-all link already said 15. A number typed into a
+   sentence drifts from the data behind it; this makes that fail the commit. */
+{
+  const n = (SITE.badges || []).length;
+  for (const rel of ['badges/index.html', 'index.html']) {
+    const t = readFileSync(join(root, rel), 'utf8');
+    for (const m of t.matchAll(/All (\d+) TryHackMe badges/g)) {
+      if (Number(m[1]) !== n) fail.push(`${rel}: says "All ${m[1]} TryHackMe badges" but SITE.badges holds ${n}.`);
+    }
+    for (const m of t.matchAll(/See all (\d+) badges/g)) {
+      if (Number(m[1]) !== n) fail.push(`${rel}: says "See all ${m[1]} badges" but SITE.badges holds ${n}.`);
+    }
+  }
+  const bh = readFileSync(join(root, 'badges/index.html'), 'utf8');
+  if (applyBadgeCountTags(bh, SITE) !== bh) {
+    fail.push('badges/index.html badge count differs from what build-fallbacks would write. Run it and commit the result.');
+  }
+}
+
+/* ── Meta descriptions must fit in a search result ────────────────────────── */
+for (const rel of allPages(root)) {
+  const t = readFileSync(join(root, rel), 'utf8');
+  const m = t.match(/<meta\s+name="description"\s+content="([^"]*)"/);
+  if (!m) { fail.push(`${rel}: no meta description.`); continue; }
+  const text = m[1].replace(/&mdash;/g, '\u2014').replace(/&amp;/g, '&').replace(/&middot;/g, '\u00b7');
+  if (text.length > 158) fail.push(`${rel}: meta description is ${text.length} characters; Google shows about 155, so it will truncate.`);
 }
 
 if (fail.length) {
