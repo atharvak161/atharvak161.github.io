@@ -12,6 +12,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── assets/css/site.css           all styles for the home page
 ├── assets/js/site.js             all behaviour + the SITE.* arrays
 ├── badges/ certifications/ projects/   hub pages, generated from the SSOT
+│   writeups/                        (all four also carry the sibling nav row)
 ├── sitemap.xml                    11 URLs: home + 4 hub pages + 6 writeups
 ├── thumbnail.jpg                  og:image — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
@@ -135,6 +136,8 @@ SITE.badges    →  #badges grid (featured only)  +  /badges/ hub (all)
 SITE.projects  →  #projects (featured only)     +  /projects/ hub (all)
 SITE.writeups  →  #writeups (featured only)     +  /writeups/ hub (all)
                   +  terminal `cat badges.txt` (all, read from the SSOT)
+HUB_ORDER      →  the sibling nav at the foot of all four hub pages
+   (ssot.mjs)     (each page gets the list minus itself, with live counts)
 ```
 
 The terminal builders read `SITE` directly, so they list the full set even when

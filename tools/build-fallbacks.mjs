@@ -60,6 +60,7 @@ import {
   applyIdentityTags,
   applyBadgeCountTags,
   applyHubJsonLd,
+  applyHubNav,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -295,4 +296,32 @@ if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already u
     }
   }
   if (hubJsonLdChanged === 0) console.log('build-fallbacks: hub CollectionPage JSON-LD already up to date.');
+}
+
+/* ── The sibling row at the foot of each hub ─────────────────────────────
+   Each hub linked home and nowhere else. Generated from HUB_ORDER, so the row
+   is identical in structure on all four and a fifth section page reaches every
+   one of them from a single edit. Each page gets the list minus itself. */
+{
+  let hubNavChanged = 0;
+  for (const [key, rel] of [
+    ['projects', 'projects/index.html'],
+    ['writeups', 'writeups/index.html'],
+    ['certs', 'certifications/index.html'],
+    ['badges', 'badges/index.html'],
+  ]) {
+    const abs = join(root, rel);
+    const before = readFileSync(abs, 'utf8');
+    const after = applyHubNav(before, key, SITE);
+    if (after !== before) {
+      writeFileSync(abs, after);
+      hubNavChanged++;
+      console.log(`build-fallbacks: ${rel} sibling nav updated.`);
+    }
+    if (applyHubNav(after, key, SITE) !== after) {
+      console.error(`build-fallbacks: NOT IDEMPOTENT (sibling nav, ${rel}).`);
+      process.exit(1);
+    }
+  }
+  if (hubNavChanged === 0) console.log('build-fallbacks: hub sibling nav already up to date.');
 }

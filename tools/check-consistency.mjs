@@ -36,6 +36,11 @@ import {
   applyBadgeCountTags,
   applyHubJsonLd,
   HUB_JSONLD,
+  HUB_ORDER,
+  HUB_LABEL,
+  hubNavHTML,
+  HUBNAV_START,
+  HUBNAV_END,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -808,6 +813,62 @@ for (const rel of allPages(root)) {
       parsed.hasPart.forEach((p, i) => {
         if (!/^https:\/\//.test(p.url || '')) fail.push(`${rel}: hasPart[${i}] ("${p.name}") has no absolute url.`);
       });
+    }
+  }
+}
+
+/* ── Every hub reaches every other hub ────────────────────────────────
+
+   Two separate things, because the generated region agreeing with the generator
+   does not prove the page is reachable. The first compares the region byte for
+   byte. The second asserts the invariant itself against the whole file: for each
+   hub, an anchor to each of the other hubs exists SOMEWHERE on the page. That is
+   the check that would have caught the original state, where all four hubs were
+   consistent with each other and every one of them was a dead end.
+
+   This block must stay ABOVE the "if (fail.length)" verdict — a check appended
+   after it runs and its failures are never reported. */
+{
+  const HUB_REL = {
+    projects: 'projects/index.html',
+    writeups: 'writeups/index.html',
+    certs: 'certifications/index.html',
+    badges: 'badges/index.html',
+  };
+  for (const key of HUB_ORDER) {
+    const rel = HUB_REL[key];
+    if (!rel) { fail.push(`HUB_ORDER names "${key}" but check-consistency has no file for it. Add it to HUB_REL.`); continue; }
+    const hubHtml = readFileSync(join(root, rel), 'utf8');
+
+    const region = getRegion(hubHtml, HUBNAV_START, HUBNAV_END);
+    if (region === null) {
+      fail.push(`${rel}: GENERATED:hubnav markers are missing. Every hub carries the sibling row.`);
+      continue;
+    }
+    let want;
+    try {
+      want = hubNavHTML(key, SITE);
+    } catch (e) {
+      // A section half-added to HUB_ORDER (no HUB_HREF/HUB_LABEL entry, or no
+      // SITE array behind it) throws rather than render a "0". Reported as a
+      // consistency failure so the message is readable, not a stack trace.
+      fail.push(`${rel}: cannot build the sibling nav \u2014 ${e.message}`);
+      continue;
+    }
+    if (region.trim() !== want.trim()) {
+      fail.push(`${rel}: sibling nav has drifted from HUB_ORDER. Run \`node tools/build-fallbacks.mjs\`.`);
+    }
+    if (region.includes(`/${HUB_HREF[key]}`)) {
+      fail.push(`${rel}: sibling nav links to itself.`);
+    }
+
+    for (const other of HUB_ORDER) {
+      if (other === key) continue;
+      const href = HUB_HREF[other];
+      const re = new RegExp(`<a[^>]+href="(?:/|\\.\\./)${href.replace(/\//g, '\\/')}"`);
+      if (!re.test(hubHtml)) {
+        fail.push(`${rel}: no link anywhere on the page to /${href} (${HUB_LABEL[other]}). A hub a visitor cannot leave sideways is why this check exists.`);
+      }
     }
   }
 }
