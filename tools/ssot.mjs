@@ -358,6 +358,63 @@ export function applyHubNav(html, currentKey, SITE) {
 }
 
 
+/* ── Writeup prev/next pagers ──────────────────────────────────────
+
+   These were wired by hand, which meant adding a writeup was a three-page edit
+   (the new page, plus BOTH neighbours) and inserting one at the top silently
+   left the old first page with an empty prev slot. SITE.writeups already holds
+   the order, so the chain is derived from it: add an entry and every pager on
+   the site re-links itself.
+
+   The empty slot at each end is a <span></span>, which is what keeps the
+   three-column nav aligned - do not drop it to two children. */
+export const WRITEUP_PAGER_START = '<!-- GENERATED:pager start \u2014 produced by tools/build-fallbacks.mjs from SITE.writeups order. Do not hand-edit; reorder SITE.writeups and run `node tools/build-fallbacks.mjs` instead. -->';
+export const WRITEUP_PAGER_END = '<!-- GENERATED:pager end -->';
+
+export function writeupPagerHTML(i, writeups) {
+  if (!Array.isArray(writeups) || !writeups.length) throw new Error('writeupPagerHTML: SITE.writeups is empty.');
+  if (i < 0 || i >= writeups.length) throw new Error(`writeupPagerHTML: index ${i} is outside SITE.writeups.`);
+  const prev = i > 0 ? writeups[i - 1] : null;
+  const next = i < writeups.length - 1 ? writeups[i + 1] : null;
+  const line = (w, rel) => {
+    const label = rel === 'prev' ? `&larr; ${ssotEsc(w.name)}` : `${ssotEsc(w.name)} &rarr;`;
+    return `      <a class="wr-pager-link" href="${ssotEsc(w.slug)}.html" rel="${rel}">${label}</a>`;
+  };
+  return [
+    prev ? line(prev, 'prev') : '      <span></span>',
+    '      <a class="wr-pager-hub" href="index.html">All writeups</a>',
+    next ? line(next, 'next') : '      <span></span>',
+  ].join('\n');
+}
+
+export function applyWriteupPager(html, i, SITE) {
+  return spliceBetweenMarkers(html, WRITEUP_PAGER_START, WRITEUP_PAGER_END, writeupPagerHTML(i, SITE.writeups || []));
+}
+
+/* The writeups hub's four description strings open with a spelled-out count
+   ("Six detailed TryHackMe walkthroughs"). Hard-typed, they are the badges-hub
+   "13 badges" bug waiting to happen: a wrong number in the text Google shows
+   for the page. Generated from the array instead. */
+const NUM_WORD = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
+  'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+  'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'];
+
+export function numWord(n) {
+  if (!Number.isInteger(n) || n < 1) throw new Error(`numWord: refusing to spell ${n}.`);
+  if (n >= NUM_WORD.length) return String(n);
+  return NUM_WORD[n];
+}
+
+export function applyWriteupCountWords(html, SITE) {
+  const n = (SITE.writeups || []).length;
+  if (!n) throw new Error('applyWriteupCountWords: SITE.writeups is empty. Refusing to write a zero count.');
+  const word = numWord(n);
+  const alt = NUM_WORD.slice(1).join('|') + '|\\d+';
+  return html.replace(new RegExp(`\\b(?:${alt}) detailed TryHackMe walkthroughs`, 'g'),
+    `${word} detailed TryHackMe walkthroughs`);
+}
+
+
 /* SITE.thm formatting. Duplicated from SITE.thmDisplay in assets/js/site.js
    deliberately: this runs in Node with no DOM, and check-consistency.mjs
    compares the two outputs, so a divergence fails the commit rather than
