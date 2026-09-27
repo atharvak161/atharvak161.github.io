@@ -59,6 +59,7 @@ import {
   applyWriteupJsonLd,
   applyIdentityTags,
   applyBadgeCountTags,
+  applyHubJsonLd,
 } from './ssot.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -266,4 +267,32 @@ if (jsonLdChanged === 0) console.log('build-fallbacks: writeup JSON-LD already u
   if (after !== before) { writeFileSync(badgesHubPath, after); console.log('build-fallbacks: badges/index.html badge count updated.'); }
   else console.log('build-fallbacks: badge count already correct.');
   if (applyBadgeCountTags(after, SITE) !== after) { console.error('build-fallbacks: NOT IDEMPOTENT (badge count).'); process.exit(1); }
+}
+
+/* ── CollectionPage structured data on the three remaining hubs ──────────────
+   writeups/index.html already had one; certifications/, projects/ and badges/
+   had none, so the page someone opens to check a credential offered a crawler
+   nothing machine-readable. Generated from SITE.certs / SITE.projects /
+   SITE.badges, the same arrays the cards come from. */
+{
+  let hubJsonLdChanged = 0;
+  for (const [key, rel] of [
+    ['certs', 'certifications/index.html'],
+    ['projects', 'projects/index.html'],
+    ['badges', 'badges/index.html'],
+  ]) {
+    const abs = join(root, rel);
+    const before = readFileSync(abs, 'utf8');
+    const after = applyHubJsonLd(before, key, SITE);
+    if (after !== before) {
+      writeFileSync(abs, after);
+      hubJsonLdChanged++;
+      console.log(`build-fallbacks: ${rel} CollectionPage JSON-LD updated.`);
+    }
+    if (applyHubJsonLd(after, key, SITE) !== after) {
+      console.error(`build-fallbacks: NOT IDEMPOTENT (hub JSON-LD, ${rel}).`);
+      process.exit(1);
+    }
+  }
+  if (hubJsonLdChanged === 0) console.log('build-fallbacks: hub CollectionPage JSON-LD already up to date.');
 }

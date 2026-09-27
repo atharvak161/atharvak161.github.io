@@ -3,14 +3,14 @@
   <url><loc>https://atharvaxsecurity.com/</loc><lastmod>2026-09-27</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://atharvaxsecurity.com/writeups/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://atharvaxsecurity.com/badges/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/certifications/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/projects/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/certifications/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/projects/</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://atharvaxsecurity.com/writeups/domino.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/writeups/capture.html</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/writeups/flagvault.html</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/writeups/flagvault2.html</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/writeups/capture.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/writeups/flagvault.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/writeups/flagvault2.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://atharvaxsecurity.com/writeups/picklerick.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://atharvaxsecurity.com/writeups/simplectf.html</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://atharvaxsecurity.com/writeups/simplectf.html</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <!-- Separate GitHub Pages projects served from this same domain. They are
        linked from the portfolio and return 200, so Google discovers them, but
        they were never declared here - which is what "Discovered, currently not

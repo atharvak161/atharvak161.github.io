@@ -403,10 +403,16 @@ export function applyWriteupJsonLd(html, w, SITE) {
   return html.slice(0, i) + block + html.slice(j + WRITEUP_JSONLD_END.length);
 }
 
-export function writeupJsonLd(w, SITE) {
-  const base = (SITE.share && SITE.share.base) || 'https://atharvaxsecurity.com/';
-  const url = `${base}writeups/${w.slug}.html`;
-  const plain = String(w.desc || '')
+/** Turns a SITE field (trusted hand-authored HTML: entities plus the odd
+ *  <span>) into the plain text JSON-LD needs. JSON-LD is read as text, not
+ *  parsed as HTML, so "&mdash;" left in place is shown literally by anything
+ *  that consumes the block.
+ *
+ *  Extracted from writeupJsonLd so the hub CollectionPage builders below decode
+ *  identically \u2014 three copies of this list is how one of them ends up missing
+ *  an entity nobody notices until it is in a search result. */
+export function plainText(s) {
+  return String(s == null ? '' : s)
     .replace(/&middot;/g, '\u00b7')
     .replace(/&mdash;/g, '\u2014')
     .replace(/&ndash;/g, '\u2013')
@@ -415,6 +421,12 @@ export function writeupJsonLd(w, SITE) {
     .replace(/&#39;/g, "'")
     .replace(/<[^>]*>/g, '')
     .trim();
+}
+
+export function writeupJsonLd(w, SITE) {
+  const base = (SITE.share && SITE.share.base) || 'https://atharvaxsecurity.com/';
+  const url = `${base}writeups/${w.slug}.html`;
+  const plain = plainText(w.desc);
   const obj = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -566,4 +578,179 @@ export function spliceHasCredential(html, regionStartMarker, regionEndMarker, ne
   const loc = locateHasCredential(html, regionStartMarker, regionEndMarker);
   if (loc === null) throw new Error('"hasCredential" array not found inside JSON-LD generated region — check GENERATED:jsonld markers');
   return html.slice(0, loc.absIndex) + newArrayText + html.slice(loc.absIndex + loc.text.length);
+}
+
+/* ── Hub-page CollectionPage structured data ──────────────────────────────
+
+   writeups/index.html has carried a CollectionPage since the writeup JSON-LD
+   went in, and each writeup page carries a TechArticle. The other three hubs
+   carried nothing: certifications/index.html is the page someone opens to check
+   a credential, and a crawler saw six cert cards as decorated <div>s with no
+   machine-readable credential behind them.
+
+   Generated from the same SITE arrays the cards come from, so a credential
+   cannot be described one way on its card and another in the page's structured
+   data. Each builder throws rather than emit an empty hasPart — a generator that
+   can write nothing eventually will, silently.
+
+   Markers are per-hub ("GENERATED:certs-jsonld") and distinct from the grid
+   markers ("GENERATED:certs"), so each region only ever rewrites its own bytes. */
+
+export const HUB_JSONLD = {};
+for (const key of ['certs', 'projects', 'badges']) {
+  const [start, end] = markers(`${key}-jsonld`, key);
+  HUB_JSONLD[key] = { start, end };
+}
+
+function siteBase(SITE) {
+  return (SITE.share && SITE.share.base) || 'https://atharvaxsecurity.com/';
+}
+
+/** Resolves a SITE path to an absolute URL on this origin. Already-absolute
+ *  URLs pass through. */
+function absUrl(path, base) {
+  return /^https?:/.test(path) ? path : base + String(path).replace(/^\//, '');
+}
+
+/** The GitHub repository behind a project: its href when that is already a repo
+ *  URL, otherwise the repo path printed in p.org (e.g. "github.com/x/y"), which
+ *  is where the live-site projects keep theirs. Returns null when there is no
+ *  repository — that is what decides SoftwareSourceCode vs CreativeWork, so it
+ *  is derived, never a typed field that can go stale against the org line. */
+export function projectRepoUrl(p) {
+  if (p.href && /^https:\/\/github\.com\/[^/]+\/[^/?#]+/.test(p.href)) return p.href.replace(/\/+$/, '');
+  const m = String(p.org || '').match(/github\.com\/[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+/);
+  return m ? `https://${m[0]}` : null;
+}
+
+/** Which SITE items a hub's hasPart lists. Stated once, used by the builders and
+ *  by check-consistency.mjs, so "what belongs in the block" cannot be written
+ *  twice and differ. */
+export function hubJsonLdItems(key, SITE) {
+  switch (key) {
+    // Only earned credentials. In-progress paths belong in #learning, exactly as
+    // the home page's hasCredential array already treats them.
+    case 'certs': return (SITE.certs || []).filter(c => c.earned);
+    // A project with no href has nothing to point a "url" at, and a CreativeWork
+    // without a URL is not worth a crawler's time.
+    case 'projects': return (SITE.projects || []).filter(p => p.href);
+    case 'badges': return SITE.badges || [];
+    default: throw new Error(`hubJsonLdItems: unknown hub "${key}"`);
+  }
+}
+
+/** Shared CollectionPage envelope. Throws on an empty hasPart: structured data
+ *  that describes nothing is worse than none, because it looks correct. */
+function collectionPage(SITE, { name, hubKey, description, hasPart }) {
+  if (!Array.isArray(hasPart) || hasPart.length === 0) {
+    throw new Error(`collectionPage(${hubKey}): hasPart is empty. Refusing to write structured data that describes nothing.`);
+  }
+  if (!HUB_HREF[hubKey]) throw new Error(`collectionPage: no HUB_HREF for "${hubKey}"`);
+  const base = siteBase(SITE);
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    url: base + HUB_HREF[hubKey],
+    description,
+    author: { '@type': 'Person', name: 'Atharva Kulkarni', url: base },
+    isPartOf: { '@type': 'WebSite', name: 'Atharva Kulkarni', url: base },
+    hasPart,
+  }, null, 2);
+}
+
+/** certifications/index.html — the six earned credentials as
+ *  EducationalOccupationalCredential, with the issuer as recognizedBy and, where
+ *  one exists, the credential ID and the self-hosted certificate PDF. */
+export function certsHubJsonLd(SITE) {
+  const earned = hubJsonLdItems('certs', SITE);
+  const base = siteBase(SITE);
+  const inProgress = (SITE.certs || []).length - earned.length;
+  const hasPart = earned.map(c => {
+    const entry = {
+      '@type': 'EducationalOccupationalCredential',
+      name: plainText(c.jsonLdName || c.name),
+      credentialCategory: 'certification',
+      recognizedBy: { '@type': 'Organization', name: plainText(c.issuer) },
+    };
+    if (c.credentialId) entry.identifier = plainText(c.credentialId);
+    const evidence = c.certUrl || (c.pill && c.pill.href) || null;
+    if (evidence) entry.url = absUrl(evidence, base);
+    return entry;
+  });
+  // Counted, never typed. A sentence with a number in it drifts from the array
+  // behind it; that is how the badges hub came to claim 13 of 15.
+  const description = `${earned.length} security certifications and credentials earned by Atharva Kulkarni`
+    + (inProgress > 0 ? `, plus ${inProgress} in progress` : '') + '.';
+  return collectionPage(SITE, { name: 'Certifications', hubKey: 'certs', description, hasPart });
+}
+
+/** projects/index.html — every project with a real href. SoftwareSourceCode when
+ *  a repository can be resolved, CreativeWork otherwise. */
+export function projectsHubJsonLd(SITE) {
+  const listed = hubJsonLdItems('projects', SITE);
+  const hasPart = listed.map(p => {
+    const repo = projectRepoUrl(p);
+    const entry = {
+      '@type': repo ? 'SoftwareSourceCode' : 'CreativeWork',
+      name: plainText(p.name),
+      description: plainText(p.desc),
+      url: p.href,
+    };
+    if (repo) entry.codeRepository = repo;
+    if (Array.isArray(p.techStack) && p.techStack.length) {
+      entry.keywords = p.techStack.map(plainText).join(', ');
+    }
+    return entry;
+  });
+  const description = `${listed.length} published projects and repositories by Atharva Kulkarni.`;
+  return collectionPage(SITE, { name: 'Projects', hubKey: 'projects', description, hasPart });
+}
+
+/** badges/index.html — the TryHackMe badge wall. Deliberately the plainest of
+ *  the three: a name, a description and the badge's own share URL. */
+export function badgesHubJsonLd(SITE) {
+  const badges = hubJsonLdItems('badges', SITE);
+  if (typeof SITE.thmShare !== 'function') {
+    throw new Error('badgesHubJsonLd: SITE.thmShare is not a function — badge URLs would be undefined.');
+  }
+  const hasPart = badges.map(b => {
+    const url = b.href || SITE.thmShare(b.slug);
+    if (!url) throw new Error(`badgesHubJsonLd: badge "${b.name}" has neither href nor slug.`);
+    return {
+      '@type': 'CreativeWork',
+      name: plainText(b.name),
+      description: plainText(b.desc),
+      url,
+    };
+  });
+  const description = `${badges.length} TryHackMe badges earned by Atharva Kulkarni.`;
+  return collectionPage(SITE, { name: 'TryHackMe Badges', hubKey: 'badges', description, hasPart });
+}
+
+export const HUB_JSONLD_BUILDER = {
+  certs: certsHubJsonLd,
+  projects: projectsHubJsonLd,
+  badges: badgesHubJsonLd,
+};
+
+/** Writes (or rewrites) one hub's CollectionPage block. Inserted before </head>
+ *  the first time, then only ever replaced between its own markers. Same shape
+ *  as applyWriteupJsonLd, so the two behave identically. */
+export function applyHubJsonLd(html, key, SITE) {
+  const mk = HUB_JSONLD[key];
+  const build = HUB_JSONLD_BUILDER[key];
+  if (!mk || !build) throw new Error(`applyHubJsonLd: unknown hub "${key}"`);
+  const json = build(SITE);
+  if (!json || !json.trim()) throw new Error(`applyHubJsonLd(${key}): builder produced an empty block.`);
+  const block = mk.start + '\n<script type="application/ld+json">\n' + json + '\n</script>\n' + mk.end;
+  const i = html.indexOf(mk.start);
+  if (i === -1) {
+    const h = html.indexOf('</head>');
+    if (h === -1) throw new Error(`applyHubJsonLd(${key}): no </head> found`);
+    return html.slice(0, h) + block + '\n' + html.slice(h);
+  }
+  const j = html.indexOf(mk.end);
+  if (j === -1) throw new Error(`applyHubJsonLd(${key}): start marker without end marker`);
+  return html.slice(0, i) + block + html.slice(j + mk.end.length);
 }
