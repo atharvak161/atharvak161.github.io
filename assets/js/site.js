@@ -50,7 +50,7 @@ SITE.share = {
 SITE.identity = {
   roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
   title: 'Atharva Kulkarni — Junior Pentester | CEH V12 | London',
-  metaDescription: 'Atharva Kulkarni — CEH V12 Certified, GCHQ-accredited MSc Applied Cyber Security graduate. Security Analyst transitioning into offensive security and penetration testing. London, UK.',
+  metaDescription: 'Junior penetration tester in London. CEH V12, GCHQ-accredited MSc, three years in enterprise security operations. CTF writeups and security tooling.',
   ogTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
   ogDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into offensive security and penetration testing. Portfolio of security projects and experience.',
   twTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',

@@ -186,9 +186,15 @@
   @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all var(--t-base) var(--ease); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem var(--gutter);
+    /* Left aligns the logo with the section text below it: the centring offset
+       plus the same gutter every section carries inside --page-max. The right
+       stays at the plain gutter because the nav cannot fit in that column -
+       logo + 12 links + toggle measure 1171px against 1104px available - and
+       cramping the links to force symmetry would be the worse trade. */
+    padding-left: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter))); padding-right: var(--gutter); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all var(--t-base) var(--ease); }
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
-  nav.scrolled { padding: .7rem 3rem; padding-inline: max(3rem, calc((100% - var(--page-max)) / 2)); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
+  nav.scrolled { padding: .7rem var(--gutter); padding-left: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter))); padding-right: var(--gutter); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
@@ -209,7 +215,7 @@
      cap here computed 680px a side against the 2560px parent, which blew past
      the 1200px max-width and crushed the content to zero. The nav is the one
      that genuinely had no cap. */
-  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem 3rem 4rem; overflow: hidden; z-index: 2; }
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: space-between; gap: 3rem; padding: 8rem var(--gutter) 4rem; overflow: hidden; z-index: 2; }
   .hero-glow { position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; animation: pulseGlow 6s ease-in-out infinite; }
   .hero-glow2 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,157,0.04) 0%, transparent 70%); bottom: 50px; left: 5%; pointer-events: none; animation: pulseGlow 8s ease-in-out infinite reverse; }
   @keyframes pulseGlow { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7} }
@@ -277,7 +283,7 @@
   @keyframes fadeSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
   /* ── SECTIONS ────────────────────────────────────────────── */
-  section { position: relative; z-index: 2; padding: 6rem 3rem; max-width: var(--page-max); margin: 0 auto; }
+  section { position: relative; z-index: 2; padding: 6rem var(--gutter); max-width: var(--page-max); margin: 0 auto; }
   .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
   .section-num { font-size: .72rem; color: var(--accent); letter-spacing: .2em; font-weight: 700; }
   h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--text); letter-spacing: .08em; text-transform: uppercase; }
@@ -622,7 +628,7 @@
     animation: glitch .18s steps(1) .04s 3;
   }
   /* ── CONTACT ─────────────────────────────────────────────── */
-  #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(var(--accent-rgb),.03))}
+  #contact{position:relative;z-index:2;border-top:1px solid var(--border);max-width:100%;padding:6rem var(--gutter);background:linear-gradient(180deg,transparent,rgba(var(--accent-rgb),.03))}
   .contact-inner{max-width:var(--page-max);margin:0 auto}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;column-gap:4rem;row-gap:0;align-items:start}
   .contact-info h3{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:1rem;letter-spacing:.08em;text-transform:uppercase}
@@ -701,7 +707,7 @@
   .form-notice{font-size:.7rem;color:var(--text3);margin-top:-.3rem}
 
   /* ── FOOTER ──────────────────────────────────────────────── */
-  footer{position:relative;z-index:2;text-align:center;padding:2rem 3rem;padding-inline: max(3rem, calc((100% - var(--page-max)) / 2));border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
+  footer{position:relative;z-index:2;text-align:center;padding:2rem var(--gutter);padding-inline: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter)));border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
   footer span{color:var(--accent)}
 
   /* ── BACK TO TOP ─────────────────────────────────────────── */
@@ -794,12 +800,19 @@
   .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
-  @media(min-width:901px) and (max-width:1299px){
-    /* With 12 links the nav needs ~1300px to fit the theme toggle and keep a
-       gap after the logo. Below that the desktop nav
+  @media(min-width:901px) and (max-width:1419px){
+    /* With 12 links the nav needs room for the logo (82px), the links (1053px)
+       and the theme toggle (36px) plus a real gap. Below that the desktop nav
        silently overflows - Resume, Contact and the theme toggle end up off
        screen with no way to scroll to them, because nav is position:fixed.
-       Reuse the hamburger that already works rather than shrinking anything. */
+       Reuse the hamburger that already works rather than shrinking anything.
+
+       Raised from 1299px to 1419px when the logo was aligned to the content
+       column. That alignment adds (viewport - 1200) / 2 to the left padding, so
+       the width at which the nav fits moved with it:
+         left padding + 1171 + gap + right gutter <= viewport
+         (W/2 - 552) + 1171 + 40 + 48 <= W   ->   W >= 1414
+       Measured, not guessed: at 1300px the links touched the logo. */
     .nav-links{display:none}.hamburger{display:flex}
   }
   @media(max-width:900px){
