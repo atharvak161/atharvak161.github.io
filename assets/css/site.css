@@ -186,15 +186,14 @@
   @media (max-width: 1299px) { #theme-toggle { margin-left: auto; margin-right: .6rem; } }
 
   /* ── NAVBAR ──────────────────────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem var(--gutter);
-    /* Left aligns the logo with the section text below it: the centring offset
-       plus the same gutter every section carries inside --page-max. The right
-       stays at the plain gutter because the nav cannot fit in that column -
-       logo + 12 links + toggle measure 1171px against 1104px available - and
-       cramping the links to force symmetry would be the worse trade. */
-    padding-left: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter))); padding-right: var(--gutter); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all var(--t-base) var(--ease); }
+  /* Full bleed on purpose: the logo sits in the far left corner, the links
+     spread across the middle, the theme toggle sits in the far right corner.
+     An earlier version aligned the logo with the content column below it. That
+     is a defensible thing to do and it is not what this nav is for - it made
+     the bar look inset and cramped the twelve links into 1104px. */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem var(--gutter); background: rgba(8,11,16,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all var(--t-base) var(--ease); }
   [data-theme="light"] nav { background: rgba(240,244,248,0.9); }
-  nav.scrolled { padding: .7rem var(--gutter); padding-left: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter))); padding-right: var(--gutter); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
+  nav.scrolled { padding: .7rem var(--gutter); box-shadow: 0 4px 30px rgba(0,212,255,0.08); }
   .nav-logo { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--accent); letter-spacing: .18em; text-decoration: none; text-transform: uppercase; }
   .nav-logo.active { text-shadow: 0 0 12px rgba(0,212,255,.5); }
   .nav-logo span { color: var(--text2); }
@@ -707,7 +706,7 @@
   .form-notice{font-size:.7rem;color:var(--text3);margin-top:-.3rem}
 
   /* ── FOOTER ──────────────────────────────────────────────── */
-  footer{position:relative;z-index:2;text-align:center;padding:2rem var(--gutter);padding-inline: max(var(--gutter), calc((100% - var(--page-max)) / 2 + var(--gutter)));border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
+  footer{position:relative;z-index:2;text-align:center;padding:2rem var(--gutter);border-top:1px solid var(--border);font-size:.72rem;color:var(--text3);letter-spacing:.06em}
   footer span{color:var(--accent)}
 
   /* ── BACK TO TOP ─────────────────────────────────────────── */
@@ -800,19 +799,16 @@
   .li-badge:hover .li-badge-cta{background:#004182}
 
   /* ── RESPONSIVE ──────────────────────────────────────────── */
-  @media(min-width:901px) and (max-width:1419px){
+  @media(min-width:901px) and (max-width:1299px){
     /* With 12 links the nav needs room for the logo (82px), the links (1053px)
        and the theme toggle (36px) plus a real gap. Below that the desktop nav
        silently overflows - Resume, Contact and the theme toggle end up off
        screen with no way to scroll to them, because nav is position:fixed.
        Reuse the hamburger that already works rather than shrinking anything.
 
-       Raised from 1299px to 1419px when the logo was aligned to the content
-       column. That alignment adds (viewport - 1200) / 2 to the left padding, so
-       the width at which the nav fits moved with it:
-         left padding + 1171 + gap + right gutter <= viewport
-         (W/2 - 552) + 1171 + 40 + 48 <= W   ->   W >= 1414
-       Measured, not guessed: at 1300px the links touched the logo. */
+       Back to 1299px now the nav is full bleed again: the padding no longer
+       grows with the viewport, so the nav has the whole width to work with and
+       1171px of content fits comfortably from 1300px up. */
     .nav-links{display:none}.hamburger{display:flex}
   }
   @media(max-width:900px){
