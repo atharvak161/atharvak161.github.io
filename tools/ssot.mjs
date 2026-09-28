@@ -97,6 +97,23 @@ function extractBalanced(text, startIdx) {
       if (ch === inStr) inStr = null;
       continue;
     }
+    // Comments are skipped before quote handling. An apostrophe in a prose
+    // comment ("the hero tagline's framing") would otherwise open a string
+    // that never closes, and the whole extraction fails with "unbalanced {}"
+    // far from the real cause. Hit twice on 2026-09-28 writing comments in
+    // SITE.identity.
+    if (ch === '/' && text[i + 1] === '/') {
+      const nl = text.indexOf('\n', i);
+      if (nl === -1) break;
+      i = nl;
+      continue;
+    }
+    if (ch === '/' && text[i + 1] === '*') {
+      const endC = text.indexOf('*/', i + 2);
+      if (endC === -1) break;
+      i = endC + 1;
+      continue;
+    }
     if (ch === '"' || ch === "'" || ch === '`') { inStr = ch; continue; }
     if (ch === '[' || ch === '{') depth++;
     else if (ch === ']' || ch === '}') {
