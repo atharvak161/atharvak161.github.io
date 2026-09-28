@@ -42,7 +42,17 @@ SITE.knowsAbout = ['Penetration Testing','Ethical Hacking','Red Teaming','Networ
    banner here, run the generator, and all eleven follow. */
 SITE.share = {
   base:   'https://atharvaxsecurity.com/',
-  image:  'thumbnail.jpg',
+  /* The ?v= is a cache key for the social networks, not for the browser.
+     LinkedIn caches og:image BY URL and does not re-fetch a URL it already
+     holds, so the banner kept changing (the terminal design, then the 150+
+     rooms line) while every LinkedIn preview carried on showing the first
+     version forever. WhatsApp fetched fresh and showed the new one, which is
+     how the split was spotted.
+
+     BUMP THIS NUMBER EVERY TIME thumbnail.jpg CHANGES. The bare file stays at
+     root and keeps working, so links already shared are untouched; the new
+     URL is simply one LinkedIn has never seen. */
+  image:  'thumbnail.jpg?v=2',
   width:  1200,
   height: 627
 };
