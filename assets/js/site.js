@@ -50,11 +50,23 @@ SITE.share = {
 SITE.identity = {
   roles: ['Junior Penetration Tester','Security Analyst','Ethical Hacker','Offensive Security','Red Team Aspirant','CTF Competitor','Security Researcher'],
   title: 'Atharva Kulkarni — Junior Pentester | CEH V12 | London',
-  metaDescription: 'Junior penetration tester in London. CEH V12, GCHQ-accredited MSc, three years in enterprise security operations. CTF writeups and security tooling.',
-  ogTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
-  ogDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into offensive security and penetration testing. Portfolio of security projects and experience.',
-  twTitle: 'Atharva Kulkarni — Security Analyst | Offensive Security | CEH V12',
-  twDescription: 'CEH V12 Certified | GCHQ-accredited MSc Applied Cyber Security | Transitioning into penetration testing and red team operations.'
+  /* The experience is Technical Support Analyst, DSS Engineer, Technical
+     Support Engineer and Network Operations Specialist: enterprise
+     INFRASTRUCTURE, not security operations. These strings used to claim
+     "three years in enterprise security operations", which the roles do not
+     support. The framing below is the one from the hero tagline, which was
+     always the accurate one. */
+  /* Google shows this as the grey text under the title. Atharva picked this
+     version for search, and the longer one below for the social card. */
+  metaDescription: 'Junior penetration tester in London. CEH V12, GCHQ-accredited MSc, turning three years of enterprise infrastructure into offensive security work.',
+  /* og/tw titles used to say "Security Analyst" while title above said
+     "Junior Pentester", so Google and LinkedIn showed different job titles for
+     the same link. One title now. */
+  ogTitle: 'Atharva Kulkarni — Junior Pentester | CEH V12 | London',
+  /* The card has room for the full version, so it carries his wording intact. */
+  ogDescription: 'Turning three years of enterprise infrastructure knowledge into offensive security. Finding the gaps before adversaries do.',
+  twTitle: 'Atharva Kulkarni — Junior Pentester | CEH V12 | London',
+  twDescription: 'Turning three years of enterprise infrastructure knowledge into offensive security. Finding the gaps before adversaries do.'
 };
 
 /* certs: one entry → certs section card + JSON-LD hasCredential (if earned)
