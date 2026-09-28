@@ -13,8 +13,8 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 ├── assets/js/site.js             all behaviour + the SITE.* arrays
 ├── badges/ certifications/ projects/   hub pages, generated from the SSOT
 │   writeups/                        (all four also carry the sibling nav row)
-├── sitemap.xml                    11 URLs: home + 4 hub pages + 6 writeups
-├── thumbnail.jpg                  og:image — DO NOT MOVE (see below)
+├── sitemap.xml                    15 URLs: home + 4 hubs + 7 writeups + 3 sub-sites
+├── thumbnail.jpg                  og:image, served as ?v=2 — DO NOT MOVE (see below)
 ├── Atharva_Kulkarni_Resume.pdf    linked from the CV section — DO NOT MOVE
 │
 ├── assets/
@@ -26,7 +26,7 @@ framework, no runtime dependencies. Served by GitHub Pages from `main` at
 │   │   └── TryHackMe-SEC1-Certificate.pdf
 │   └── vendor/                    GSAP + ScrambleTextPlugin, vendored
 │                                  deliberately — no CDN dependency
-├── writeups/                      6 standalone CTF writeups
+├── writeups/                      7 standalone CTF writeups
 ├── tools/check-consistency.mjs    invariant checker (see below)
 └── .githooks/pre-commit           runs the checker before every commit
 ```
@@ -58,9 +58,11 @@ locally as a pre-commit gate, never in the cloud.
 
 ### Runtime
 
-Eleven HTML documents. The home page links `assets/css/site.css` and
-`assets/js/site.js`; the four hub pages and six writeups still carry their own
-inline `<style>`. GSAP and the fonts are vendored locally. The only thing
+Fourteen HTML documents. Every page loads `assets/css/tokens.css` for the
+shared design tokens, then one stylesheet for its kind: `site.css` for the home
+page, `hub.css` for the four section pages, `writeup.css` for the seven
+writeups. Each keeps a small inline `<style>` for what is genuinely local to
+it. Behaviour lives in `assets/js/site.js`, which only the home page loads. GSAP and the fonts are vendored locally. The only thing
 fetched from a third party at runtime is the analytics beacon, and only on the
 home page.
 
@@ -162,14 +164,27 @@ JavaScript — which means drift here is invisible in a browser:
 | static `<script type="application/ld+json">` | earned entries of `SITE.certs` |
 
 **3. Two root files are load-bearing public URLs.** `thumbnail.jpg` is the
-`og:image` cached by LinkedIn, X and Slack, referenced by all 11 pages;
+`og:image` cached by LinkedIn, X and Slack, referenced by all 12 pages;
 `Atharva_Kulkarni_Resume.pdf` has been linked from job applications. Moving
 either into `assets/` would tidy the tree and break live links. They stay at
 root on purpose.
 
-`thumbnail.png` (209KB) is a different matter: nothing in the repo references
-it any more. This file used to name it as the og:image, which was wrong. Before
-moving it, check whether an old shared post still hotlinks it.
+The tags point at `thumbnail.jpg?v=2`, not the bare filename. That query string
+is a cache key for the social networks: LinkedIn caches `og:image` by URL and
+does not re-fetch one it already holds, so two banner redesigns shipped while
+every LinkedIn preview kept showing the first version. WhatsApp fetched fresh
+and showed the new one, which is how the split surfaced. **Bump the number
+whenever the banner changes**, in `SITE.share.image`; the generator writes it
+into all 24 image tags. The bare URL still resolves, so links already shared
+are untouched.
+
+`thumbnail.png` (209KB) was removed on 2026-09-28 and is in the quarantine
+folder, not deleted. It was the superseded banner. An earlier version of this
+paragraph said nothing had ever referenced it, which was wrong: it WAS the live
+`og:image` until 2026-09-14 (#4), so a post shared before then may still point
+at the URL. Weighed against keeping a public repo lightweight, and the removal
+won. If an old preview ever breaks, the file is in quarantine and in git
+history.
 
 ## Vendored JavaScript
 
