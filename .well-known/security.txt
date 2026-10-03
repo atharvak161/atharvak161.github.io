@@ -1,0 +1,20 @@
+# security.txt for atharvaxsecurity.com
+# RFC 9116 — https://www.rfc-editor.org/rfc/rfc9116
+#
+# This is a personal cybersecurity portfolio. It is a static site on GitHub
+# Pages: no accounts, no sessions, no database, and nothing is collected from
+# visitors. If you have found something anyway, I would genuinely like to know.
+
+Contact: mailto:atharvak161@gmail.com
+Expires: 2027-10-03T16:27:04Z
+Preferred-Languages: en
+Canonical: https://atharvaxsecurity.com/.well-known/security.txt
+
+# Scope: atharvaxsecurity.com and its sub-paths (/projects/, /writeups/,
+# /certifications/, /badges/, /cybersec-toolkit/, /cybersec-vault/, /Blueprint/).
+#
+# Out of scope: GitHub Pages infrastructure itself, which I do not control.
+# Report those to GitHub at https://bounty.github.com/.
+#
+# Please do not run automated scanners against the site. It is static, it is
+# hosted on shared infrastructure, and a scan mostly tells you about GitHub.
