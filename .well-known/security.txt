@@ -6,9 +6,14 @@
 # visitors. If you have found something anyway, I would genuinely like to know.
 
 Contact: mailto:atharvak161@gmail.com
-Expires: 2027-10-03T16:27:04Z
+Expires: 2036-10-03T16:29:02Z
 Preferred-Languages: en
 Canonical: https://atharvaxsecurity.com/.well-known/security.txt
+
+# RFC 9116 recommends an Expires value under a year. This one is ten, by
+# choice: the contact address is a personal one that is not going to change,
+# and a file that silently expires is worse than one dated far out. The
+# consistency checker warns 60 days before it lapses either way.
 
 # Scope: atharvaxsecurity.com and its sub-paths (/projects/, /writeups/,
 # /certifications/, /badges/, /cybersec-toolkit/, /cybersec-vault/, /Blueprint/).
