@@ -964,6 +964,44 @@ for (const rel of allPages(root)) {
   }
 }
 
+/* ── security.txt has not expired ───────────────────────────────────
+
+   RFC 9116 requires an Expires date, and an expired security.txt is worse than
+   none: a researcher reads it as abandoned. The date is a year out and there is
+   nothing to remind anyone, so the checker does the reminding - it warns at 60
+   days and fails outright once the date has passed.
+
+   It also guards .nojekyll, because without that file GitHub Pages runs Jekyll,
+   Jekyll drops every path beginning with a dot, and /.well-known/security.txt
+   404s on the live site while sitting perfectly fine in the repo.
+
+   This block must stay ABOVE the "if (fail.length)" verdict. */
+{
+  const stPath = join(root, '.well-known/security.txt');
+  if (!existsSync(join(root, '.nojekyll'))) {
+    fail.push('.nojekyll is missing. Without it GitHub Pages runs Jekyll, which drops /.well-known/ and the security.txt 404s live.');
+  }
+  if (!existsSync(stPath)) {
+    fail.push('.well-known/security.txt is missing.');
+  } else {
+    const st = readFileSync(stPath, 'utf8');
+    for (const field of ['Contact:', 'Expires:']) {
+      if (!new RegExp('^' + field, 'm').test(st)) fail.push(`.well-known/security.txt has no ${field} field (RFC 9116 requires it).`);
+    }
+    const m = st.match(/^Expires:\s*(\S+)/m);
+    if (m) {
+      const exp = new Date(m[1]);
+      if (Number.isNaN(exp.getTime())) {
+        fail.push(`.well-known/security.txt Expires is not a valid date: ${m[1]}`);
+      } else {
+        const days = Math.round((exp - Date.now()) / 86400000);
+        if (days < 0) fail.push(`.well-known/security.txt EXPIRED ${-days} days ago. Push the Expires date forward.`);
+        else if (days < 60) warn.push(`security.txt expires in ${days} days — push the Expires date forward.`);
+      }
+    }
+  }
+}
+
 if (fail.length) {
   console.error(`\nFAIL — ${fail.length} consistency problem(s):`);
   fail.forEach(f => console.error(`  ✗ ${f}`));
