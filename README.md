@@ -4,6 +4,53 @@ Personal security portfolio. Single-page static site, no build step, no
 framework, no runtime dependencies. Served by GitHub Pages from `main` at
 [atharvaxsecurity.com](https://atharvaxsecurity.com).
 
+## The map
+
+Everything under `atharvaxsecurity.com`, plus the standalone repos — one picture
+of what is where.
+
+```mermaid
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#11151f","primaryTextColor":"#e7ecf5","primaryBorderColor":"#2a3244","lineColor":"#3a4457","fontFamily":"monospace","fontSize":"13px"}}}%%
+graph LR
+  ROOT["atharvaxsecurity.com"]
+
+  ROOT --- HOME["/ — portfolio home"]
+  ROOT --- HUBS(["hub pages"])
+  ROOT --- APPS(["sub-applications"])
+  ROOT --- EXT(["standalone repos"])
+
+  HUBS --- H1["/projects/"]
+  HUBS --- H2["/writeups/ — 7 CTF writeups"]
+  HUBS --- H3["/certifications/ — CEH, SEC0, SEC1"]
+  HUBS --- H4["/badges/ — TryHackMe wall"]
+
+  APPS --- A1["/commander/<br/>9 tools, methodology,<br/>shells, payloads"]
+  APPS --- A2["/cybersec-toolkit/<br/>client-side utilities"]
+  APPS --- A3["/cybersec-vault/<br/>248 notes, 4 tracks"]
+  APPS --- A4["/Blueprint/<br/>PM dashboard"]
+
+  EXT --- E1["jobscope<br/>UK job aggregator, Node"]
+  EXT --- E2["finance-dashboard<br/>finance tracker"]
+
+  classDef root fill:#1a1206,stroke:#f0b152,stroke-width:2px,color:#f0b152;
+  classDef hub fill:#11151f,stroke:#6bb8ff,color:#cfe3ff;
+  classDef app fill:#0d1a18,stroke:#46e0d4,color:#a9f0e8;
+  classDef ext fill:#141019,stroke:#b98cff,color:#d9c7ff;
+  classDef group fill:#161b27,stroke:#3a4457,color:#8891a3;
+
+  class ROOT root;
+  class HOME,H1,H2,H3,H4 hub;
+  class A1,A2,A3,A4 app;
+  class E1,E2 ext;
+  class HUBS,APPS,EXT group;
+```
+
+**Served under the domain** — the portfolio, four hub pages, and four
+sub-applications, each its own repo on the same custom domain. **Standalone** —
+repos on GitHub, not on the site. Every app is static, client-side, runs nothing
+on a server.
+
+
 ```
 .
 ├── index.html                     the markup; the SSOT arrays live in assets/js/site.js
